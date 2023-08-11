@@ -1,0 +1,24 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "lint": "eslint src",
+    "dbg": "node --experimental-vm-modules --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
+    "start": "node --experimental-vm-modules index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/client": "^3.8.0",
+    "@graphql-tools/schema": "^10.0.0",
+    "arangojs": "^8.4.0",
+    "dotenv-safe": "^8.2.0",
+    "graphql": "^16.7.1",
+    "graphql-yoga": "^4.0.4",
+    "nats": "^2.15.1"
+  }
+}
