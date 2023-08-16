@@ -1,0 +1,30 @@
+version: '1'
+services:
+  database:
+    image: arangodb
+    restart: always
+    ports:
+      - 8529:8529
+    environment:
+      - ARANGO_ROOT_PASSWORD=yourpassword
+
+  nats:
+    image: nats:latest
+    expose:
+      - "4222"
+    ports:
+      - "8222:8222"
+
+  api:
+    build: ./api
+    ports:
+      - 4000:4000
+    depends_on:
+      - nats
+      - database
+
+networks:
+  default:
+    name: ruok
+    external: false
+
