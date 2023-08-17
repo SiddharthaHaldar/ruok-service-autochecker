@@ -2,7 +2,7 @@
 
 Automatically scans existing PHAC (GCP) services to provide visibility on endpoints and standards. 
 
-A crawler that pulls services from the DNS repo to gather endpoints (to perform things like service uptime checks), and their GitHub repositories to provide visibility on things like vunerability scanning and if APIs are in play. 
+A crawler that pulls service details from the DNS repo to gather endpoints (to perform things like service uptime checks), and their GitHub repositories to provide visibility on things like vunerability scanning and whether or not APIs are in play. 
 
 *TODO - change name to TBD 
 
