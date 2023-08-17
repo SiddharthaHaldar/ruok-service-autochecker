@@ -1,0 +1,20 @@
+[
+    { 
+        "project": "HoPiC",
+        "servicesUrls": ["https://hopic-sdpac.phac-aspc.alpha.canada.ca/"], 
+        "github-repo": "https://github.com/PHACDataHub/cpho-phase2",
+        "internal-tool": true
+    },
+    {
+        "project": "epicenter",
+        "servicesUrls": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"],
+        "github-repo": "https://github.com/PHACDataHub/phac-epi-garden",
+        "internal-tool": true
+    }, 
+    {
+        "project": "data-catalog",
+        "url": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"],
+        "github-repo": "https://github.com/PHACDataHub/data-catalog",
+        "internal-tool": true
+    }
+]

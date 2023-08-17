@@ -1,10 +1,12 @@
-# Ruok - Data Service Autochecker
+# RUOK - Service Scanner
 
-Automatically scans existing PHAC (GCP) services to provide visibility on endpoints and standards.  
+Automatically scans existing PHAC (GCP) services to provide visibility on endpoints and standards. 
 
-*TODO - change name to TBD - Data Observatory?*
+A crawler that pulls services from the DNS repo to gather endpoints (to perform things like service uptime checks), and their GitHub repositories to provide visibility on things like vunerability scanning and if APIs are in play. 
 
-### *Please note - this is work in progress!*
+*TODO - change name to TBD 
+
+#### *Please note - this is work in progress - just getting started*
 
 This uses [Safe Inputs](https://github.com/PHACDataHub/safe-inputs) and [Tracker](https://github.com/canada-ca/tracker) as a starting point.
 
