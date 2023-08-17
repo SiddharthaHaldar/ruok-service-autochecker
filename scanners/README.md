@@ -1,5 +1,5 @@
 ## Scanners
-Currently working on the functionality for the different pieces that will be communicated via NATs payload.  (Right now just started on the GitHub piece.)
+Currently working on the functionality for the different pieces that will be passed via NATs payload.  (Right now just started on the GitHub piece - pulling out details with the octokit API.)
 
 *Service discovery* will pull in metadata from the DNS GitHub repo to determine which services (defined by endpoints) will be scanned, and their associated GitHub or code repos. (TODO - add in container registries too)
 
@@ -7,6 +7,6 @@ Currently working on the functionality for the different pieces that will be com
 
 *GitHub processing* will process and save in database
 
-*Service Scanning* will search for aspects like uptime, DNS take over 
+*Endpoint Scanning* will search for aspects like uptime, DNS take over 
 
-Service Processing will similarly, process and save in database
+*Endpoint Processing* will similarly, process and save in database
