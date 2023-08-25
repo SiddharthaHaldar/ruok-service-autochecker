@@ -71,6 +71,36 @@ curl -u root:yourpassword -X POST --header 'accept: application/json' \
      --dump - http://0.0.0.0:8529/_db/dataServices/_api/collection
 
 
+# ---- Create documents
+echo ""
+echo "Creating sample projects - note records not confirmed - just using as an example!"
+echo ""
+
+curl -u root:yourpassword -X POST --header 'accept: application/json' \
+     --data-binary '{"projectName": "HoPiC","projectOwnerDivisionAcronym": "DS","servicesUrls": ["https://hopic-sdpac.phac-aspc.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/cpho-phase2", "internal-tool": true}' \
+     --dump - http://localhost:8529/_db/dataServices/_api/document/dataServicesCollection
+
+curl -u root:yourpassword -X POST --header 'accept: application/json' \
+     --data-binary '{ "projectName": "epicenter", "projectOwnerDivisionAcronym": "DSCO","serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/phac-epi-garden", "internal-tool": true}' \
+     --dump - http://localhost:8529/_db/dataServices/_api/document/dataServicesCollection
+
+curl -u root:yourpassword -X POST --header 'accept: application/json' \
+     --data-binary '{ "projectName": "data-catalog", "projectOwnerDivisionAcronym": "DS", "serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"], "gitHubRepository": "https://github.com/PHACDataHub/data-catalog", "internal-tool": true}' \
+     --dump - http://localhost:8529/_db/dataServices/_api/document/dataServicesCollection
+
+# Also add to system db:
+curl -u root:yourpassword -X POST --header 'accept: application/json' \
+     --data-binary '{"projectName": "HoPiC","projectOwnerDivisionAcronym": "DS","servicesUrls": ["https://hopic-sdpac.phac-aspc.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/cpho-phase2", "internal-tool": true}' \
+     --dump - http://localhost:8529/_api/document/dataServicesCollection
+
+curl -u root:yourpassword -X POST --header 'accept: application/json' \
+     --data-binary '{ "projectName": "epicenter", "projectOwnerDivisionAcronym": "DSCO","serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/phac-epi-garden", "internal-tool": true}' \
+     --dump - http://localhost:8529/_api/document/dataServicesCollection
+
+curl -u root:yourpassword -X POST --header 'accept: application/json' \
+     --data-binary '{ "projectName": "data-catalog", "projectOwnerDivisionAcronym": "DS", "serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"], "gitHubRepository": "https://github.com/PHACDataHub/data-catalog", "internal-tool": true}' \
+     --dump - http://localhost:8529/_api/document/dataServicesCollection
+
 # echo ""
 # echo "Finding new collection"
 # curl -u root:yourpassword --header 'accept: application/json' http://localhost:8529/_api/collection > response.json
