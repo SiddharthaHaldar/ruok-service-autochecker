@@ -10,12 +10,23 @@ import { aql } from "arangojs";
 // #TODO use schema first definition - ie. "export const schema = new GraphQLSchema({"with fields and definitions & resolvers for this once working 
 
 const typeDefinitions = /* GraphQL */ `
+
     type Query {
         hello: String
+        getProjectByName(projectName: String): Project
+        getAllProjects: [Project]
     }
 
     type Mutation {
         createDataService(serviceName: String!, domain: String!): DataService
+    }
+
+    type Project {
+        projectName: String
+        projectOwnerDivisionAcronym: String
+        serviceURLs: [String]
+        gitHubRepository: String
+        internalTool: Boolean
     }
 
     type DataService {
@@ -28,7 +39,63 @@ const resolvers = {
 
     Query: {
         hello: () => 'Hello, world!',
+
+        getProjectByName: async (_, args, context) => {
+            const { db } = context;
+            const { projectName } = args;
+            try {
+                const cursor = await context.db.query(aql`
+                    FOR doc IN dataServicesCollection
+                    FILTER doc.projectName == ${projectName}
+                    RETURN doc
+                `);
+                const project = await cursor.next()
+                console.log("Found project:", project);
+                return project;
+
+              } catch (err) {
+                console.error(err.message);
+              }
+            },
+            // // example
+            // query {
+            //     getProjectByName(projectName: "epicenter") {
+            //       _id
+            //       projectName
+            //       projectOwnerDivisionAcronym
+            //       serviceURLs
+            //       gitHubRepository
+            //       internalTool
+            //     }
+            //   }
+
+        getAllProjects: async (_, args, context) => {
+            try {
+                const cursor = await context.db.query(aql`
+                    FOR doc IN dataServicesCollection
+                    RETURN doc
+                `);
+                const projects = await cursor.all()
+                console.log(projects);
+                return projects;
+            } catch (err) {
+                console.error(err.message);
+                throw new Error('Error fetching projects');
+            }
+        },
+        // // example
+        // {
+        //     getAllProjects {
+        //       projectName
+        //       projectOwnerDivisionAcronym
+        //       serviceURLs
+        //       gitHubRepository
+        //       internalTool
+        //     }
+        //   }
     },
+ 
+
 
     Mutation: {
         createDataService: async (_, args, context) => {

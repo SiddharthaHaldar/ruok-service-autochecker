@@ -2,7 +2,7 @@
 
 Automatically scans existing PHAC (GCP) services to provide visibility on endpoints and standards. 
 
-A crawler that pulls service details from the DNS repo to gather endpoints (to perform things like service uptime checks), and their GitHub repositories to provide visibility on things like vunerability scanning and whether or not APIs are in play. 
+This will be a crawler that pulls service details from the DNS repo to gather endpoints (to perform functions like service uptime checks), and their corresponding GitHub repositories to provide visibility on things like having vunerability scanning enabled and whether or not APIs are in play. 
 
 *TODO - change name to TBD 
 
@@ -10,12 +10,12 @@ A crawler that pulls service details from the DNS repo to gather endpoints (to p
 
 This uses [Safe Inputs](https://github.com/PHACDataHub/safe-inputs) and [Tracker](https://github.com/canada-ca/tracker) as a starting point.
 
-## To Run 
+## To build and run 
 ```
-docker compose up -d && ./database/db-init.sh
+docker compose up --build -d && ./database/db-init.sh
 ```
 
-## To Tear down 
+## To tear down 
 ```
 docker compose down -v
 ```

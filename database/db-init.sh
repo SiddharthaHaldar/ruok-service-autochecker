@@ -41,8 +41,6 @@ fi
 #     --data '{"name": "dataServices", "createCollection": true }' \
 #     --dump - http://database:8529/_api/database; 
 #     echo "'dataServices' database creation succeeded."
-
-
      
 # echo ""
 # echo "reading all databases"
@@ -50,21 +48,9 @@ fi
 
 # ---- Create collection 
 echo ""
-echo "Creating a 'dataServicesCollection' collection"
+echo "Creating a 'dataServicesCollection' collection in a 'dataServices' database"
 echo ""
-# in _system db (which only seem to be able to access with AQL in API at the moment)
-# curl -u root:yourpassword -X POST --header 'accept: application/json' \
-#      --data '{"name": "dataServicesCollection"}' \
-#      --dump - http://localhost:8529/_api/collection
 
-curl -u root:yourpassword -X POST --header 'accept: application/json' \
-     --data '{"name": "dataServicesCollection"}' \
-     --dump - http://0.0.0.0:8529/_api/collection
-
-# in the dataService database that we home to use
-# curl -u root:yourpassword -X POST --header 'accept: application/json' \
-#      --data '{"name": "dataServicesCollection"}' \
-#      --dump - http://localhost:8529/_db/dataServices/_api/collection
 
 curl -u root:yourpassword -X POST --header 'accept: application/json' \
      --data '{"name": "dataServicesCollection"}' \
@@ -77,49 +63,17 @@ echo "Creating sample projects - note records not confirmed - just using as an e
 echo ""
 
 curl -u root:yourpassword -X POST --header 'accept: application/json' \
-     --data-binary '{"projectName": "HoPiC","projectOwnerDivisionAcronym": "DS","servicesUrls": ["https://hopic-sdpac.phac-aspc.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/cpho-phase2", "internal-tool": true}' \
+     --data-binary '{"projectName": "HoPiC","projectOwnerDivisionAcronym": "DS","servicesURLs": ["https://hopic-sdpac.phac-aspc.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/cpho-phase2", "internalTool": true}' \
      --dump - http://localhost:8529/_db/dataServices/_api/document/dataServicesCollection
 
 curl -u root:yourpassword -X POST --header 'accept: application/json' \
-     --data-binary '{ "projectName": "epicenter", "projectOwnerDivisionAcronym": "DSCO","serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/phac-epi-garden", "internal-tool": true}' \
+     --data-binary '{ "projectName": "epicenter", "projectOwnerDivisionAcronym": "DSCO","serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/phac-epi-garden", "internalTool": true}' \
      --dump - http://localhost:8529/_db/dataServices/_api/document/dataServicesCollection
 
 curl -u root:yourpassword -X POST --header 'accept: application/json' \
-     --data-binary '{ "projectName": "data-catalog", "projectOwnerDivisionAcronym": "DS", "serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"], "gitHubRepository": "https://github.com/PHACDataHub/data-catalog", "internal-tool": true}' \
+     --data-binary '{ "projectName": "data-catalog", "projectOwnerDivisionAcronym": "DS", "serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"], "gitHubRepository": "https://github.com/PHACDataHub/data-catalog", "internalTool": true}' \
      --dump - http://localhost:8529/_db/dataServices/_api/document/dataServicesCollection
 
-# Also add to system db:
-curl -u root:yourpassword -X POST --header 'accept: application/json' \
-     --data-binary '{"projectName": "HoPiC","projectOwnerDivisionAcronym": "DS","servicesUrls": ["https://hopic-sdpac.phac-aspc.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/cpho-phase2", "internal-tool": true}' \
-     --dump - http://localhost:8529/_api/document/dataServicesCollection
-
-curl -u root:yourpassword -X POST --header 'accept: application/json' \
-     --data-binary '{ "projectName": "epicenter", "projectOwnerDivisionAcronym": "DSCO","serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/phac-epi-garden", "internal-tool": true}' \
-     --dump - http://localhost:8529/_api/document/dataServicesCollection
-
-curl -u root:yourpassword -X POST --header 'accept: application/json' \
-     --data-binary '{ "projectName": "data-catalog", "projectOwnerDivisionAcronym": "DS", "serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"], "gitHubRepository": "https://github.com/PHACDataHub/data-catalog", "internal-tool": true}' \
-     --dump - http://localhost:8529/_api/document/dataServicesCollection
-
-# echo ""
-# echo "Finding new collection"
-# curl -u root:yourpassword --header 'accept: application/json' http://localhost:8529/_api/collection > response.json
-# jq '.result[] | select(.name == "services")' response.json
-
-# # curl -u root:yourpassword -X POST --header 'accept: application/json' --data-binary @- --dump - http://localhost:8529/_api/document/products <<EOF
-# # { 1: "World" } EOF
-
-# curl -u root:yourpassword -X POST --header 'accept: application/json' \
-#      --data-binary '{"1": "World"}' \
-#      --dump - http://localhost:8529/_db/dataServices/_api/document/dataServicesCollection
-
-# curl -u root:yourpassword -X POST --header 'accept: application/json' \
-#      --data-binary '{
-#        "query": "INSERT { _key: @key, value: @value } INTO dataServicesCollection",
-#        "bindVars": { "key": "2", "value": "World" }
-#      }' \
-#      --dump - http://localhost:8529/_db/dataServices/_api/cursor
-
+echo ""
 echo "Database initialization complete."
-
-# npm start
+echo ""

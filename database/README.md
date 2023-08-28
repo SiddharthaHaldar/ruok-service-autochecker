@@ -3,7 +3,7 @@
 ## Update - using docker compose 
 From root of project
 ```
-docker compose up -d && ./database/db-init.sh
+docker compose up --build -d && ./database/db-init.sh
 ```
 To Tear down 
 ```

@@ -1,4 +1,5 @@
-import 'dotenv-safe/config.js'
+// import 'dotenv-safe/config.js'
+import 'dotenv/config'
 import { schema } from "./src/schema.js";
 import { Server } from "./src/server.js";
 import { Database, aql } from "arangojs";
@@ -31,12 +32,6 @@ const dbConfig = {
   
 const db = new Database(dbConfig);
   
-const query = async function query(strings, ...vars) {
-    return db.query(aql(strings, ...vars), {
-    count: true,
-    })
-}
-
 // NATS connection 
 const nc = await connect({ 
     servers: NATS_URL, 
@@ -59,7 +54,7 @@ process.on('SIGINT', () => process.exit(0))
  
   const server = new Server({
     schema,
-    context: { query, db, publish },
+    context: { db, publish },
   })
   server.listen({ port: PORT, host: HOST }, () =>
   console.log(`🚀 API is running on http://${HOST}:${PORT}/graphql`),
