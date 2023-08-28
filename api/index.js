@@ -1,5 +1,5 @@
 // import 'dotenv-safe/config.js'
-import 'dotenv/config'
+// import 'dotenv/config'
 import { schema } from "./src/schema.js";
 import { Server } from "./src/server.js";
 import { Database, aql } from "arangojs";

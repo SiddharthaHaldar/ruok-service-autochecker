@@ -63,7 +63,7 @@ echo "Creating sample projects - note records not confirmed - just using as an e
 echo ""
 
 curl -u root:yourpassword -X POST --header 'accept: application/json' \
-     --data-binary '{"projectName": "HoPiC","projectOwnerDivisionAcronym": "DS","servicesURLs": ["https://hopic-sdpac.phac-aspc.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/cpho-phase2", "internalTool": true}' \
+     --data-binary '{"projectName": "HoPiC","projectOwnerDivisionAcronym": "DS","serviceURLs": ["https://hopic-sdpac.phac-aspc.alpha.canada.ca/"],"gitHubRepository": "https://github.com/PHACDataHub/cpho-phase2", "internalTool": true}' \
      --dump - http://localhost:8529/_db/dataServices/_api/document/dataServicesCollection
 
 curl -u root:yourpassword -X POST --header 'accept: application/json' \
