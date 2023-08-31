@@ -6,7 +6,7 @@ This will be a crawler that pulls service details from the DNS repo to gather en
 
 *TODO - change name to TBD 
 
-#### *Please note - this is work in progress - just getting started*
+#### *Please note - this is work in progress - just getting started* 
 
 This uses [Safe Inputs](https://github.com/PHACDataHub/safe-inputs) and [Tracker](https://github.com/canada-ca/tracker) as a starting point.
 
