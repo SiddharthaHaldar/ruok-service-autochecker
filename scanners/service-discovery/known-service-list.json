@@ -37,6 +37,11 @@
         "gitHubRepository": "https://github.com/PHACDataHub/it33-filtering",
         "internalTool": false
         
+    },
+    {
+        "projectName": "django-phac_aspc-helpers",
+        "gitHubRepository": "https://github.com/PHACDataHub/django-phac_aspc-helpers",
+        "internalTool": true
     }
 
 ]

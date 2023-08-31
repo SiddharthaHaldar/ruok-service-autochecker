@@ -1,5 +1,24 @@
 // Not entirely sure if these should be separate files - they kind of seem like they should.... keeping them here for now because it's
 // easy to import and test. 
+//https://octokit.rest/?query=/repos/%7Bowner%7D/%7Brepo%7D
+// https://docs.github.com/en/free-pro-team@latest/rest/
+
+// Security advisories • Enabled
+
+import { Octokit, App,  RequestError } from "octokit";
+const { 
+  owner = 'PHACDataHub',
+  token,
+  repo = "safe-inputs"
+  } = process.env;
+
+// Authenicate with GitHub
+const octokit = new Octokit({ 
+    auth: token,
+});
+
+
+
 export async function getAllRepos(owner, octokit) {
     try {
         const response = await octokit.request('GET /orgs/{org}/repos', {
@@ -9,7 +28,6 @@ export async function getAllRepos(owner, octokit) {
                 }
         });
         // console.log(response.data)
-        
         for (const i in response.data) {
             console.log(response.data[i].name)
         }
@@ -72,7 +90,6 @@ export async function getFileContents(owner, repo, octokit, path) {
             'X-GitHub-Api-Version': '2022-11-28'
           }
         });
-      
         // const names = repoContents.data.map(content => content.name);
         // console.log(names);
         console.log(response.data.path)
@@ -82,7 +99,7 @@ export async function getFileContents(owner, repo, octokit, path) {
       }
     }
       
-export async function githubPages(owner, repo, octokit) {
+export async function getGithubPagesDetails(owner, repo, octokit) {
     try {
         const respGHPages = await octokit.request('GET /repos/{owner}/{repo}/pages', {
           owner: owner,
@@ -107,6 +124,89 @@ export async function githubPages(owner, repo, octokit) {
         }
       }
     }
+
+// required_pull_request_reviews
+
+export async function getCodeScanningAlerts(owner, repo, octokit, branch) {
+  // don't have permissions for this right now 
+  try {
+    const response = await octokit.request('GET /repos/{owner}/{repo}/code-scanning/alerts', {
+      owner: owner,
+      repo: repo,
+      branch: branch,
+      headers: {
+          'X-GitHub-Api-Version': '2022-11-28'
+      }
+    });
+    console.log (response.data)
+    return({
+      "response": response.data
+    })
+  } catch (error) {
+    console.error("An error occurred while fetching branch protection details:", error.message);
+  }
+}
+// await getCodeScanningAlerts(owner, repo, octokit)
+// don't have permissions for this right now 
+
+
+export async function getBranchProtectionDetails(owner, repo, octokit, branch) {
+  // don't have permissions for this right now 
+  try {
+    const response = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
+      owner: owner,
+      repo: repo,
+      branch: branch,
+      headers: {
+          'X-GitHub-Api-Version': '2022-11-28'
+      }
+    });
+    console.log (response.data)
+    return({
+      "protected": true,
+      "response": response.data
+    })
+  } catch (error) {
+    if (error.status === 404) {
+      return({"protected": false})
+    } else {
+      console.error('An error occurred:', error.message);
+      return({"protected": false})
+    }
+  }
+}
+// const test = await getBranchProtectionDetails(owner, repo, octokit, 'dns')
+// console.log(test)
+
+
+export async function getPullRequestProtection(owner, repo, octokit, branch) {
+  // don't have permissions for this right now 
+  try {
+    const response = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews', {
+      owner: owner,
+      repo: repo,
+      branch: branch,
+      headers: {
+          'X-GitHub-Api-Version': '2022-11-28'
+      }
+    });
+    console.log (response.data)
+    return({
+      "protected": true,
+      "response": response.data
+    })
+  } catch (error) {
+    if (error.status === 404) {
+      return({"protected": false})
+    } else {
+      console.error('An error occurred:', error.message);
+      return({"protected": false})
+    }
+  }
+}
+// const test = await getPullRequestProtection(owner, repo, octokit, 'acm-core')
+// console.log(test)
+
 
 export async function getRepoDetails(owner, repo, octokit) {
     try {
@@ -133,6 +233,7 @@ export async function getRepoDetails(owner, repo, octokit) {
             "license": response.data.license,
             "has_pages": response.data.has_pages,
             // "all": response.data, // all langagus?
+            // response.data.archived
         })
     
     } catch (error) {
@@ -140,29 +241,6 @@ export async function getRepoDetails(owner, repo, octokit) {
     }
   }
 
-
-// ---- main branch protection
-// // GET /repos/{owner}/{repo}/branches/{branch}/protection (main - atually get main branch from earlier)
-// const response1 = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
-//     owner: owner,
-//     repo: repo,
-//     branch: branch,
-//     headers: {
-//       'X-GitHub-Api-Version': '2022-11-28'
-//     }
-//   })
-// console.log(response1.data); //- 404 and message - make sure tests
-
-// // ----- pull resquest review protection
-// const resp = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews', {
-//     owner: owner,
-//     repo: repo,
-//     branch: branch,
-//     headers: {
-//       'X-GitHub-Api-Version': '2022-11-28'
-//     }
-//   })
-// console.log(resp.data)
 
 // console.log("\n----- Dependabot -----")
 // ----- Dependabot alerts - GET YOU ARE NOT AUTHORIZED TO DO THIS error for this one - I think we need to start with just checking if alerts 

@@ -15,27 +15,35 @@ export function searchForFile(directory, targetFileName) {
         if (stat.isDirectory()) {
             const subDirectoryPaths = searchForFile(fullPath, targetFileName);
             foundFilePaths.push(...subDirectoryPaths); 
-        } else if (file === targetFileName) {
+        } else if (file.includes(targetFileName)) { //changing for part name too like dependabot.y
+        // } else if (file === targetFileName) {
             foundFilePaths.push(fullPath); 
         }
     }
     return(foundFilePaths)
 }
 
-function searchForDirectory(directory, targetDirectoryName) {
-    const entries = fs.readdirSync(directory);
+
+export function searchForDirectory(directory, targetDirectoryName) {
+    const subDirectories = fs.readdirSync(directory);
     const foundDirectoryPaths = [];
   
-    for (const entry of entries) {
-      const fullPath = `${directory}/${entry}`;
+    for (const subDir of subDirectories) {
+      const fullPath = `${directory}/${subDir}`;
       const stat = fs.statSync(fullPath);
   
-      if (stat.isDirectory() && entry === targetDirectoryName) {
-        foundDirectoryPaths.push(fullPath);
+      if (stat.isDirectory()) {
+        // if (subDir === targetDirectoryName) {
+        if (subDir.includes(targetDirectoryName)) { // changing to includes to account for tests and __tests__
+          foundDirectoryPaths.push(fullPath);
+        }
+        const subDirectoryPaths = searchForDirectory(fullPath, targetDirectoryName);
+        foundDirectoryPaths.push(...subDirectoryPaths);
       }
     }
     return foundDirectoryPaths;
   }
+
  
 export async function hasApiDirectory(directory) {
     const apiDirectories = searchForDirectory (directory, "api")
@@ -46,6 +54,17 @@ export async function hasApiDirectory(directory) {
     }
 } 
 
+export async function hasDependabotYaml(directory) {
+    // searchForFile returns array of found file paths
+    const dependabotFile = searchForFile(directory, "dependabot.y") // accounting for both .yaml and .yml
+    if (dependabotFile.length > 0) {
+        return true
+    } else {
+        return false
+    }
+} 
+
+
 export async function hasSecurityMd(directory) {
     const securityMds = searchForFile(directory, "security.md")
     if (securityMds.length > 0) {
@@ -55,6 +74,36 @@ export async function hasSecurityMd(directory) {
     }
 }
 
+// async function findTestingLibraries(directory, langague){
+//     // Note -there must be a better way to do this... will 
+//     const pythonTestingLibraries = ["pytest", "unittest", "django...", "coverage"]
+//     const javascriptTestingLibraries = []
+
+//     // search for each package.jsons and see if library
+//     // search for pdm (can't remember the filename for this) or requirements.txt and 
+
+//     // see (not here) if used in gh workflows or cloudbuild.yaml or other used ci process
+// }
+
+export async function searchTests(directory) {
+    // Just returning basic if __test__ folder for now 
+    const testDirectories = searchForDirectory (directory, "tests")
+    const testDetails = []
+
+    if (testDirectories.length > 0) {
+        for (const dir of testDirectories) { //will this address null case?
+            const repoScopedPath = dir.split('/').slice(3).join('/'); // removing ./temp-cloned-repo/${repo}
+            testDetails.push ({
+                "repoScopedPath": repoScopedPath, 
+            // TODO
+                // determine if non-empty - 
+                // find testing libraries (langague? ) -get python - coverage, pytest, js, typescript jest, etc
+                // maybe scrape readme for coverage report?
+            });
+        }
+    }
+    return testDetails     
+}
 
 export async function searchIgnoreFile(directory, targetFileName) {
     const ignoreFilePaths = searchForFile(directory, targetFileName)
@@ -113,59 +162,3 @@ export async function searchFileForText(filePath, text) {
         throw error;
     }
 }
-// const dotenvInGitIgnore = await searchFileForText(filePath, '\\*\\*/\\*.env')
-// console.log(dotenvInGitIgnore)
-// console.log("")
-
-// function searchInsideFile(filePath, searchString){
-
-// }
-// export const searchFileForText = (filePath, text) => {
-// // https://medium.com/codex/achieve-the-best-performance-search-a-string-in-file-using-nodejs-6a0f2a3b6cfa
-//     return new Promise((resolve) => {
-        
-//         // const regEx = new RegExp(text, "i")
-//         const regEx = new RegExp(text)
-//         const result = [];
-
-//         // fs.readFile('file/' + filename + ".txt", 'utf8', function (err, contents) {
-//         fs.readFile(filePath, 'utf8', function (err, contents) {
-
-//             // console.log(err)
-//             let lines = contents.toString().split("\n");
-//             lines.forEach(line => {
-//                 if (line && line.search(regEx) >= 0) {
-//                     console.log('found in file ', filePath)
-//                     result.push(line)
-//                 }
-//             })
-//             if (result.length > 0) {
-//                 console.log( text, "found text in file");
-//                 resolve(result);
-//             } else {
-//                 console.log("text not found in file");
-//                 resolve([]);
-//             }
-//         })
-//     });
-// }
-// searchFileForText(filePath, textToSearch)
-//     .then(result => {
-//         console.log('Search results:', result);
-//     })
-//     .catch(error => {
-//         console.error('An error occurred:', error);
-//     });
-// searchFileForText(filePath, '.env') 
-// searchFileForText(filePath, '**/*.env')
-
-// (async () => {
-//     const dotenvInGitIgnore = await searchFileForText(filePath, '\\*\\*/\\*.env'); 
-//     console.log(dotenvInGitIgnore);
-// })();
-
-// // Going to extract the following:
-// {gitignoreContainsAllDotEnv: [{path:t/F}]}
-// {gitignoreContainsSomeDotEnv:}
-// {dockerignoreContainsAllDotEnv}
-// return paths, true/ false contain gitignore
