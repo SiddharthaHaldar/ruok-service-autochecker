@@ -19,3 +19,17 @@ service-discovery will add services to database and kick off other scanners.
 TODO:
 * Talk to Zachary re services
 * Look at data catalog for additional services
+
+
+annotations in dns repo are in the form 
+
+    projectName: <your-project-name>
+    projectOwnerDivisionAcronym: <eg-DSCO-or-DS>
+  # The following items are optional - please comment out or remove lines that are not applicable 
+    gitHubRepository: <https://github.com/PHACDataHub/<repository-name>>
+    nonGitHubCodeRepository: <eg-azure-devops-repo>
+  # Include one line for each service, e.g. API, UI...
+    serviceURLs:
+      - <service-url>
+    containerRegistries:
+      - <eg-GCP-artifact-registry-or-docker-hub>

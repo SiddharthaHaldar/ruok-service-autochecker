@@ -1,20 +1,43 @@
 [
     { 
-        "project": "HoPiC",
-        "servicesUrls": ["https://hopic-sdpac.phac-aspc.alpha.canada.ca/"], 
-        "github-repo": "https://github.com/PHACDataHub/cpho-phase2",
-        "internal-tool": true
+        "projectName": "HoPiC",
+        "serviceURLs": ["https://hopic-sdpac.phac-aspc.alpha.canada.ca/"], 
+        "gitHubRepository": "https://github.com/PHACDataHub/cpho-phase2",
+        "internalTool": true
     },
     {
-        "project": "epicenter",
-        "servicesUrls": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"],
-        "github-repo": "https://github.com/PHACDataHub/phac-epi-garden",
-        "internal-tool": true
+        "projectName": "epicenter",
+        "serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"],
+        "gitHubRepository": "https://github.com/PHACDataHub/phac-epi-garden",
+        "internalTool": true
     }, 
     {
-        "project": "data-catalog",
-        "url": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"],
-        "github-repo": "https://github.com/PHACDataHub/data-catalog",
-        "internal-tool": true
+        "projectName": "data-catalog",
+        "serviceURLs": ["https://time-deno.garden.dl.phac.alpha.canada.ca/"],
+        "gitHubRepository": "https://github.com/PHACDataHub/data-catalog",
+        "internalTool": true
+    },
+    {
+        "projectName": "safe-inputs",
+        "serviceURLs": ["https://safeinputs.phac.alpha.canada.ca/", "https://safeinputs.phac.alpha.canada.ca/graphql"],
+        "gitHubRepository": "https://github.com/PHACDataHub/safe-inputs",
+        "internalTool": true
+    },
+    {  
+        "projectName": "Hello Django",
+        "projectOwnerDivisionAcronym": "DSCO",
+        "gitHubRepository": "https://github.com/PHACDataHub/cloudrun-deployment-example",
+        "serviceURLs": "https://hello-world-from-cloud-build-trigger-vlfae7w5dq-nn.a.run.app",
+        "containerRegistries": ["northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app"],
+        "internalTool": false
+    },
+    {
+        "projectName": "ISTG-33 Filtering App",
+        "projectOwnerDivisionAcronym": "DSCO",
+        "gitHubRepository": "https://github.com/PHACDataHub/it33-filtering",
+        "internalTool": false
+        
     }
+
 ]
+
