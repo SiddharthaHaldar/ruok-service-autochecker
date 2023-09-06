@@ -99,6 +99,7 @@ export async function searchTests(directory) {
                 // determine if non-empty - 
                 // find testing libraries (langague? ) -get python - coverage, pytest, js, typescript jest, etc
                 // maybe scrape readme for coverage report?
+                // Any root directory with code - search for tests
             });
         }
     }

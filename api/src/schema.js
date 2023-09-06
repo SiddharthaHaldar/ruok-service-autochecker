@@ -5,23 +5,29 @@ import {
     GraphQLString,
     GraphQLNonNull,
   } from 'graphql'
+import { GraphQLJSON } from 'graphql-type-json';
 import { aql } from "arangojs";
 
 // #TODO use schema first definition - ie. "export const schema = new GraphQLSchema({"with fields and definitions & resolvers for this once working 
 
 const typeDefinitions = /* GraphQL */ `
+    scalar JSON
 
     type Query {
         hello: String
-        getProjectByName(projectName: String): Project
+        getProjectByName(projectName: String!): Project
+        getProjectIDByName(projectName: String!): String
         getAllProjects: [Project]
     }
 
     type Mutation {
         createDataService(serviceName: String!, domain: String!): DataService
+        upsertProjectFromGitHubScan(payload: JSON): JSON
+
     }
 
     type Project {
+        _key: ID
         projectName: String
         projectOwnerDivisionAcronym: String
         serviceURLs: [String]
@@ -33,9 +39,13 @@ const typeDefinitions = /* GraphQL */ `
         serviceName: String
         domain: String
     }
-    `;
 
+     
+
+    `;
+    // upsertProjectWithGitHubRepoScan(project_name: String!, project_scan)
 const resolvers = {
+    JSON: GraphQLJSON,
 
     Query: {
         hello: () => 'Hello, world!',
@@ -69,6 +79,7 @@ const resolvers = {
             //     }
             //   }
 
+        
         getAllProjects: async (_, args, context) => {
             try {
                 const cursor = await context.db.query(aql`
@@ -95,7 +106,6 @@ const resolvers = {
         //   }
     },
  
-
 
     Mutation: {
         createDataService: async (_, args, context) => {
@@ -143,8 +153,35 @@ const resolvers = {
         //       domain
         //     }
         //   }
-      },
-    };
+        upsertProjectFromGitHubScan: async (_, args, context) => {
+            const { db } = context;
+            const { payload } = args;
+            // get project id 
+            // use to insert data (but using just a ball of json so just going to insert for now)
+            const insertQuery = aql ` 
+                INSERT {
+                    "payload": ${payload},
+                    } INTO dataServicesCollection
+                `;
+            // OPTIONS { exclusive: true }
+            try {
+                const insertResult = await context.db.query(insertQuery);
+                console.log("Inserted new service:", insertResult);
+                // insertNewServiceDB(serviceName, domain)
+            } catch (error) {
+                console.error("Error creating service:", error);
+                console.log(error);
+                throw new Error("Failed to create service.");
+              }
+            return { payload }
+        }
+        // example
+        // mutation {
+            // upsertProjectFromGitHubScan(payload: {stuff: "things"})
+        // }       
+      
+    }
+}
 
 export const schema = makeExecutableSchema({
   resolvers: [resolvers],

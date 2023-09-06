@@ -13,8 +13,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "arangojs": "^8.4.0",
     "dotenv": "^16.3.1",
     "dotenv-safe": "^8.2.0",
+    "graphql-type-json": "^0.3.2",
+    "nats": "^2.16.0",
     "octokit": "^3.1.0",
     "simple-git": "^3.19.1"
   }

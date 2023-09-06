@@ -7,6 +7,9 @@ import { tempGetProjects } from "./src/get-projects.js"
 import { getRepoDetails, repoLanguages, getAllRepos, getGithubPagesDetails } from "./src/github-details-with-octokit.js";
 import { cloneRepository } from "./src/clone-repo.js"
 import { searchIgnoreFile, hasSecurityMd, hasApiDirectory, searchTests, hasDependabotYaml} from "./src/search-cloned-repo.js"
+import { connect, JSONCodec, jwtAuthenticator } from 'nats'
+import { Database, aql } from "arangojs";
+
 import * as fs from 'fs';
 import dotenv from 'dotenv'
 // import 'dotenv-safe/config.js'
@@ -14,19 +17,60 @@ dotenv.config()
 
 const { 
   owner = 'PHACDataHub',
-  token
-  } = process.env;
+  token,
+  PORT = 3000,
+  HOST = '0.0.0.0',
+  DB_NAME = "dataServices",
+  // DB_URL = "http://database:8529",
+  DB_URL = "http://0.0.0.0:8529",
+  DB_USER = "root",
+  DB_PASS = 'yourpassword',
+  // NATS_URL = "demo.nats.io:4222", // Uncomment this to use demo server
+  NATS_URL = "nats://0.0.0.0:4222"
+} = process.env;
 
-// Authenicate with GitHub
+// Database connection 
+const db = new Database({
+  url: DB_URL,
+  databaseName: DB_NAME,
+  auth: { username: DB_USER, password: DB_PASS },
+});
+
+// Authenicate with GitHub 
 const octokit = new Octokit({ 
     auth: token,
 });
+
+// NATs connection 
+const nc = await connect({ 
+  servers: NATS_URL,
+  // authenticator: jwtAuthenticator(jwt), // Comment this out to use demo server
+})
+const jc = JSONCodec(); // for encoding NAT's messages
+console.log('🚀 Connected to NATS jetstream server...');
+
+async function publish(payload) {
+  nc.publish('githubRepoScan', jc.encode(payload)) 
+}
+
+async function insertIntoDatabase(payload, collectionName, db ) {
+  try {
+    const collection = db.collection(collectionName);
+    collection.save(payload).then(
+    meta => console.log('Document saved:', meta._rev),
+    err => console.error('Failed to save document:', err)
+    );
+
+  } catch (err) {
+    console.error(err.message);
+  }
+}
 
 const projects = tempGetProjects();
 // This is a temporary work around - get the project list from service-discovery/known-service-list.json
 // TODO - pull list from from DB, or nats (from DNS repo)
 
-async function processProjects() {
+async function scanGitHubRepos() {
     // for (const project of projects) {
       const payload = {}
 
@@ -88,11 +132,21 @@ async function processProjects() {
       payload.has_api_directory = await hasApiDirectory(clonedRepoPath); // TODO - this is basic look for Api folder - determine type by libraries by langauge - hard to tell 
       payload.has_dependabot_yaml = await hasDependabotYaml(clonedRepoPath);
     // Remove cloned repo
-
-      console.log(payload)
+      return { payload }
+      // console.log(payload)
   };
 
-processProjects().catch(error => {
-  console.error('An error occurred:', error);
-});
+process.on('SIGTERM', () => process.exit(0))
+process.on('SIGINT', () => process.exit(0))
+;(async () => {
+  const payload = await scanGitHubRepos().catch(error => {
+    console.error('An error occurred searching the GitHub repo:', error);
+  });
+  await publish(payload) 
+  await insertIntoDatabase(payload, "dataServicesCollection", db )
+  // await createDocument("dataServicesCollection", {"payload": payload}, db)
+  console.log("published payload! ")
+  console.log(payload)
+})();
 
+await nc.closed();

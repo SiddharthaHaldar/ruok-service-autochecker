@@ -42,6 +42,9 @@ docker compose down -v
 * Add filters and search functions
 * Pull in GoC UI components and address accessibility standards
 
+References:
+https://www.arangodb.com/tutorials/tutorial-node-js/
+
 
 
 
