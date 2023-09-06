@@ -1,3 +1,5 @@
+# https://docs.docker.com/network/drivers/bridge/
+# https://forums.docker.com/t/simple-cross-container-communication/33457/4
 version: '1'
 services:
   database:
@@ -10,10 +12,14 @@ services:
 
   nats:
     image: nats:latest
-    expose:
-      - "4222"
+    # name: nats-server
+    # expose:
+    #   - "4222"
     ports:
+      - "4222:4222"
+      - "6222:6222"
       - "8222:8222"
+    # hostname: nats.ruok
 
   api:
     build: ./api
@@ -26,5 +32,5 @@ services:
 networks:
   default:
     name: ruok
-    external: false
+    external: true
 
