@@ -1,5 +1,7 @@
 // import { Octokit, App,  RequestError } from "octokit";
 import { simpleGit } from "simple-git";
+import * as fs from 'fs';
+import * as fse from 'fs-extra'
 // import dotenv from 'dotenv'
 // // import 'dotenv-safe/config.js'
 // dotenv.config()
@@ -7,7 +9,7 @@ import { simpleGit } from "simple-git";
 const { 
   owner = 'PHACDataHub',
   // repo = "Discovery-team",
-  repo = "cpho-phase2",
+  repo = "dns",
   // repo = "DSCO-naming-app", // has github pages
   // repo = "nats-data-pipeline-demo", // licence but no file 
     // repo = 'it33-filtering', //just placeholder for now - will need to cycle through stream published from nats
@@ -72,21 +74,16 @@ export async function cloneRepository(clone_url, repo) {
     });
   }
 
-// const clone_url = "git@github.com:PHACDataHub/cpho-phase2.git"
+// const clone_url = "git@github.com:PHACDataHub/dns.git"
 // const repoPath = await cloneRepository(clone_url, repo);
-// console.log(repoPath)
 
-// TODO remove repo function
 
-// remove repo
-// const fs = require('fs/promises'); // Import the promises version of fs
-
-// const directoryPath = './path/to/your/directory';
-
-// fs.rm(directoryPath, { recursive: true, force: true })
-//   .then(() => {
-//     console.log('Directory removed successfully.');
-//   })
-//   .catch((err) => {
-//     console.error('Error removing directory:', err);
-//   });
+export async function removeClonedRepository(clonedRepoPath) {
+  fse.remove(clonedRepoPath)
+    .then(() => {
+      console.log('Directory removed successfully.');
+    })
+    .catch((err) => {
+      console.error('Error removing directory:', err);
+    });
+  }

@@ -5,7 +5,7 @@
 import { Octokit, App,  RequestError } from "octokit";
 import { tempGetProjects } from "./src/get-projects.js"
 import { getRepoDetails, repoLanguages, getAllRepos, getGithubPagesDetails } from "./src/github-details-with-octokit.js";
-import { cloneRepository } from "./src/clone-repo.js"
+import { cloneRepository, removeClonedRepository} from "./src/clone-repo.js"
 import { searchIgnoreFile, hasSecurityMd, hasApiDirectory, searchTests, hasDependabotYaml} from "./src/search-cloned-repo.js"
 import { connect, JSONCodec, jwtAuthenticator } from 'nats'
 import { Database, aql } from "arangojs";
@@ -75,7 +75,7 @@ async function scanGitHubRepos() {
       const payload = {}
 
       const project = projects[6]; // temp work around so don't max out quota 
-      const repo = project.gitHubRepository.split('/').pop();
+      const repo = project.sourceCodeRepository.split('/').pop();
 
     // From database or project json - pull out details for the scan:
       payload.project_name = project.projectName;
@@ -131,7 +131,10 @@ async function scanGitHubRepos() {
       payload.unit_test_details = await searchTests(clonedRepoPath); // TODO - this is just basic is the folder there - also search for langauge specific libraries, coverage...
       payload.has_api_directory = await hasApiDirectory(clonedRepoPath); // TODO - this is basic look for Api folder - determine type by libraries by langauge - hard to tell 
       payload.has_dependabot_yaml = await hasDependabotYaml(clonedRepoPath);
-    // Remove cloned repo
+    
+      // Remove cloned repo
+      await removeClonedRepository(clonedRepoPath)
+
       return { payload }
       // console.log(payload)
   };
