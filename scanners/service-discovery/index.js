@@ -9,7 +9,7 @@
 
 // import { tempGetProjects } from "./src/get-projects.js"
 import { cloneDnsRepository, removeClonedDnsRepository} from "./src/clone-dns-repo.js"
-import { consolidateProjectAnnotations, extractAnnotationsFromDnsRecords, isPhacDataHub } from "./src/extract-project-metadata-from-dns-repo.js";
+import { consolidateProjectAnnotations, extractAnnotationsFromDnsRecords, hasPhacDataHubGitHubRepo } from "./src/extract-project-metadata-from-dns-repo.js";
 import { connect, JSONCodec, jwtAuthenticator } from 'nats'
 import { Database, aql } from "arangojs";
 
@@ -90,10 +90,15 @@ async function processProjects(projects) {
     }  
 } 
 
+const timeout = setTimeout(() => {
+    process.exit(0);
+}, 180000);
+
 // TODO have this running for one message - or cloud function/ cron job once a day?
 // TODO fix the hanging issue - not able to close (even when running just as function)
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
+
 ;(async () => {
     const projects = await getProjects().catch(error => {
       console.error('An error occurred getting projects:', error);
@@ -103,6 +108,8 @@ process.on('SIGINT', () => process.exit(0))
     await processProjects(projects);
   
     console.log("Published payload!");
+    // timeout
+    // process.exit(0)
   })();
 
 await nc.closed();
