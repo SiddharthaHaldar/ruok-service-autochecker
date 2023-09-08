@@ -140,14 +140,18 @@ async function scanGitHubRepos() {
   };
 
 process.on('SIGTERM', () => process.exit(0))
+
+52
 process.on('SIGINT', () => process.exit(0))
 ;(async () => {
+  // TODO listen on projects NATs channel (with extracted projectName, and PHACDataHub codeSourceRepository)
+  // TODO modify scanGitHubRepos to use repo/ projectname 
   const payload = await scanGitHubRepos().catch(error => {
     console.error('An error occurred searching the GitHub repo:', error);
   });
-  await publish(payload) 
-  await insertIntoDatabase(payload, "dataServicesCollection", db )
-  // await createDocument("dataServicesCollection", {"payload": payload}, db)
+  await publish(payload) // Don't think this is needed - unless spinning off (eg langague specific) scans
+  await insertIntoDatabase(payload, "dataServicesCollection", db ) // This needs to change to upsert and lockdown the schema
+ 
   console.log("published payload! ")
   console.log(payload)
 })();
