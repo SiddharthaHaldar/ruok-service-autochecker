@@ -56,6 +56,14 @@ curl -u root:yourpassword -X POST --header 'accept: application/json' \
      --data '{"name": "dataServicesCollection"}' \
      --dump - http://0.0.0.0:8529/_db/dataServices/_api/collection
 
+echo ""
+echo "Creating a 'projects' collection in a 'dataServices' database"
+echo ""
+
+curl -u root:yourpassword -X POST --header 'accept: application/json' \
+     --data '{"name": "projects"}' \
+     --dump - http://0.0.0.0:8529/_db/dataServices/_api/collection
+
 
 # ---- Create documents
 echo ""
