@@ -22,7 +22,7 @@ describe('Remove cloned DNS repository', () => {
 
     const clonedRepoPath = path.join(__dirname, 'temp-cloned-repo', 'dns');
     const exists = await fsExtra.pathExists(clonedRepoPath);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // logging after the fact was causing issues - so adding timeout here. 
    
     expect(exists).toBe(false);
   });
