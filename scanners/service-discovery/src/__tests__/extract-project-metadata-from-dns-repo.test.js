@@ -1,10 +1,7 @@
 import { extractAnnotationsFromDnsRecords, consolidateProjectAnnotations, hasPhacDataHubGitHubRepo } from '../extract-project-metadata-from-dns-repo'; 
-import {expect, jest, test} from '@jest/globals';
-import * as fsPromises from 'fs/promises';
+import {expect} from '@jest/globals';
 import * as path from 'path';
-import * as os from 'os';
-import { tmpdir } from 'os';
-import { mkdtemp, writeFile } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 
 describe('extractAnnotationsFromDnsRecords', () => {
     let tempDir; // Temporary directory path
@@ -12,9 +9,10 @@ describe('extractAnnotationsFromDnsRecords', () => {
     beforeAll(async () => {
         const currentModuleDir = path.dirname(new URL(import.meta.url).pathname);
 
-        // Create the temporary directory
+        // make temp dir
         tempDir = path.join(currentModuleDir, 'temp-cloned-repo', 'dns-records');
-        await fsPromises.mkdir(tempDir, { recursive: true });
+        // await fsPromises.mkdir(tempDir, { recursive: true });
+        await mkdir(tempDir, { recursive: true });
   
         const mockedDnsRecords = {
             'file1.yaml': '---\nmetadata:\n  annotations:\n    projectName: Project1\n    sourceCodeRepository: https://github.com/project1\n',
