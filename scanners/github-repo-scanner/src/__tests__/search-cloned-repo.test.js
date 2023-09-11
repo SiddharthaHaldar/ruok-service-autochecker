@@ -1,4 +1,4 @@
-import { searchForFile, searchForDirectory, hasApiDirectory, hasDependabotYaml, hasSecurityMd, searchTests  } from '../search-cloned-repo';
+import { searchForFile, searchForDirectory, hasApiDirectory, hasDependabotYaml, hasSecurityMd, searchTests, searchIgnoreFile, searchFileForText   } from '../search-cloned-repo';
 import * as fs from 'fs';
 
 
@@ -203,7 +203,7 @@ describe('hasSecurityMd function', () => {
     });
 });
 
-
+// // Not actually completed function - will revisit - want non-empty test dir, libraries etc
 // describe('searchTests function', () => {
 //     let testDirectory;
 
@@ -250,3 +250,143 @@ describe('hasSecurityMd function', () => {
 //     });
 // });
 
+// TODO dockerignore as well! 
+describe('searchIgnoreFile function', () => {
+    let testDirectory;
+
+    beforeAll(() => {
+        testDirectory = './temp-test-directory';
+        if (!fs.existsSync(testDirectory)) {
+            fs.mkdirSync(testDirectory);
+        }
+
+        // Create test files with various names
+        fs.mkdirSync(`${testDirectory}/dir1`);
+        fs.mkdirSync(`${testDirectory}/dir2`);
+        fs.mkdirSync(`${testDirectory}/dir2/subdir2`);
+        fs.writeFileSync(`${testDirectory}/.gitignore`, '');
+        fs.writeFileSync(`${testDirectory}/dir1/.env`, '');
+        fs.writeFileSync(`${testDirectory}/dir2/.env.dev`, '');
+        fs.writeFileSync(`${testDirectory}/dir2/subdir2/.env.test`, '');
+    });
+
+    afterAll(() => {
+        // clean up
+        if (fs.existsSync(testDirectory)) {
+            fs.rmdirSync(testDirectory, { recursive: true });
+        }
+    });
+
+    it('should return details of ignore files with .env', async () => {
+        const ignoreFileDetails = await searchIgnoreFile(testDirectory, '.gitignore');
+
+        expect(ignoreFileDetails).toHaveLength(1); 
+        // expect(ignoreFileDetails[0].repoScopedPath).toBe('');
+        expect(ignoreFileDetails[0].hasDotenv).toBe(false); 
+        expect(ignoreFileDetails[0].hasDoubleStarSlashStarDotenv).toBe(false);
+        expect(ignoreFileDetails[0].hasDoubleStarSlashDotenvStar).toBe(false);
+    });
+
+
+    it('should return details of gitignore containing .env', async () => {
+        fs.writeFileSync(`${testDirectory}/.gitignore`, '.env');
+        const ignoreFileDetails = await searchIgnoreFile(testDirectory, '.gitignore');
+
+        expect(ignoreFileDetails).toHaveLength(1); 
+        // expect(ignoreFileDetails[0].repoScopedPath).toBe('');
+        expect(ignoreFileDetails[0].hasDotenv).toBe(true);
+        expect(ignoreFileDetails[0].hasDoubleStarSlashStarDotenv).toBe(false);
+        expect(ignoreFileDetails[0].hasDoubleStarSlashDotenvStar).toBe(false);
+    });
+
+    it('should return details of gitignore containing .env', async () => {
+        fs.writeFileSync(`${testDirectory}/.gitignore`, '**/*.env');
+        const ignoreFileDetails = await searchIgnoreFile(testDirectory, '.gitignore');
+
+        expect(ignoreFileDetails).toHaveLength(1); 
+        // expect(ignoreFileDetails[0].repoScopedPath).toBe('');
+        expect(ignoreFileDetails[0].hasDotenv).toBe(true); 
+        expect(ignoreFileDetails[0].hasDoubleStarSlashStarDotenv).toBe(true);
+        expect(ignoreFileDetails[0].hasDoubleStarSlashDotenvStar).toBe(false);
+    });
+
+    it('should return details of gitignore containing .env', async () => {
+        fs.writeFileSync(`${testDirectory}/.gitignore`, '**/.env*');
+        const ignoreFileDetails = await searchIgnoreFile(testDirectory, '.gitignore');
+
+        expect(ignoreFileDetails).toHaveLength(1); 
+        // expect(ignoreFileDetails[0].repoScopedPath).toBe('');
+        expect(ignoreFileDetails[0].hasDotenv).toBe(true); 
+        expect(ignoreFileDetails[0].hasDoubleStarSlashStarDotenv).toBe(false);
+        expect(ignoreFileDetails[0].hasDoubleStarSlashDotenvStar).toBe(true);
+    });
+  
+    it('should return details of gitignore containing in subdirectory .env', async () => {
+        fs.writeFileSync(`${testDirectory}/.gitignore`, '');
+        fs.writeFileSync(`${testDirectory}/dir1/.gitignore`, '.env');
+        const ignoreFileDetails = await searchIgnoreFile(testDirectory, '.gitignore');
+        console.log("***********", ignoreFileDetails)
+        expect(ignoreFileDetails).toHaveLength(2); 
+        // expect(ignoreFileDetails[0].repoScopedPath).toBe(''); //to test this path! (cuts at 3rd)
+        expect(ignoreFileDetails[0].hasDotenv).toBe(false); 
+        expect(ignoreFileDetails[0].hasDoubleStarSlashStarDotenv).toBe(false);
+        expect(ignoreFileDetails[0].hasDoubleStarSlashDotenvStar).toBe(false);
+
+        // expect(ignoreFileDetails[1].repoScopedPath).toBe('.gitignore'); //todo - need to test this path!  This isn't right
+        expect(ignoreFileDetails[1].hasDotenv).toBe(true); 
+        expect(ignoreFileDetails[1].hasDoubleStarSlashStarDotenv).toBe(false);
+        expect(ignoreFileDetails[1].hasDoubleStarSlashDotenvStar).toBe(false);
+    });
+
+    it('should return number of ignore files with .env', async () => {
+        const ignoreFileDetails = await searchIgnoreFile(testDirectory, '.env');
+        expect(ignoreFileDetails).toHaveLength(3); 
+    });
+
+    it('should return an empty array if no ignore files exist', async () => {
+        // Remove the test ignore files
+        fs.unlinkSync(`${testDirectory}/.gitignore`);
+        fs.unlinkSync(`${testDirectory}/dir1/.env`);
+        fs.unlinkSync(`${testDirectory}/dir2/.env.dev`);
+        fs.unlinkSync(`${testDirectory}/dir2/subdir2/.env.test`);
+        fs.unlinkSync(`${testDirectory}/dir1/.gitignore`);
+
+        const ignoreFileDetails = await searchIgnoreFile(testDirectory, '.gitignore');
+        console.log(ignoreFileDetails)
+
+        expect(ignoreFileDetails).toBe(undefined); 
+    });
+});
+
+
+describe('searchFileForText function', () => {
+    let testFile;
+
+    beforeAll(() => {
+        // temp file
+        testFile = './temp-test-file.txt';
+        fs.writeFileSync(testFile, 'This is a test file.\nIt contains some text to search.');
+    });
+
+    afterAll(() => {
+        // clean up
+        if (fs.existsSync(testFile)) {
+            fs.unlinkSync(testFile);
+        }
+    });
+
+    it('should return true if the text is found in the file', async () => {
+        const textToSearch = 'test file';
+        const foundText = await searchFileForText(testFile, textToSearch);
+        
+        expect(foundText).toBe(true);
+    });
+
+    it('should return false if the text is not found in the file', async () => {
+        const textToSearch = 'nonexistent text';
+        const foundText = await searchFileForText(testFile, textToSearch);
+        
+        expect(foundText).toBe(false);
+    });
+
+});

@@ -7,6 +7,7 @@ import { tempGetProjects } from "./src/get-projects.js"
 import { getRepoDetails, repoLanguages, getAllRepos, getGithubPagesDetails } from "./src/github-details-with-octokit.js";
 import { cloneRepository, removeClonedRepository} from "./src/clone-repo.js"
 import { searchIgnoreFile, hasSecurityMd, hasApiDirectory, searchTests, hasDependabotYaml} from "./src/search-cloned-repo.js"
+import { getProjectPayload } from "./src/process-nats-messages.js"
 import { connect, JSONCodec, jwtAuthenticator } from 'nats'
 import { Database, aql } from "arangojs";
 
@@ -69,6 +70,7 @@ async function insertIntoDatabase(payload, collectionName, db ) {
 const projects = tempGetProjects();
 // This is a temporary work around - get the project list from service-discovery/known-service-list.json
 // TODO - pull list from from DB, or nats (from DNS repo)
+// Projects from dns repo being published on 'gitHubReposToScan' channel
 
 async function scanGitHubRepos() {
     // for (const project of projects) {
