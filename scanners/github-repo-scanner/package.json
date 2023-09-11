@@ -21,5 +21,8 @@
     "nats": "^2.16.0",
     "octokit": "^3.1.0",
     "simple-git": "^3.19.1"
+  },
+  "devDependencies": {
+    "jest": "^29.6.4"
   }
 }
