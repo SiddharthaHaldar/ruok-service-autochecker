@@ -23,7 +23,6 @@ export function searchForFile(directory, targetFileName) {
     return(foundFilePaths)
 }
 
-
 export function searchForDirectory(directory, targetDirectoryName) {
     const subDirectories = fs.readdirSync(directory);
     const foundDirectoryPaths = [];
@@ -58,6 +57,7 @@ export async function hasDependabotYaml(directory) {
     // searchForFile returns array of found file paths
     const dependabotFile = searchForFile(directory, "dependabot.y") // accounting for both .yaml and .yml
     if (dependabotFile.length > 0) {
+        console.log('****', dependabotFile)
         return true
     } else {
         return false
@@ -66,7 +66,7 @@ export async function hasDependabotYaml(directory) {
 
 
 export async function hasSecurityMd(directory) {
-    const securityMds = searchForFile(directory, "security.md")
+    const securityMds = searchForFile(directory, "SECURITY.md")
     if (securityMds.length > 0) {
         return true
     } else {
