@@ -7,8 +7,11 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export async function extractAnnotationsFromDnsRecords() {
-    const dir = path.join(__dirname, 'temp-cloned-repo', 'dns', 'dns-records');
+export async function extractAnnotationsFromDnsRecords(clonedRepoPath='./temp-cloned-repo/dns/dns-records') {
+    // clonedRepoPath = 'temp-cloned-repo/dns/dns-records'
+    // const dir = path.join(__dirname, 'temp-cloned-repo', 'dns', 'dns-records');
+    const dir = path.join(__dirname, clonedRepoPath);
+    // const dir = clonedRepoPath
     const files = fs.readdirSync(dir);
     const results = [];
 
@@ -84,13 +87,26 @@ export async function consolidateProjectAnnotations(results) {
                     ...uniqueResults[key],
                     ...newResult,
                 };
+            // if (!uniqueResults[key]) {
+            //     // If the key doesn't exist, create it with the newResult
+            //     uniqueResults[key] = {
+            //         projectName,
+            //         sourceCodeRepository,
+            //         ...rest, // Include other fields from 'rest'
+            //     };
+            // } else {
+            //     // If the key already exists, merge the fields
+            //     uniqueResults[key] = {
+            //         ...uniqueResults[key],
+            //         ...rest, // Merge other fields from 'rest'
+            //     };
             }
         }
     }
 return Object.values(uniqueResults);
 }
 
-export async function hasPhacDataHubGitHubRepo(project){
+export function hasPhacDataHubGitHubRepo(project){
     if (project.sourceCodeRepository && project.sourceCodeRepository.startsWith('https://github.com/PHACDataHub/')) {
         return true
     } else{
