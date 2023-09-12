@@ -11,12 +11,15 @@ Currently working on the functionality for the different pieces that will be pas
 
 *GitHub scanning* subscribes to 'projects.\*', pull out various aspects from the code repo using the octokit API (and also cloning repo and querying directly), then publishes results on 'projects.\<project_db_key\>.github'
 
-*GitHub processing* subscribes to 'projects.*.github', will perform process and save (upsert?) in database
+*GitHub processing* subscribes to 'projects.*github', will perform process and save (upsert?) in database
 
 *Endpoint scanning* will subscribe to 'projects.\*', search for aspects like uptime, DNS take over, then publish on 'projects.\<project_db_key\>.endpoints'
 
-*Endpoint processing* will subscribe to 'projects.*.endpoints', similarly, process and save in database
+*Endpoint processing* will subscribe to 'projects.*endpoints', similarly, process and save in database
 
 *Container Scanning* will subscribe to 'projects.\*', scan container registries, then publish on 'projects.\<project_db_key\>.containers'
 
 *Container processing* will subscribe to 'projects.\<project_db_key\>.containers'
+
+#### References:
+* https://jestjs.io/docs/mock-function-api

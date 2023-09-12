@@ -7,7 +7,7 @@ import { tempGetProjects } from "./src/get-projects.js"
 import { getRepoDetails, repoLanguages, getAllRepos, getGithubPagesDetails } from "./src/github-details-with-octokit.js";
 import { cloneRepository, removeClonedRepository} from "./src/clone-repo.js"
 import { searchIgnoreFile, hasSecurityMd, hasApiDirectory, searchTests, hasDependabotYaml} from "./src/search-cloned-repo.js"
-import { getProjectPayload } from "./src/process-nats-messages.js"
+// import { getProjectPayload } from "./src/process-nats-messages.js"
 import { connect, JSONCodec, jwtAuthenticator } from 'nats'
 import { Database, aql } from "arangojs";
 

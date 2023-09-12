@@ -20,6 +20,8 @@ docker compose up --build -d && ./database/db-init.sh
 docker compose down -v
 ```
 
+
+
 #### Rough scope (to be converted to GitHub issues):
 * Get list of data services/products 
     * pull from DNS repo, 
