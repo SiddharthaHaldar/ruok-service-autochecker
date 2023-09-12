@@ -5,6 +5,10 @@ If alpha.canada.ca - consider reviewing https://alpha.canada.ca/en/instructions.
 * an “alpha” banner to indicate to users that it is a prototype service
 * a feedback or issue-reporting method (either email address, web form, or public issue tracker)
 
+These are interesting resources that might be of use 
+* https://github.com/cds-snc/status-statut
+* https://github.com/cds-snc/scan-websites
+
 Also:
 * DNS takeovers
 * Subdomain takeovers
