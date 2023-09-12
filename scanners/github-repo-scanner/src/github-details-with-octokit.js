@@ -78,7 +78,7 @@ export async function repoLanguages(owner, repo, octokit) {
     } catch (error) {
         console.error("An error occurred while fetching repo langauges:", error.message);
     }
-    }
+  }
 
 export async function getFileContents(owner, repo, octokit, path) {
     try {

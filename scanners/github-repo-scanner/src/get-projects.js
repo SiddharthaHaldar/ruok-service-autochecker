@@ -33,15 +33,7 @@ export function extractRepoScanInfo(projects) {
   
   return (payload)
 }
-// extractRepoScanInfo(projects)
 
-
-// const projects = tempGetProjects();
-// if (projects) {
-//   console.log('Projects:', projects);
-// } else {
-//   console.log('Failed to retrieve projects.');
-// }
 
 
 
