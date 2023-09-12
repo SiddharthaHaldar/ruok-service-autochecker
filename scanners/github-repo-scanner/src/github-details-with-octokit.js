@@ -9,7 +9,8 @@ import { Octokit, App,  RequestError } from "octokit";
 const { 
   owner = 'PHACDataHub',
   token,
-  repo = "safe-inputs"
+  // repo = "safe-inputs"
+  repo = "it33-filtering"
   } = process.env;
 
 // Authenicate with GitHub
@@ -47,21 +48,22 @@ export async function licenceDetails(owner, repo, octokit) {
             'X-GitHub-Api-Version': '2022-11-28'
           }
         });
+        console.log(response)
         // console.log("Licence:", response.data.license.spdx_id);
         return({"hasLicense": true, "license": response.data.license.spdx_id})
     
       } catch (error) {
         if (error.status === 404) {
-            // console.log('License not found for the repository');
-            // console.log("")
+            console.log('License not found for the repository')
             return({"hasLicense": false})
         } else {
             console.error('An error occurred:', error.message);
-            // console.log("")
             return({"hasLicense": false})
         }
       }
     }
+
+// licence = await licenceDetails(owner, repo, octokit)
 
 export async function repoLanguages(owner, repo, octokit) {
     try {

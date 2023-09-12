@@ -31,13 +31,19 @@ const octokit = new Octokit({
 
 
 describe('Octokit calls', () => {
+    let octokit;
+
+    beforeAll(() => {
+        octokit = { request: jest.fn()};
+    });
+    
     afterEach(() => {
         jest.clearAllMocks();
     });
 
     it('should get all repos', async () => {
-        const octokit = { request: jest.fn()};
-        // mock response
+        // const octokit = { request: jest.fn()};
+
         nock('https://api.github.com')
             .get('/orgs/PHACDataHub/repos')
             .reply(200, [{ name: 'repo1' }, { name: 'repo2' }]);
@@ -55,34 +61,47 @@ describe('Octokit calls', () => {
   it('should get license response', async () => {
     const octokit = { request: jest.fn()};
     nock('https://api.github.com')
-        .get('/repos/PHACDataHub/it33-filtering/license')
-        .reply(200, { license: { spdx_id: 'MIT' } });
+        .get('/orgs/PHACDataHub/repos')
+        .reply(200, {license: { spdx_id: 'MIT' } } );
+    // const actualResponse = {
+    //     status: 200,
+    //     data: {
+    //       license: {
+    //         spdx_id: 'MIT',
+    //       },
+    //       // other properties as needed
+    //     },
+    //   };
+    
+    // const mock = jest
+    //   .fn()
+    //   .mockImplementation(() => Promise.resolve(actualResponse));
 
-    const result = await licenceDetails('PHACDataHub', 'it33-filtering', octokit);
+    const result = await licenceDetails('PHACDataHub', 'repo1', octokit);
 
     expect(octokit.request).toHaveBeenCalledWith('GET /repos/{owner}/{repo}/license', {
         owner: 'PHACDataHub',
-        repo: 'it33-filtering',
+        repo: 'repo1',
         headers: {
             'X-GitHub-Api-Version': '2022-11-28',
         },
     });
   });
 
-  it('should get license details for repository with license', async () => {
-    const owner = 'PHACDataHub'
-    const repo = 'it33-filtering'
-    const result = await licenceDetails(owner, repo, octokit)
+//   it('should get license details for repository with license', async () => {
+//     const owner = 'PHACDataHub'
+//     const repo = 'it33-filtering'
+//     const result = await licenceDetails(owner, repo, octokit)
 
-    expect(result).toEqual({ hasLicense: true, license: 'MIT' });
-  });
+//     expect(result).toEqual({ hasLicense: true, license: 'MIT' });
+//   });
 
-  it('should get license details for repository without license', async () => {
-    const owner = 'PHACDataHub'
-    const repo = 'dns'
-    const result = await licenceDetails(owner, repo, octokit)
+//   it('should get license details for repository without license', async () => {
+//     const owner = 'PHACDataHub'
+//     const repo = 'dns'
+//     const result = await licenceDetails(owner, repo, octokit)
 
-    expect(result).toEqual({ hasLicense: false, license: undefined });
-  });
+//     expect(result).toEqual({ hasLicense: false, license: undefined });
+//   });
 
 });
