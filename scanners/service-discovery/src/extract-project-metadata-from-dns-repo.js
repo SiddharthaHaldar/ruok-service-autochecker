@@ -106,13 +106,7 @@ export async function consolidateProjectAnnotations(results) {
 return Object.values(uniqueResults);
 }
 
-export function hasPhacDataHubGitHubRepo(project){
-    if (project.sourceCodeRepository && project.sourceCodeRepository.startsWith('https://github.com/PHACDataHub/')) {
-        return true
-    } else{
-        return false
-    }
-}
+
 // const projects = extractUniqueAnnotations(dnsRecordsAnnotations)
 // console.log(projects)
 

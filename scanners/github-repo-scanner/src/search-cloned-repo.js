@@ -57,7 +57,7 @@ export async function hasDependabotYaml(directory) {
     // searchForFile returns array of found file paths
     const dependabotFile = searchForFile(directory, "dependabot.y") // accounting for both .yaml and .yml
     if (dependabotFile.length > 0) {
-        console.log('****', dependabotFile)
+        // console.log('****', dependabotFile)
         return true
     } else {
         return false

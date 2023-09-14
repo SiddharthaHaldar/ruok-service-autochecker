@@ -25,5 +25,6 @@ describe('Remove cloned DNS repository', () => {
     await new Promise((resolve) => setTimeout(resolve, 2000)); // logging after the fact was causing issues - so adding timeout here. 
    
     expect(exists).toBe(false);
+   
   });
 });
