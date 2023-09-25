@@ -2,29 +2,25 @@
 
 // ** set up to run on a periodic timeframe 
 
-// clone dns repo, 
-// extract annotations
-// upsert into database / initate scans 
+// clone dns repo, extract annotations
+// TODO - get domains as well! 
+// upsert into database / send off to endpoint dispatcher
 
-// (from there it will be scanned and added (upserteed into db) and simutaniously services 
 // Something to consider is tracking those repos/ services not captured in dns repo
 
-// TODO - use env file
+// TODO - use env file & dotenv safe, 
+// TODO - tests! 
 
 // import { tempGetProjects } from "./src/get-projects.js"
 import { cloneDnsRepository, removeClonedDnsRepository} from "./src/clone-dns-repo.js"
-import { insertIntoDatabase } from "./src/database-functions.js";
+import { upsertIntoDatabase} from "./src/database-functions.js";
 import { consolidateProjectAnnotations, extractAnnotationsFromDnsRecords } from "./src/extract-project-metadata-from-dns-repo.js";
-import { connect, JSONCodec, jwtAuthenticator } from 'nats'
-import { Database, aql } from "arangojs";
-
-import dotenv from 'dotenv'
-// import 'dotenv-safe/config.js'
-dotenv.config()
+import { connect, JSONCodec} from 'nats'
+import { Database } from "arangojs";
+import { request, gql, GraphQLClient } from 'graphql-request'
+import 'dotenv-safe/config.js'
 
 const { 
-  owner = 'PHACDataHub',
-  token,
   PORT = 3000,
   HOST = '0.0.0.0',
   DB_NAME = "dataServices",
@@ -32,9 +28,13 @@ const {
   DB_URL = "http://0.0.0.0:8529",
   DB_USER = "root",
   DB_PASS = 'yourpassword',
-//   NATS_URL = "nats://nats:4222"
-  NATS_URL = "nats://0.0.0.0:4222"
+  NATS_URL = "nats://0.0.0.0:4222",
+  NATS_PUB_STREAM = 'discoveredServices',
+  API_URL = "http://0.0.0.0:4000/graphql"
 } = process.env;
+
+// API connection 
+const graphQLClient = new GraphQLClient(API_URL);
 
 // Database connection 
 const db = new Database({
@@ -46,21 +46,18 @@ const db = new Database({
 // NATs connection 
 const nc = await connect({ 
   servers: NATS_URL,
-  // authenticator: jwtAuthenticator(jwt), 
 })
 const jc = JSONCodec(); // for encoding NAT's messages
 console.log('🚀 Connected to NATS jetstream server...');
 
-async function publish(subject, payload) {
+async function publish( subject, payload) {
   nc.publish(subject, jc.encode(payload)) 
 }
 
-// const projects = tempGetProjects();
-// This is a temporary work around - get the project list from service-discovery/known-service-list.json
-// TODO - pull list from from DB, or nats (from DNS repo)
+// TODO - maybe compare with list from DB - find not longer used services? - also compare with last updated github etc... 
 
 async function getProjects() {
-    await cloneDnsRepository() 
+    await cloneDnsRepository() //TODO if exisits remove and clone again?
     const dnsRecordsAnnotations = await extractAnnotationsFromDnsRecords();
     const projects = await consolidateProjectAnnotations(dnsRecordsAnnotations);
     // TODO get projects from known-services list, compare as well... concat in
@@ -70,21 +67,20 @@ async function getProjects() {
 
 async function processProjects(projects) {
     for (const project of projects){
-        // TODO - check if exisits first! 
         // TODO Determine what to do with ones in db, but not in this scan
-        const projectKey = await insertIntoDatabase(project, "projects", db) //TODO modify so upsert instead and return key
-        let key = 235 // temp work around 
-        //if not null
-        // await publish(`projects.${key}`, project)
-        
-        console.log("🚀 Sending to scanners...")
+        const upsertService = await upsertIntoDatabase(project, graphQLClient)
+        const serviceName = upsertService.upsertService._key // serviceName is the database key for services collection
+        //TODO check if not undefined
+        await publish(`${NATS_PUB_STREAM}.${serviceName}`, project)
+
+        console.log(`🚀 Sending message to scanners... on ${NATS_PUB_STREAM}.${serviceName}`)
         console.log(project)
     }  
 } 
 
 const timeout = setTimeout(() => {
     process.exit(0);
-}, 3000);
+}, 5000);
 
 // TODO have this running for one message - or cloud function/ cron job once a day?
 // TODO fix the hanging issue - not able to close (even when running just as function)
@@ -98,10 +94,6 @@ process.on('SIGINT', () => process.exit(0))
     });
   
     await processProjects(projects);
-  
-    console.log("Published payload!");
-    // timeout
-    // process.exit(0)
   })();
 
 await nc.closed();
