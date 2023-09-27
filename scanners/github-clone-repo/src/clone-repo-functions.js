@@ -28,7 +28,7 @@ export async function cloneRepository(clone_url, repo) {
     }
   }
 
-async function removeClonedRepository(clonedRepoPath) {
+export async function removeClonedRepository(clonedRepoPath) {
     try {
       await fse.remove(clonedRepoPath);
       console.log('Previously cloned repository removed successfully.');
