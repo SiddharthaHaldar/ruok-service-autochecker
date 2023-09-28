@@ -5,10 +5,10 @@
 
 # Security
 
-**Do not post any security issues on the public repository!** Security vulnerabilities must be reported by email to ...
+Please refer to the Public Health Data Center of Practice [Security Policy](https://github.com/PHACDataHub/Wiki/wiki/COP-Security-Policy#encouraging-proper-incident-and-event-management) .
 
 ______________________
 
 ## Sécurité
 
-**Ne publiez aucun problème de sécurité sur le dépôt publique!** Les vulnérabilités de sécurité doivent être signalées par courriel à ...
+Veuillez vous référer à la [politique de sécurité](https://github.com/PHACDataHub/Wiki/wiki/COP-Security-Policy#encouraging-proper-incident-and-event-management) du centre de données de santé publique.
