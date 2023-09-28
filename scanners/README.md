@@ -2,15 +2,62 @@
 
 Highly based on https://github.com/canada-ca/tracker
 
-Currently working on the functionality for the different pieces that will be passed via NATs payload.  (Right now just started on the GitHub piece - pulling out details with the octokit API and by cloning and scanning the contents of the repo.)
+Each of these 'scanners' are a contained running service with their own dependcies.  They will eventually each have their own dockerfile, and be deployed with Kubernetes, but in the meantime, each service will need to be launched separately.  To do that, change directory into that scanner service then:
+### To Run
+```
+npm start
+```
+### To Test
+```
+npm t
+```
 
+Currently splitting out the functions from the monolithic function created in the old-scanners/github-scanner into smaller, self contained functions. These all communicate using [NATs.io](https://nats.io/) which is a lightweight, cloud-native messaging system designed for distributed systems. 
 
-Initial diagram (see [nats-message-flow-diagram](../diagram-nats-message-flow/))
-(note - <sN> is service Name - derived from the project name listed in DNS repo - with spaces/ special characters removed.  It's passed as the last NATs subject token (after the last '.' and is pullout out from this to be used for processing. 
+The following diagram shows the inital nats message flow through these services ( [nats-message-flow-diagram](../diagram-nats-message-flow/))
+('\<sN\>' refers to serviceName - which is the unique key derived from project name, with spaces and special characters removed.  serviceName is passed as the last NATs subject token (after the last '.') and is extracted from the subject by downstream services to be used for processing. 
 ![image info](../diagram-nats-message-flow/nats-message-flow.png)
 
-### In the process of changing this! 
-*Service discovery* pulls in metadata from the DNS GitHub repo to determine which services (defined by endpoints) will be scanned, and their associated GitHub or code repos. (TODO - add in container registries too). *NOTE: currently adding annotations to dns metadata - was causing failures, so working from json for now.  These are save in the database 'projects' collection, and kicks off service dispatch.
+### Kick off
+* *Service discovery* - this will likely become a scheduled job.  This is the entrypoint.  Service Discovery clones the DNS GitHub repository and extracts the metadata annotations, as well as the specName for domain from the dns records. It uses the project Name with the with spaces/ special characters removed, as the serviceName, which is also now the database key for the service. These records are consloidated, saved in the database 'services' collection and passed to Endpoint dispatcher.   
+
+* *Endpoint Dispatcher* parses and verifies the endpoints, then fires the endpoint to the appropriate NATs subject - where the associated checkers are listening. 
+
+* Suffixed by '-check'* performs the scan or check
+
+* Some checks will trigger additional checks, or will be consolidated with other checks.  For instance, we're collecting programming languages used for each service, which can be used to search for particular API librabies to determine type of API used, or specific testing dependencies being used, and further search for patterns in the code, or to look for certain security considerations for that langauge and dependency.  
+
+* There are other services that assist with the checks rather than perform the actual check, such as, github-clone-repo, which clones the services' GitHub respository to be able to more easily scan the files and directories.  github-octokit-repo-details returns a large result, which other check services will individually parse out. These are included here under scanners regardless.
+
+* *Done Collector* contains a set of checks that needs to be performed for an endpoint for a particular service.  As each check comes in, it's added to the result. Once the done collector receives 'checked' payloads from all of the checks from the set, the result is sent on to saveToDatabase
+
+* *Save to Database* upserts the service record with the newly checked information for that endpoint into the database.
+TODO - does this make more sense to split out in to endpoint collections?
+
+
+### Original list of checks 
+- [ ] SLOs established
+- [ ] Uptime tracking
+- [ ] Are there tests? Is coverage enabled? (only have existance of test directory now- will use langagues to dig into libraries and languagues)
+- [x] Does the project contain a LICENSE file
+- [ ] DNS takeovers
+- [ ] Subdomain takeovers 
+- [x] Does the .gitignore file ignore files with credentials? ie: includes **/*.env 
+- [x] Does the .dockerignore files ignore files with credentials? ie: includes **/*.env 
+- [ ] Is Secret scanning enabled for that repo?
+- [x] Is there a security.md file?
+- [ ] existence of an API (only have directory now - will use langagues to dig into libraries and languagues)
+- [ ] REST/graphql (see above)
+- [ ] vuln scanning enabled (only see dependabot.yml now... but seems like you can have without this)
+- [ ] More from Open data products spec: https://opendataproducts.org/
+- [ ] PHAC data standards (also see https://www.dublincore.org)
+
+### Other checks that we have now (note - some not-so-useful-yet ones will be fed into more useful checks later)
+- [x] has dependabot.yml or yml
+- [x] main and all programming langagues (to be used for more later)
+- [x] main branch name (for main branch protection)
+- [x] has test directory
+- [x] has API directory
 
 #### References:
 * https://jestjs.io/docs/mock-function-api
@@ -24,11 +71,8 @@ These are interesting resources that might be of use
 * https://github.com/cds-snc/status-statut
 * https://github.com/cds-snc/scan-websites
 
-Also:
-* DNS takeovers
-* Subdomain takeovers
-* SLOs established?
-* Uptime tracking?
 
-* PHAC data standards - (where do we find these? - there's also this  https://www.dublincore.org/)
+ 
+
+
 
