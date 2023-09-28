@@ -14,7 +14,7 @@ describe('cloneDnsRepository', () => {
       expect(repoPath).toBeTruthy()  
       expect(exists).toBe(true)
 
-      // Clean up 
+      // clean up 
       await removeClonedDnsRepository(repoPath)
     });
 
