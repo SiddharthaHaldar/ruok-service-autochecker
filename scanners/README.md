@@ -3,7 +3,7 @@
 Highly based on https://github.com/canada-ca/tracker
 
 Each of these 'scanners' are a contained running service with their own dependcies.  They will eventually each have their own dockerfile, and be deployed with Kubernetes, but in the meantime, each service will need to be launched separately.  To do that, change directory into that scanner service then:
-### To Run
+### To Run Individually
 ```
 npm start
 ```
@@ -12,7 +12,9 @@ npm start
 npm t
 ```
 
-docker-compose -f docker-compose-scanners.yaml up --build
+### To Spin them all up together 
+(With the exception of service-discovery which triggers the scan)
+docker-compose -f docker-compose-scanners.yaml --network host up --build
 
 Currently splitting out the functions from the monolithic function created in the old-scanners/github-scanner into smaller, self contained functions. These all communicate using [NATs.io](https://nats.io/) which is a lightweight, cloud-native messaging system designed for distributed systems. 
 

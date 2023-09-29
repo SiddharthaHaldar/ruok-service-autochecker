@@ -4,11 +4,10 @@ import { connect, JSONCodec} from 'nats'
 import { hasSecurityMd } from './src/has-security-md.js'
 import 'dotenv-safe/config.js'
 
-const { 
-  NATS_URL = "nats://0.0.0.0:4222",
-  NATS_SUB_STREAM = "gitHub.cloned.>",
-  NATS_PUB_STREAM = "gitHub.checked.hasSecurityMd" 
-} = process.env;
+const { NATS_URL } = process.env
+
+const NATS_SUB_STREAM = "gitHub.cloned.>"
+const NATS_PUB_STREAM = "gitHub.checked.hasSecurityMd" 
 
 
 // NATs connection 

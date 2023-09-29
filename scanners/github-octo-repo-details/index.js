@@ -4,13 +4,12 @@ import { connect, JSONCodec} from 'nats'
 import { Octokit, App,  RequestError } from "octokit";
 import 'dotenv-safe/config.js'
 
-const { 
-  OWNER = 'PHACDataHub',
-  GITHUB_TOKEN,
-  NATS_URL = "nats://0.0.0.0:4222",
-  NATS_SUB_STREAM = "gitHub.initiate.>",
-  NATS_PUB_STREAM = "gitHub.octokit.repoDetails" 
-} = process.env;
+const { NATS_URL, GITHUB_TOKEN } = process.env;
+
+const OWNER = 'PHACDataHub'
+const NATS_SUB_STREAM = "gitHub.initiate.>"
+const NATS_PUB_STREAM = "gitHub.octokit.repoDetails" 
+
 
 // Authenicate with GitHub 
 const octokit = new Octokit({ 

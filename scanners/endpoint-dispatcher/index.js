@@ -5,10 +5,9 @@ import { connect, JSONCodec } from 'nats'
 import { getPhacDataHubGitHubRepo, getArtifactContainerRegistries, getDockerHub, getDomains, getServiceUrls } from './src/parse-endpoints.js'
 import 'dotenv-safe/config.js'
 
-const { 
-  NATS_URL = "nats://0.0.0.0:4222",
-  NATS_SUB_STREAM = "discoveredServices.>",
-} = process.env;
+const { NATS_URL } = process.env;
+
+const NATS_SUB_STREAM = "discoveredServices.>"
 
 // NATs connection 
 const nc = await connect({ 

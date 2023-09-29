@@ -4,3 +4,4 @@
 deploy
 **/nats.creds
 **/.DS_Store
+temp-cloned-repo/

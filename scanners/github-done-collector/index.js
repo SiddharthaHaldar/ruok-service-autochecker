@@ -3,11 +3,10 @@
 import { connect, JSONCodec} from 'nats'
 import 'dotenv-safe/config.js'
 
-const { 
-  NATS_URL = "nats://0.0.0.0:4222",
-  NATS_SUB_STREAM = "gitHub.checked.>",
-  NATS_PUB_STREAM = "gitHub.saveToDatabase" 
-} = process.env;
+const { NATS_URL } = process.env;
+  
+const NATS_SUB_STREAM = "gitHub.checked.>"
+const NATS_PUB_STREAM = "gitHub.saveToDatabase" 
 
 
 // NATs connection 

@@ -4,14 +4,10 @@ import { connect, JSONCodec} from 'nats'
 import { searchIgnoreFile } from './src/get-dotignore-details.js'
 import 'dotenv-safe/config.js'
 
-const { 
-//   owner = 'PHACDataHub',
-//   token,
-  NATS_URL = "nats://0.0.0.0:4222",
-  NATS_SUB_STREAM = "gitHub.cloned.>",
-  NATS_PUB_STREAM = "gitHub.checked.gitignore" 
-} = process.env;
+const { NATS_URL } = process.env;
 
+const NATS_SUB_STREAM = "gitHub.cloned.>"
+const NATS_PUB_STREAM = "gitHub.checked.gitignore" 
 
 // NATs connection 
 const nc = await connect({ 
