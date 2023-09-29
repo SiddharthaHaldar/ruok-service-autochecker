@@ -12,9 +12,9 @@ npm start
 npm t
 ```
 
-### To Spin them all up together 
+~~### To Spin them all up together 
 (With the exception of service-discovery which triggers the scan)
-docker-compose -f docker-compose-scanners.yaml --network host up --build
+docker-compose -f docker-compose-scanners.yaml --network host up --build~~ (Not quite yet - need to set up volume/ google cloud storage)
 
 Currently splitting out the functions from the monolithic function created in the old-scanners/github-scanner into smaller, self contained functions. These all communicate using [NATs.io](https://nats.io/) which is a lightweight, cloud-native messaging system designed for distributed systems. 
 
