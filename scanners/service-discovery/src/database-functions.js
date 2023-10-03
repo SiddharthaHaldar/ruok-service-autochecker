@@ -28,33 +28,34 @@ export function replaceNonJetstreamCompatibleCharacters(projectName){
 
 // }
 
-export async function upsertIntoDatabase(payload, graphQLClient) {
-    const  { projectName, sourceCodeRepository, containerRegistries, serviceEndpointUrls } = payload;
+export async function upsertIntoDatabase(project, graphQLClient) {
+    const  { projectName, sourceCodeRepository, containerRegistries, serviceEndpointUrls, domains } = project;
     const serviceName = replaceNonJetstreamCompatibleCharacters(projectName)
   
     const mutation = gql`
-    mutation UpsertService($projectName: String!, $sourceCodeRepository: String, $_key: String, $containerRegistries: String, $serviceEndpointUrls: String) {
-      upsertService(payload: {
+    mutation UpsertService($projectName: String!, $sourceCodeRepository: String, $_key: String, $containerRegistries: String, $serviceEndpointUrls: String, $domains: [String]) {
+      upsertService(
         _key: $_key
         projectName: $projectName,
         sourceCodeRepository: $sourceCodeRepository,
         containerRegistries: $containerRegistries,
-        serviceEndpointUrls: $serviceEndpointUrls
-      })
+        serviceEndpointUrls: $serviceEndpointUrls,
+        domains: $domains
+      )
     }`;
     const variables = {
       projectName: projectName,
       sourceCodeRepository: sourceCodeRepository,
       _key: serviceName, 
       containerRegistries: containerRegistries, 
-      serviceEndpointUrls: serviceEndpointUrls
-  
+      serviceEndpointUrls: serviceEndpointUrls,
+      domains: domains
     };
                   
     try {
-        const data = await graphQLClient.request(mutation, variables)
-        console.log(data)
-        return data
+        const insertData = await graphQLClient.request(mutation, variables)
+        console.log(insertData)
+        return insertData
     } catch (err) {
         console.error('Failed to save document:', err.message);
   //         throw err; // Rethrow the error for handling elsewhere if needed

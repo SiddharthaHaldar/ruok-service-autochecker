@@ -21,17 +21,16 @@ import { request, gql, GraphQLClient } from 'graphql-request'
 import 'dotenv-safe/config.js'
 
 const { 
-  PORT = 3000,
-  HOST = '0.0.0.0',
   DB_NAME = "dataServices",
   // DB_URL = "http://database:8529",
   DB_URL = "http://0.0.0.0:8529",
   DB_USER = "root",
   DB_PASS = 'yourpassword',
   NATS_URL = "nats://0.0.0.0:4222",
-  NATS_PUB_STREAM = 'discoveredServices',
   API_URL = "http://0.0.0.0:4000/graphql"
 } = process.env;
+
+const NATS_PUB_STREAM = 'discoveredServices'
 
 // API connection 
 const graphQLClient = new GraphQLClient(API_URL);
@@ -48,7 +47,7 @@ const nc = await connect({
   servers: NATS_URL,
 })
 const jc = JSONCodec(); // for encoding NAT's messages
-console.log('🚀 Connected to NATS jetstream server...');
+console.log('🚀 Connected to NATS server...');
 
 async function publish( subject, payload) {
   nc.publish(subject, jc.encode(payload)) 
@@ -68,7 +67,7 @@ async function getProjects() {
 
 async function processProjects(projects) {
     for (const project of projects){
-        // TODO Determine what to do with ones in db, but not in this scan
+        // TODO Determine what to do with ones in db, but not in this scan (ie not in DNS repo)
         const upsertService = await upsertIntoDatabase(project, graphQLClient)
         const serviceName = upsertService.upsertService._key // serviceName is the database key for services collection
         //TODO check if not undefined
@@ -79,12 +78,12 @@ async function processProjects(projects) {
     }  
 } 
 
+// Adding timeout to prevent this from hanging
 const timeout = setTimeout(() => {
     process.exit(0);
 }, 5000);
 
-// TODO have this running for one message - or cloud function/ cron job once a day?
-// TODO fix the hanging issue - not able to close (even when running just as function)
+
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 
