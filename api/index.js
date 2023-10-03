@@ -2,6 +2,7 @@
 import { schema } from "./src/schema.js";
 import { Server } from "./src/server.js";
 import { Database, aql } from "arangojs";
+import 'dotenv-safe/config.js'
 
 const { 
     PORT = 4000,
@@ -26,13 +27,12 @@ const db = new Database(dbConfig);
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 ;(async ( ) => {
- 
   const server = new Server({
     schema,
     context: { db},
-
   })
+
   server.listen({ port: PORT, host: HOST }, () =>
-  console.log(`🚀 API is running on http://${HOST}:${PORT}/graphql`),
+    console.log(`🚀 API is running on http://${HOST}:${PORT}/graphql`),
   )
 })()
