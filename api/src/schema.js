@@ -4,6 +4,7 @@ import { aql } from "arangojs";
 
 // #TODO use schema first definition - ie. "export const schema = new GraphQLSchema({"with fields and definitions & resolvers for this once working 
 // upsertService(data: JSON): JSON
+
 export const schema = createSchema({
     typeDefs: /* GraphQL */ `
         scalar JSON
@@ -13,6 +14,7 @@ export const schema = createSchema({
             getProjectByName(projectName: String!): Project
             getProjectIDByName(projectName: String!): String
             getAllProjects: [Project]
+            getSourceCodeRepositoryByServiceName(serviceName: String!): String
         }
 
         type Mutation {
@@ -26,6 +28,13 @@ export const schema = createSchema({
                 serviceEndpointUrls: String = ""
                 domains: [String] = ""
               ): JSON
+
+              upsertGitHubScan(
+                _key: String! 
+                gitHubRepository: String!
+                scanResults: JSON
+                timestamp: Int
+                ): JSON
         }
 
         type Project {
@@ -65,7 +74,7 @@ export const schema = createSchema({
                 } catch (err) {
                     console.error(err.message);
                 }
-                },
+            },
                 // // example
                 // query {
                 //     getProjectByName(projectName: "epicenter") {
@@ -102,6 +111,26 @@ export const schema = createSchema({
             //       gitHubRepository
             //       internalTool
             //     }
+            //   }
+            
+            getSourceCodeRepositoryByServiceName: async (_, args, context) => {
+                const { db } = context;
+                const { serviceName } = args;
+                try {
+                    const cursor = await context.db.query(aql`
+                        FOR doc IN services
+                        FILTER doc._key == ${serviceName}
+                        RETURN doc.sourceCodeRepository
+                    `);
+                    return await cursor.next()
+
+                } catch (err) {
+                    console.error(err.message);
+                }
+            },
+            // example
+            // query {
+            //     getSourceCodeRepositoryByServiceName(serviceName: "epicenter")
             //   }
         },
     
@@ -154,9 +183,6 @@ export const schema = createSchema({
             //   }
 
 
-            // INSERT { _key: ${_key}, data: ${data} }
-            // IN services 
-            // OPTIONS { overwriteMode: "update" }
             upsertService: async (_, args, context) => {
                 const { db } = context;
                 const {_key, projectName, sourceCodeRepository, containerRegistries, serviceEndpointUrls, domains } = args;
@@ -181,8 +207,8 @@ export const schema = createSchema({
                     console.log(error);
                     throw new Error("Failed to create service.");
                 }
-                return { _key }
-            }
+                return _key
+            },
             // example
             // mutation {
             //     upsertService(
@@ -192,10 +218,51 @@ export const schema = createSchema({
             //       containerRegistries: "registry.example.com",
             //       serviceEndpointUrls: "https://example.com/service",
             //       domains: ["example.com", "sub.example.com"]
-            //     ) {
-            //       _key
-            //     }
+            //     ) 
             //   }
+
+            upsertGitHubScan: async (_, args, context) => {
+                const { db } = context;
+                const { _key, serviceName, gitHubRepository, scanResults } = args;
+
+                console.log(_key, gitHubRepository, scanResults) // note the _key is the serviceName
+       
+                const timestamp = Date.now()
+                const upsertQuery = aql`
+                    INSERT { _key: ${_key},
+                        gitHubRepository: ${gitHubRepository},
+                        scanResults: ${scanResults},
+                        timestamp: ${timestamp}
+                    }
+                    IN gitHubScan
+                    OPTIONS { overwriteMode: "update" }
+                    `;
+                
+                try {
+                    const upsertResult = await context.db.query(upsertQuery);
+                    console.log("Inserted/updated GitHub Scan results:", upsertResult);
+                } catch (error) {
+                    console.error("Error creating/updating GitHub Scan record:", error);
+                    throw new Error("Failed to create/update service.");
+                }
+                return {
+                    _key,
+                    gitHubRepository,
+                    scanResults,
+                    timestamp
+                };
+            }
+            // example: 
+                // mutation {
+                //     upsertGitHubScan(
+                //             _key: "https",
+                //                     gitHubRepository: "sehsdfoh",
+                //             serviceName: "example-service",
+                //             scanResults: {
+                //                 hasAPI : true,
+                //             }
+                //         ) 
+                //         }
         
         }
     }
