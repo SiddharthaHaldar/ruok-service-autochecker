@@ -7,11 +7,12 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Debug ruok API",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/api/index.js"
+            "program": "${workspaceFolder}/api/index.js",
+            "cwd": "${workspaceFolder}/api"
         }
     ]
 }
