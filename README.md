@@ -7,6 +7,10 @@ This crawler pulls service endpoints from the [dns](https://github.com/PHACDataH
 Full list of checks can be found in the [scanners](./scanners) section. 
 
 
+## Development Environment
+
+See the [Development Environment](docs/development-environment.md) page for recommendations on setting up the development environment for this project.
+
 #### *Please note - this is work in progress* 
 
 This uses [Safe Inputs](https://github.com/PHACDataHub/safe-inputs) and [Tracker](https://github.com/canada-ca/tracker) as a starting point.
