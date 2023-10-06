@@ -3,7 +3,7 @@
 {
 	"name": "Node.js",
 	"build": {
-		"dockerfile": "Dockerfile.dev"
+		"dockerfile": "Dockerfile"
 	},
 	"runArgs": [
 		"--userns=keep-id",
