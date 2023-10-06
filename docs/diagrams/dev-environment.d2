@@ -1,0 +1,86 @@
+title: |md
+# Developer Environment
+|
+
+Host Machine: {
+    Podman: {
+        VSCode Server: {
+            "": {
+                shape: image
+                icon: ./img/podman.png
+            }
+            VSCode Dev Container: {
+                "": {
+                    shape: image
+                    icon: ./img/vscode.png
+                }
+                "Debug": {
+                    shape: image
+                    icon: ./img/debug.svg
+                }                
+            }
+        }
+        Kubernetes in Docker: {
+            "": {
+                shape: image
+                icon: ./img/podman.png
+            }
+            "KinD Container": {
+                "": {
+                    shape: image
+                    icon: ./img/kind.png
+                }
+                "App 1 Pod": {
+                    "": {
+                        shape: image
+                        icon: https://icons.terrastruct.com/azure%2F_Companies%2FKubernetes.svg
+                    }
+                    "main container": {
+                        "": {
+                            shape: image
+                            icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+                        }
+                    }
+                }
+                "Arangodb Pod": {
+                    "": {
+                        shape: image
+                        icon: https://icons.terrastruct.com/azure%2F_Companies%2FKubernetes.svg
+                    }
+                    "main container": {
+                        "": {
+                            shape: image
+                            icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+                        }
+                    "Port 4000": {}
+                    }
+                }
+                }
+            }
+        }
+
+    Host Network: {}
+
+    VSCode Client: {
+        shape: image
+        icon: ./img/vscode.png
+    }
+
+    K9s: {
+        shape: image
+        icon: ./img/k9s.png
+    }
+
+
+# VSCode runs in client-server mode with dev container as VSCode server
+VSCode Client -> Podman.VSCode Server.VSCode Dev Container
+
+# VSCode dev container is attached to host network
+Podman.VSCode Server.VSCode Dev Container <-> Host Network: `--network host`
+
+# K9s dashboard runs against KinD cluster
+K9s -> Podman.Kubernetes in Docker.KinD Container
+
+# Can port-forward containers on cluster to host network
+Podman.Kubernetes in Docker.KinD Container.Arangodb Pod.main container.Port 4000 -> Host Network: Port Forward
+}
