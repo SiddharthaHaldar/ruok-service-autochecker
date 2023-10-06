@@ -13,6 +13,16 @@
             ],
             "program": "${workspaceFolder}/api/index.js",
             "cwd": "${workspaceFolder}/api"
+        },
+                {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug ruok webhook server",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/webhook-server/index.js",
+            "cwd": "${workspaceFolder}/webhook-server"
         }
     ]
 }
