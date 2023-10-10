@@ -6,6 +6,9 @@ This crawler pulls service endpoints from the [dns](https://github.com/PHACDataH
 
 Full list of checks can be found in the [scanners](./scanners) section. 
 
+## Application Architecture
+
+See the [Architecture](docs/architecture.md) page for an overview of the RUOK application architecture.
 
 ## Development Environment
 
