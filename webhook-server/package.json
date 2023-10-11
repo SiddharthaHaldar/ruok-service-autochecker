@@ -1,5 +1,9 @@
 {
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "smee-client": "^1.2.3"
+  },
+  "scripts": {
+    "webhook-forward": "smee --url https://smee.io/0sRl0du2R9tpGD6w --port 3000"
   }
 }

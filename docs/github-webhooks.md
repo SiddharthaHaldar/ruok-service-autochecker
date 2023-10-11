@@ -2,6 +2,10 @@
 
 `webhook-server/` contains the implementation of the GitHub webhook server portion of this project. The purpose of this server is to listen for events triggered by certain events of interest on GitHub resources.
 
+## Validating GitHub Webhook Deliveries
+
+> TODO
+
 ## Local Development with GitHub Webhooks
 
 In order to test `webhook-server` locally, it is necessary to use a webhook proxy URL to forward webhooks from GitHub to your computer. Instructions for how to do this are as follows:
