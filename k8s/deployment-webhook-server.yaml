@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webhook-server
+  name: webhook-server
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webhook-server
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: webhook-server
+    spec:
+      containers:
+      - name: webhook-server
+        imagePullPolicy: Never
+        image: localhost/ruok-webhook-server:0.0.1
+        securityContext:
+          allowPrivilegeEscalation: false
+        resources:
+          limits:
+            cpu: 300m
+            memory: 70Mi
+          requests:
+            cpu: 300m
+            memory: 70Mi
