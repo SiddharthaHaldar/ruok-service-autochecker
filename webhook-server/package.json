@@ -6,7 +6,8 @@
     "smee-client": "^1.2.3"
   },
   "scripts": {
-    "webhook-forward": "smee --url https://smee.io/0sRl0du2R9tpGD6w --port 3000"
+    "webhook-forward": "smee --url https://smee.io/0sRl0du2R9tpGD6w --port 3000",
+    "start": "node index.js"
   },
   "type": "module"
 }
