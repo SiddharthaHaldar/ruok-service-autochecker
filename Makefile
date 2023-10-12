@@ -27,4 +27,9 @@ build-webhook-server-image:
 # K8s
 
 k8s:
+    # Deploy CRDs separately from rest of manifests to avoid race condition
+	echo DEPLOY ARANGODB OPERATOR CRDS
+	kubectl apply -k ./k8s/arangodb-crds/
+	echo DEPLOY MAIN APPLICATION AFTER CRDS ARE INSTALLED
+	sleep 2
 	kubectl apply -k ./k8s/
