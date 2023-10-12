@@ -6,6 +6,3 @@ resources:
 - ./deployment-ruok-api.yaml
 - ./deployment-webhook-server.yaml
 - ./nats-svc.yaml
-# From arrangodb k8s operator: https://github.com/arangodb/kube-arangodb/tree/master
-- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.2.33/manifests/arango-crd.yaml
-- https://raw.githubusercontent.com/arangodb/kube-arangodb/1.2.33/manifests/arango-deployment.yaml
