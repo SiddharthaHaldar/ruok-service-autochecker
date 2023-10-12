@@ -6,3 +6,16 @@ resources:
 - ./deployment-ruok-api.yaml
 - ./deployment-webhook-server.yaml
 - ./nats-svc.yaml
+patches:
+- target:
+    version: v1
+    kind: Deployment
+    name: webhook-server
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/env
+      value:
+        - name: NATS_SERVER
+          value: nats:4222
+        - name: NATS_PUB_STREAM
+          value: GitHubEvent
