@@ -9,6 +9,12 @@ APP_VERSION := 0.0.1
 # Figure out if podman or docker is being used as the container runtime
 CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
 
+#   _           _ _     _ 
+#  | |__  _   _(_) | __| |
+#  | '_ \| | | | | |/ _` |
+#  | |_) | |_| | | | (_| |
+#  |_.__/ \__,_|_|_|\__,_|
+
 # Build all images in the repo
 build: build-api-image build-webhook-server-image
 
@@ -23,9 +29,12 @@ build-api-image:
 build-webhook-server-image:
 	$(CONTAINER_RUNTIME) build ./webhook-server/ -t $(APP_NAME)-webhook-server:$(APP_VERSION)
 
-
-# K8s
-
+#       _            _             
+#    __| | ___ _ __ | | ___  _   _ 
+#   / _` |/ _ \ '_ \| |/ _ \| | | |
+#  | (_| |  __/ |_) | | (_) | |_| |
+#   \__,_|\___| .__/|_|\___/ \__, |
+#             |_|            |___/ 
 k8s:
     # Deploy CRDs separately from rest of manifests to avoid race condition
 	echo DEPLOY ARANGODB OPERATOR CRDS

@@ -14,7 +14,7 @@
             "program": "${workspaceFolder}/api/index.js",
             "cwd": "${workspaceFolder}/api"
         },
-                {
+        {
             "type": "node",
             "request": "launch",
             "name": "Debug ruok webhook server",

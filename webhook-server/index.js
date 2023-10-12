@@ -3,12 +3,17 @@ import { connect, JSONCodec } from 'nats'
 
 // Load .env file
 import 'dotenv/config'
+
 // Get config variables from environment
-const { WEBHOOK_SECRET, NATS_SERVER, NATS_PUB_STREAM } = process.env
+const {
+  WEBHOOK_SECRET,
+  WEBHOOK_SERVER_PORT,
+  NATS_SERVER,
+  NATS_PUB_STREAM
+} = process.env
 
 // Create express app
 const app = express()
-const port = 3000
 
 // Connect to NATS server
 const nc = await connect({ servers: [NATS_SERVER] })
@@ -33,6 +38,6 @@ app.post('/', async (req, res) => {
   }))
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.listen(WEBHOOK_SERVER_PORT, () => {
+  console.log(`Webhook server listening on port ${WEBHOOK_SERVER_PORT}`)
 })
