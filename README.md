@@ -14,6 +14,10 @@ See the [Architecture](docs/architecture.md) page for an overview of the RUOK ap
 
 See the [Development Environment](docs/development-environment.md) page for recommendations on setting up the development environment for this project.
 
+## Deployment
+
+See the [Deployment](docs/deployment.md) page for instructions on how to deploy the `ruok-service-autochecker` application.
+
 #### *Please note - this is work in progress* 
 
 This uses [Safe Inputs](https://github.com/PHACDataHub/safe-inputs) and [Tracker](https://github.com/canada-ca/tracker) as a starting point.
