@@ -1,0 +1,95 @@
+title: |md
+  # Architecture
+|
+
+GitHub: {
+  shape: image
+  icon: https://icons.terrastruct.com/dev%2Fgithub.svg
+}
+
+SMEE Proxy Server: {
+  shape: image
+  icon: ./img/smee.png
+}
+
+Users: {
+  shape: image
+  icon: https://icons.terrastruct.com/essentials%2F359-users.svg
+}
+
+K8s Cluster: {
+  Webhook Server: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
+
+  SMEE Proxy Client: {
+    shape: image
+    icon: ./img/smee.png
+  }
+
+  NATS Queue: {
+    shape: image
+    icon: ./img/nats.png
+  }
+
+  Clone Repo Scanner: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
+
+  Octokit API Scanner: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
+
+  Arangodb: {
+    shape: image
+    icon: ./img/arangodb.png
+  }
+
+  Web Application: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
+}
+
+# Webhook server registers with GitHub repos/organization for webhook events
+GitHub -> K8s Cluster.Webhook Server: Event Webhook
+
+# In development environments, webhooks are directed towards SMEE proxy server,
+# then the SMEE proxy redirects the webhook to a client listening on localhost.
+GitHub -> SMEE Proxy Server: dev {
+  style: {
+    stroke: red
+  }
+}
+
+SMEE Proxy Server -> K8s Cluster.SMEE Proxy Client: dev {
+  style: {
+    stroke: red
+  }
+}
+
+K8s Cluster.SMEE Proxy Client -> K8s Cluster.Webhook Server: dev {
+  style: {
+    stroke: red
+  }
+}
+
+# Webhook server publishes events in NATS queue
+K8s Cluster.Webhook Server -> K8s Cluster.NATS Queue: Publish Repo Events
+
+# Scanners subscribe to certain repo events
+K8s Cluster.Clone Repo Scanner -> K8s Cluster.NATS Queue: Subscribe to Repo Events
+K8s Cluster.Octokit API Scanner -> K8s Cluster.NATS Queue: Subscribe to Repo Events
+
+# Scanners write metrics of interest to ArangoDB.
+K8s Cluster.Clone Repo Scanner -> K8s Cluster.Arangodb: Write Metrics
+K8s Cluster.Octokit API Scanner -> K8s Cluster.Arangodb: Write Metrics
+
+# Web application fetches data from arangodb and presents it on UI
+K8s Cluster.Web Application -> K8s Cluster.Arangodb: Reads
+
+# Users are served pages from web application
+Users -> K8s Cluster.Web Application: Visit

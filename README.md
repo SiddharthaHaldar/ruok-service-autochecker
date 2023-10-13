@@ -6,10 +6,17 @@ This crawler pulls service endpoints from the [dns](https://github.com/PHACDataH
 
 Full list of checks can be found in the [scanners](./scanners) section. 
 
+## Application Architecture
+
+See the [Architecture](docs/architecture.md) page for an overview of the RUOK application architecture.
 
 ## Development Environment
 
 See the [Development Environment](docs/development-environment.md) page for recommendations on setting up the development environment for this project.
+
+## Deployment
+
+See the [Deployment](docs/deployment.md) page for instructions on how to deploy the `ruok-service-autochecker` application.
 
 #### *Please note - this is work in progress* 
 

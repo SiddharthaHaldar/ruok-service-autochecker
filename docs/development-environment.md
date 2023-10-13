@@ -52,6 +52,18 @@ As per [this thread answer](https://community.home-assistant.io/t/developing-in-
 ...
 ```
 
+## VSCode Development Tools
+
+### VSCode Integrated Debugger
+
+Debug configurations can be found in the `.vscode/launch.json` file in the project root. For information on how to use VSCode's integrated debugger, see the [VSCode Debugging documentation](https://code.visualstudio.com/docs/editor/debugging).
+
+### Environment Variable Management with `direnv` 
+
+In order to run or debug a given application in a dev container, it may be necessary load a specific set of environment variables to configure that application. [`direnv`](https://direnv.net/) is a tool that automatically loads environment variables into your shell when you `cd` into a folder.
+
+You may need to run `direnv allow` in a directory upon making changes to its `.envrc` file.
+
 ## Podman
 
 Instructions for installing the Podman runtime on all platforms can be found [at this link](https://podman.io/docs/installation). Additionally (and optionally), you can install [Podman Desktop](https://podman-desktop.io/), which provides a graphical tool to facilitate working with podman.

@@ -1,0 +1,5 @@
+SMEE_URL := ${SMEE_URL}
+WEBHOOK_SERVER_PORT := ${WEBHOOK_SERVER_PORT}
+
+forward-webhook:
+	smee --url $(SMEE_URL) --port $(WEBHOOK_SERVER_PORT)
