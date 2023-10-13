@@ -7,59 +7,89 @@ GitHub: {
   icon: https://icons.terrastruct.com/dev%2Fgithub.svg
 }
 
-Users: {
-    shape: image
-    icon: https://icons.terrastruct.com/essentials%2F359-users.svg
+SMEE Proxy Server: {
+  shape: image
+  icon: ./img/smee.png
 }
 
-GKE Autopilot: {
-    Webhook Server: {
-        shape: image
-        icon: https://icons.terrastruct.com/dev%2Fdocker.svg
-    }
+Users: {
+  shape: image
+  icon: https://icons.terrastruct.com/essentials%2F359-users.svg
+}
 
-    NATS Queue : {
-        shape: image
-        icon: ./img/nats.png
-    }
+K8s Cluster: {
+  Webhook Server: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
 
-    Clone Repo Scanner : {
-        shape: image
-        icon: https://icons.terrastruct.com/dev%2Fdocker.svg
-    }
+  SMEE Proxy Client: {
+    shape: image
+    icon: ./img/smee.png
+  }
 
-    Octokit API Scanner : {
-        shape: image
-        icon: https://icons.terrastruct.com/dev%2Fdocker.svg
-    }
+  NATS Queue: {
+    shape: image
+    icon: ./img/nats.png
+  }
 
-    Arangodb: {
-        shape: image
-        icon: ./img/arangodb.png 
-    }
+  Clone Repo Scanner: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
 
-    Web Application: {
-        shape: image
-        icon: https://icons.terrastruct.com/dev%2Fdocker.svg
-    }
+  Octokit API Scanner: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
+
+  Arangodb: {
+    shape: image
+    icon: ./img/arangodb.png
+  }
+
+  Web Application: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
 }
 
 # Webhook server registers with GitHub repos/organization for webhook events
-GitHub -> GKE Autopilot.Webhook Server: Event Webhook
+GitHub -> K8s Cluster.Webhook Server: Event Webhook
+
+# In development environments, webhooks are directed towards SMEE proxy server,
+# then the SMEE proxy redirects the webhook to a client listening on localhost.
+GitHub -> SMEE Proxy Server: dev {
+  style: {
+    stroke: red
+  }
+}
+
+SMEE Proxy Server -> K8s Cluster.SMEE Proxy Client: dev {
+  style: {
+    stroke: red
+  }
+}
+
+K8s Cluster.SMEE Proxy Client -> K8s Cluster.Webhook Server: dev {
+  style: {
+    stroke: red
+  }
+}
 
 # Webhook server publishes events in NATS queue
-GKE Autopilot.Webhook Server -> GKE Autopilot.NATS Queue: Publish Repo Events
+K8s Cluster.Webhook Server -> K8s Cluster.NATS Queue: Publish Repo Events
 
 # Scanners subscribe to certain repo events
-GKE Autopilot.Clone Repo Scanner -> GKE Autopilot.NATS Queue: Subscribe to Repo Events
-GKE Autopilot.Octokit API Scanner -> GKE Autopilot.NATS Queue: Subscribe to Repo Events
+K8s Cluster.Clone Repo Scanner -> K8s Cluster.NATS Queue: Subscribe to Repo Events
+K8s Cluster.Octokit API Scanner -> K8s Cluster.NATS Queue: Subscribe to Repo Events
 
 # Scanners write metrics of interest to ArangoDB.
-GKE Autopilot.Clone Repo Scanner -> GKE Autopilot.Arangodb: Write Metrics
-GKE Autopilot.Octokit API Scanner -> GKE Autopilot.Arangodb: Write Metrics
+K8s Cluster.Clone Repo Scanner -> K8s Cluster.Arangodb: Write Metrics
+K8s Cluster.Octokit API Scanner -> K8s Cluster.Arangodb: Write Metrics
 
 # Web application fetches data from arangodb and presents it on UI
-GKE Autopilot.Web Application -> GKE Autopilot.Arangodb: Reads
+K8s Cluster.Web Application -> K8s Cluster.Arangodb: Reads
 
 # Users are served pages from web application
-Users -> GKE Autopilot.Web Application: Visit
+Users -> K8s Cluster.Web Application: Visit
