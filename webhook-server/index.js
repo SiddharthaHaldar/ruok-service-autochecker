@@ -44,6 +44,8 @@ app.post('/', async (req, res) => {
     eventType,
     sourceCodeRepository,
   }))
+  // TODO: replace this with a proper logger
+  console.log("successfully published event: ", eventType)
 })
 
 app.listen(WEBHOOK_SERVER_PORT, () => {
