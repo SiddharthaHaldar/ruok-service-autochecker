@@ -13,6 +13,7 @@ RUN npm ci
 # COPY . . 
 COPY ./.env ./.env.example ./
 COPY ./index.js .
+COPY ./util.js .
 
 USER node
 
