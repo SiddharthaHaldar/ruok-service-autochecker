@@ -10,13 +10,16 @@ Local development of the Webhook Server requires interacting with GitHub event h
 
 ![Architecture](../docs/diagrams/architecture.svg)
 
-## Run and Debug Webhook Server
+## Run and Debug Webhook Server: Initial Setup
 
-To run and debug the webhook server, see the steps below.
+To run and debug the webhook server, see the steps below. 
 
 1. Open VSCode with the dev container for this repository.
 2. Create a `.env` file based on the values in `.env.example` (`.env` is `.gitignore`d so real values aren't accidentally committed to source control).
 3. Create a `.envrc` file based on `.envrc.example`. Since `direnv` is used in the dev container for this repository, you should only need the `dotenv` in your `.envrc` file.
 4. Visit [smee.io](https://smee.io) to create a channel that can be used with the `smee` client to forward GitHub webhooks to the local webhook server. You'll need to update the environment variable called `SMEE_URL` with the URL that's generated for your new channel on smee.io.
 5. Follow the [Creating webhooks](https://docs.github.com/en/webhooks/using-webhooks/creating-webhooks) instructions from GitHub's official documentation to create a webhook on a repository of interest. Keep track of the secret key you use and set the `WEBHOOK_SECRET` environment variable to this value (this is the secret key that is used to verify that a webhook did indeed originate with GitHub.com).
-4. Start your local Kubernetes cluster, and port-forward the `nats` service to `localhost:4222`
+6. Start your local Kubernetes cluster, and port-forward the `nats` service to `localhost:4222`.
+7. `cd` into the `webhook-server` folder and run `make forward-webhook`.
+8. Click the debug icon in the VSCode menu bar, select "*Debug ruok webhook server*", and press the play button. Insert a breakpoint wherever you want to debug your application.
+9. Create an event on the GitHub repo that you registered the [smee.io](https://smee.io) URL for, or replay an existing event. If everything is set up correctly, you should arrive at the breakpoint set in step 8 with request data for the given webhook.
