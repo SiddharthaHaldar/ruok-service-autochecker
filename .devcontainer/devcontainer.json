@@ -6,7 +6,7 @@
 		"dockerfile": "Dockerfile"
 	},
 	"runArgs": [
-		"--userns=keep-id",
+		// "--userns=keep-id",
 		"--network=host"
 	],
 	"containerUser": "node",
