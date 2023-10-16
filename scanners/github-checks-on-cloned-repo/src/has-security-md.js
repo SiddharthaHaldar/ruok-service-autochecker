@@ -1,9 +1,7 @@
 // fs docs node https://nodejs.org/docs/v0.3.4/api/fs.html
 import * as fs from 'fs'
-import * as util from 'util'
-import * as path from 'path'
+import { CheckOnClonedRepoStrategy } from './check-on-cloned-repo-strategy.js'
 
-// api directory - libraries? - expand into endpoints etc...consume it?
 
 export function searchForFile(directory, targetFileName) {
     // searches directory and returns array of file paths for any found targetFileNames
@@ -25,8 +23,6 @@ export function searchForFile(directory, targetFileName) {
 }
 
 export async function hasSecurityMd(clonedRepoPath) {
-    // const repoPath = `../../temp-cloned-repo/${repoName}`
-
     const securityMds = searchForFile(clonedRepoPath, "SECURITY.md")
     if (securityMds.length > 0) {
         return true
@@ -34,3 +30,19 @@ export async function hasSecurityMd(clonedRepoPath) {
         return false
     }
 }
+
+export class HasSecurityMd extends CheckOnClonedRepoStrategy {
+    async doRepoCheck() {
+        const securityMdFound = await hasSecurityMd(this.clonedRepoPath)
+        console.log(
+            `hasSecurityMd: ${securityMdFound }`
+        )
+        return {'hasSecurityMd':securityMdFound}
+    }
+    checkName() {
+        this.checkName = 'hasSecurityMd'
+        console.log(`checkName is ${this.checkName}`)
+        return this.checkName
+    }
+}
+

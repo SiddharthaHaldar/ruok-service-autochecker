@@ -2,6 +2,7 @@
 import * as fs from 'fs'
 import * as util from 'util'
 import * as path from 'path'
+import { CheckOnClonedRepoStrategy } from './check-on-cloned-repo-strategy.js'
 
 // api directory - libraries? - expand into endpoints etc...consume it?
 
@@ -35,3 +36,19 @@ export async function hasDependabotYaml(clonedRepoPath) {
         return false
     }
 } 
+
+
+export class HasDependabotYaml extends CheckOnClonedRepoStrategy {
+    async doRepoCheck() {
+        const hasDependabotYamlResult = await hasDependabotYaml(this.clonedRepoPath);
+        console.log(
+            `hasDependabotYamlResult: ${hasDependabotYamlResult}`
+        )
+        return hasDependabotYamlResult
+    }
+    checkName() {
+        this.checkName = 'hasDependabotYaml'
+        console.log(`checkName is ${this.checkName}`)
+        return this.checkName
+    }
+}

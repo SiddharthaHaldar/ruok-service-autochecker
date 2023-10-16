@@ -1,5 +1,6 @@
 // github-cloned-has-tests-directory/src/has-tests-directory.js
 import * as fs from 'fs';
+import { CheckOnClonedRepoStrategy } from './check-on-cloned-repo-strategy.js'
 // repoPath used to search for tests
 
 // const directory = `../../temp-cloned-repo/${repoName}`
@@ -54,4 +55,20 @@ export async function formTestsDirectoryPayload(testDirectories) {
     // return ({"testDirectories": null})
   }
 
+}
+
+export class HasTestsDirectory extends CheckOnClonedRepoStrategy {
+  async doRepoCheck() {
+      const testDirectories = await searchTests(this.clonedRepoPath)
+      const formatedTestDirectory = await formTestsDirectoryPayload(testDirectories)
+      console.log(
+          `hasTestDirectory: ${JSON.stringify(formatedTestDirectory)}`
+      )
+      return formatedTestDirectory
+  }
+  checkName() {
+      this.checkName = 'hasTestsDirectory'
+      console.log(`checkName is ${this.checkName}`)
+      return this.checkName
+  }
 }

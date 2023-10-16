@@ -1,6 +1,7 @@
 // fs docs node https://nodejs.org/docs/v0.3.4/api/fs.html
 import * as fs from 'fs';
 import * as util from 'util';
+import { CheckOnClonedRepoStrategy } from './check-on-cloned-repo-strategy.js'
 
 // api directory - libraries? - expand into endpoints etc...consume it?
 
@@ -161,5 +162,24 @@ export async function searchFileForText(filePath, text) {
     } catch (error) {
         console.error('An error occurred:', error);
         throw error;
+    }
+}
+
+
+
+
+
+export class HasApiDirectory extends CheckOnClonedRepoStrategy {
+    async doRepoCheck() {
+        const hasApiDir = await hasApiDirectory(this.clonedRepoPath);
+        console.log(
+            `has api dir: ${hasApiDir}`
+        )
+        return hasApiDir
+    }
+    checkName() {
+        this.checkName = 'hasApiDirectory'
+        console.log(`checkName is ${this.checkName}`)
+        return this.checkName
     }
 }
