@@ -19,7 +19,7 @@ spec:
       containers:
       - name: webhook-server
         imagePullPolicy: Never
-        image: localhost/ruok-webhook-server:0.0.1
+        image: ruok-webhook-server:0.0.1
         securityContext:
           allowPrivilegeEscalation: false
         resources:
