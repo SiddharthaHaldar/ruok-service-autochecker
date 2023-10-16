@@ -7,6 +7,7 @@ import { HasDependabotYaml } from './src/has-dependabot-yaml.js'
 import { HasTestsDirectory } from './src/has-tests-directory.js'
 import { HasSecurityMd } from "./src/has-security-md.js"
 import { DotDockerIgnoreDetails, DotGitIgnoreDetails } from "./src/get-dotignore-details.js"
+import { AllChecks } from './src/all-checks.js'
 import 'dotenv-safe/config.js'
 
 const { NATS_URL } = process.env;
@@ -32,19 +33,21 @@ const repoCheck = new RepoChecker()
 function initializeChecker(checkName, repoName) {
     switch (checkName) {
         case 'hasApiDirectory':
-            return new HasApiDirectory(repoName);
+            return new HasApiDirectory(repoName)
         case 'hasDependabotYaml':
-            return new HasDependabotYaml(repoName);
+            return new HasDependabotYaml(repoName)
         case 'hasTestsDirectory':
-            return new HasTestsDirectory(repoName);
+            return new HasTestsDirectory(repoName)
         case 'hasSecurityMd':
-            return new HasSecurityMd(repoName);
+            return new HasSecurityMd(repoName)
         case 'dotDockerIgnoreDetails':
-            return new DotDockerIgnoreDetails(repoName);
+            return new DotDockerIgnoreDetails(repoName)
         case 'dotGitIgnoreDetails':
-            return new DotGitIgnoreDetails(repoName);
+            return new DotGitIgnoreDetails(repoName)
+        case 'allChecks':
+            return new AllChecks(repoName)
         default:
-            throw new Error(`Unknown checker: ${checkName}`);
+            throw new Error(`Unknown checker: ${checkName}`)
     }
 }
 
@@ -60,7 +63,8 @@ process.on('SIGINT', () => process.exit(0))
         const repoName = message.subject.split(".").reverse()[0]
 
     // Select, intialize and do check  (will be input in future iterations - now just hardcoding in 'Do the check'
-        const checkName = 'hasTestsDirectory'
+        // const checkName = 'hasTestsDirectory'
+        const checkName = 'allChecks'
         const check = initializeChecker(checkName, repoName)
 
         const payload = repoCheck.doRepoCheck(check)
