@@ -29,7 +29,7 @@ async function publish(subject, payload) {
 // Initialize Checkers 
 const repoChecker = new RepoChecker()
 
-// Initialize Checkers 
+// Initialize Checkers //TODO - move to src???
 function initializeChecker(checkName, repoName) {
     switch (checkName) {
         case 'hasApiDirectory':
@@ -63,13 +63,14 @@ process.on('SIGINT', () => process.exit(0))
         const repoName = message.subject.split(".").reverse()[0]
 
     // Select, intialize and do check  (will be input in future iterations - now just hardcoding in 'Do the check'
-        const checkName = 'allChecks' // This actually may lead to not needing checkName in interface (since we're giving it here...)
+        const checkName = 'allChecks' // This actually leads to not needing checkName in interface (since we're giving it here...)
         const check = initializeChecker(checkName, repoName)
 
         const payload = repoChecker.doRepoCheck(check) // Wow, not super clear names here....
         const subject = `${NATS_PUB_STREAM}.${repoChecker.checkName(check)}.${repoName}` // like here - so long as they match what is going in db, can repace middle token with checkName defined here. 
     
     // Publish
+    // TODO - include or append original payload here - or just the sourcecoderepository
         await publish(subject, payload) 
         console.log(`Sent to ... ${subject}, payload: ${payload}`, )
     }
