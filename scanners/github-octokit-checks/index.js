@@ -2,8 +2,8 @@
 
 import { connect, JSONCodec} from 'nats'
 import { Octokit, App,  RequestError } from "octokit";
-import { RepoDetailsCheckStrategy } from './src/repo-details.js';
-import { RepoChecker } from './src/octokit-repo-check-context.js';
+import { RepoDetailsCheckStrategy } from './src/get-repo-details.js';
+import { RepoChecker } from './src/octokit-check-context.js';
 // import { RepoDetailsCheckStrategy } 
 import 'dotenv-safe/config.js'
 

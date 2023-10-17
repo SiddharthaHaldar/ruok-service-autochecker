@@ -1,23 +1,20 @@
-import { OctokitCheckStrategy } from "./src/octokit-check-strategy.js";
-import { RepoDetailsCheckStrategy } from "./src/repo-details.js"
+
+import { GetRepoDetailsStrategy } from "./src/get-repo-details.js"
 import { AutomatedSecurityFixesStrategy } from "./src/automated-security-fixes.js";
 import { ProgrammingLanguagesStrategy } from "./src/all-langauges.js";
+import { BranchProtectionStrategy } from "./src/branch-protection-details.js"
+import { CodeContributorsStrategy } from "./src/code-contributors.js";
+import { VunerabilityAlertsEnabledStrategy } from "./src/are-vunerability-alerts-enabled.js";
 import { Octokit, App,  RequestError } from "octokit";
 
 const OWNER = 'PHACDataHub'
 const repoName = 'ruok-service-autochecker'
 
 const octokit = new Octokit({ auth: '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' });
-// const strategy = new OctokitCheckStrategy(repoName, OWNER, octokit, 'main');
-// const strategy = new RepoDetailsCheckStrategy(repoName, OWNER, octokit, 'main');
-const strategy = new RepoDetailsCheckStrategy(repoName, OWNER, octokit, 'main')
-const response1 = await strategy.makeOctokitCall();
-const response = await strategy.formatResponse()
 
-// const response = await RepoDetailsCheckStrategy.makeOctokitCall(OWNER, repo, octokit);
-// console.log(response1)
-// console.log('')
-// console.log(response)
+const strategy = new GetRepoDetailsStrategy(repoName, OWNER, octokit, 'main')
+const response = await strategy.formatResponse()
+console.log(response)
 
 const dependabot = new AutomatedSecurityFixesStrategy(repoName, OWNER, octokit, 'main') 
 const response3 =  await dependabot.formatResponse()
@@ -26,6 +23,20 @@ console.log(response3)
 const all_languages = new ProgrammingLanguagesStrategy(repoName, OWNER, octokit, 'main') 
 const response4 =  await all_languages.formatResponse()
 console.log(response4)
+
+
+// const branchProtection = new BranchProtectionStrategy(repoName, OWNER, octokit, 'main')
+// const response5 =  await branchProtection.formatResponse()
+// console.log(response5)
+
+
+const codeContributors = new CodeContributorsStrategy(repoName, OWNER, octokit, 'main')
+const response5 =  await codeContributors.formatResponse()
+console.log(response5)
+
+const vunerabilityAlertsEnabled = new VunerabilityAlertsEnabledStrategy(repoName, OWNER, octokit, 'main')
+const response7 =  await vunerabilityAlertsEnabled.formatResponse()
+console.log(response7)
 // // Define the endpoint and options
 // const endpoint = 'GET /repos/{owner}/{repo}';
 // const options = {

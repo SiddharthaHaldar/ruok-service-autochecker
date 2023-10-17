@@ -8,19 +8,16 @@ export class OctokitCheckStrategy {
         this.octokit = octokit
         this.branch = branchName
     }
-    async makeOctokitRequest(endpoint, options) {
-        try {
-            const response = await this.octokit.request(endpoint, options);
-            return response.data;
-        } catch (error) {
-            console.error("An error occurred:", error.message);
-            throw error; // Optionally rethrow the error for higher-level handling
-        }
-    }
 
-    async makeOctokitCall(endpoint, options) {
-        return this.makeOctokitRequest(endpoint, options);
-    }
+    async makeOctokitRequest() {
+        try {
+          const response = await this.octokit.request(this.endpoint, this.options);
+          return response
+        } catch (error) {
+          console.error("An error occurred:", error.message);
+          throw error
+        }
+      }
 
     formatResponse() {
         return this.formatResponse
