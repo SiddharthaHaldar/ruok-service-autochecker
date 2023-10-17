@@ -23,8 +23,9 @@ console.log('🚀 Connected to NATS server - listening on ...', sub.subject, "ch
 
 // NATs publish
 async function publish(subject, payload) {
-  nc.publish(subject, jc.encode(payload)) 
-}
+    nc.publish(subject, jc.encode(payload)) 
+    console.log(`Sent to ... ${subject}: `, payload)
+  }
 
 // Initialize Checkers 
 const repoChecker = new RepoChecker()
@@ -56,23 +57,23 @@ process.on('SIGINT', () => process.exit(0))
 ;(async () => {
  
     for await (const message of sub) {
-        console.log('\n**************************************************************')
-        console.log(`Recieved from ... ${message.subject} \n`)
-        
         const payloadFromCloneRepo  = await jc.decode(message.data)
+
+        console.log('\n**************************************************************')
+        console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(payloadFromCloneRepo)}`)
+        
         const repoName = message.subject.split(".").reverse()[0]
 
-    // Select, intialize and do check  (will be input in future iterations - now just hardcoding in 'Do the check'
+    // Select, intialize and do check  (will be input in future iterations - now just hardcoding in)
         const checkName = 'allChecks' // This actually leads to not needing checkName in interface (since we're giving it here...)
         const check = initializeChecker(checkName, repoName)
 
         const payload = repoChecker.doRepoCheck(check) // Wow, not super clear names here....
-        const subject = `${NATS_PUB_STREAM}.${repoChecker.checkName(check)}.${repoName}` // like here - so long as they match what is going in db, can repace middle token with checkName defined here. 
+        const subject = `${NATS_PUB_STREAM}.${repoChecker.checkName(check)}.${repoName}` // like here - so long as they match what is going in db, can repace middle token with checkName hardcoded above. 
     
     // Publish
     // TODO - include or append original payload here - or just the sourcecoderepository
         await publish(subject, payload) 
-        console.log(`Sent to ... ${subject}, payload: ${payload}`, )
     }
 })();
 

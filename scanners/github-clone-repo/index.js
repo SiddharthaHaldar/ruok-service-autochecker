@@ -6,7 +6,6 @@ import 'dotenv-safe/config.js'
 
 const { NATS_URL } = process.env
 
-// const NATS_SUB_STREAM = "gitHub.initiate.>"
 const NATS_SUB_STREAM="GitHubEvent"
 const NATS_PUB_STREAM = 'gitHub.cloned' 
 
