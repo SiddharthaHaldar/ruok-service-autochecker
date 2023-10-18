@@ -1,4 +1,5 @@
 
+// vunerability alerts aka dependabot alerts
 import { OctokitCheckStrategy } from './octokit-check-strategy.js'
 
 export class VunerabilityAlertsEnabledStrategy extends OctokitCheckStrategy {
@@ -24,10 +25,15 @@ export class VunerabilityAlertsEnabledStrategy extends OctokitCheckStrategy {
                 }   
             }
         } catch (error) {
-            if (error.message == 'Vulnerability alerts are disabled.')
-            return {
-                'vunerability_alerts_enabled': false,
-            }  
+            if (error.message == 'Vulnerability alerts are disabled.'){
+                return {
+                    'dependabot_alerts_enabled': false,
+                }  
+            } else {
+                return {
+                    'dependabot_alerts_enabled': `error: ${error.message}`  
+                }
+            }
         }
     }
 }

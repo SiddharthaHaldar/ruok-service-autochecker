@@ -1,5 +1,6 @@
 
 // https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28
+// dependabot enabled
 import { OctokitCheckStrategy } from './octokit-check-strategy.js'
 
 export class AutomatedSecurityFixesStrategy extends OctokitCheckStrategy {
@@ -24,8 +25,9 @@ export class AutomatedSecurityFixesStrategy extends OctokitCheckStrategy {
         'dependabot': response.data 
       }
     } catch (error) {
-      console.error("An error occurred while formatting the response:", error.message);
-      throw error;
+      return {
+        'dependabot': `error: ${error.message}` 
+      }
     }
   }
 }

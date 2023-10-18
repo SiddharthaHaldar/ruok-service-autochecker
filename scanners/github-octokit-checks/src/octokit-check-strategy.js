@@ -19,7 +19,7 @@ export class OctokitCheckStrategy {
         }
       }
 
-    formatResponse() {
+    async formatResponse() {
         return this.formatResponse
     }
 }

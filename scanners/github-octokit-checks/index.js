@@ -1,10 +1,16 @@
 // github-octokit-repo-details/index.js
 
 import { connect, JSONCodec} from 'nats'
-import { Octokit, App,  RequestError } from "octokit";
-import { RepoDetailsCheckStrategy } from './src/get-repo-details.js';
-import { RepoChecker } from './src/octokit-check-context.js';
-// import { RepoDetailsCheckStrategy } 
+import { Octokit, App,  RequestError } from "octokit"
+// import { RepoChecker } from './src/octokit-check-context.js';
+import { GetRepoDetailsStrategy } from "./src/get-repo-details.js"
+import { AutomatedSecurityFixesStrategy } from "./src/automated-security-fixes.js";
+import { ProgrammingLanguagesStrategy } from "./src/all-langauges.js";
+import { BranchProtectionStrategy } from "./src/branch-protection.js"
+import { CodeContributorsStrategy } from "./src/code-contributors.js";
+import { VunerabilityAlertsEnabledStrategy } from "./src/are-vunerability-alerts-enabled.js";
+import { PullRequestProtectionStrategy } from "./src/pull-request-protection.js";
+import { AllChecksStrategy } from './src/all-checks.js';
 import 'dotenv-safe/config.js'
 
 const { NATS_URL, GITHUB_TOKEN } = process.env;
@@ -12,7 +18,7 @@ const { NATS_URL, GITHUB_TOKEN } = process.env;
 const OWNER = 'PHACDataHub'
 
 const NATS_SUB_STREAM = "GitHubEvent"
-const NATS_PUB_STREAM = "gitHub.octokit.repoDetails" 
+const NATS_PUB_STREAM = "gitHub.octokit" 
 
 // Authenicate with GitHub 
 const octokit = new Octokit({ auth: GITHUB_TOKEN,});
@@ -29,65 +35,56 @@ async function publish(subject, payload) {
     console.log(`Sent to ... ${subject}: `, payload)
   }
 
-
-// async function getRepoDetails(owner, repo, octokit) {
-//     try {
-//         const response = await octokit.request('GET /repos/{owner}/{repo}', {
-//         owner: owner,
-//         repo: repo,
-//         headers: {
-//             'X-GitHub-Api-Version': '2022-11-28'
-//         }
-//         });
-//         return (response.data)
-    
-//     } catch (error) {
-//         console.error("An error occurred while fetching repository details:", error.message);
-//     }
-//   }
-
-const repoChecker = new RepoChecker();
-
-// async function makeOctokitRequest(endpoint, options, octokit) {
-//     try {
-//       const response = await octokit.request(endpoint, options)
-//       return response.data
-//     } catch (error) {
-//       console.error("An error occurred:", error.message)
-//       throw error
-//     }
-//   }
+// Initialize Checkers //TODO - move to src???
+async function initializeChecker(checkName, repoName, OWNER, octokit, branchName='main') {
+    switch (checkName) {
+        case 'getRepoDetails':
+            return new GetRepoDetailsStrategy(repoName, OWNER, octokit, branchName)
+        case 'dependabot':
+            return new AutomatedSecurityFixesStrategy(repoName, OWNER, octokit, branchName) 
+        case 'allLanguages':
+            return new ProgrammingLanguagesStrategy(repoName, OWNER, octokit, branchName)
+        case 'codeContributers':
+            return new CodeContributorsStrategy(repoName, OWNER, octokit, branchName)
+        case 'vunerabilityAlertsEnabled':
+            return new VunerabilityAlertsEnabledStrategy(repoName, OWNER, octokit, branchName)
+        case 'pullRequestProtection':
+            return new PullRequestProtectionStrategy(repoName, OWNER, octokit, branchName)
+        case 'branchProtection':
+            return new BranchProtectionStrategy(repoName, OWNER, octokit, branchName)
+        case 'allChecks':
+            return new AllChecksStrategy(repoName, OWNER, octokit, branchName)
+        default:
+            throw new Error(`Unknown checker: ${checkName}`)
+    }
+}
 
 
-
-//   programming_languages_all = await repoLanguages(owner, repo, octokit) 
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 ;(async () => {
  
-    for await (const message of sub) {
-        const webhookPayload = await jc.decode(message.data)
+  for await (const message of sub) {
+    const webhookPayload = await jc.decode(message.data)
 
-        console.log('\n**************************************************************')
-        console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(webhookPayload)}`)
-        
-        const { sourceCodeRepository } = webhookPayload
-        const repoName = sourceCodeRepository.split('/').pop();
+    console.log('\n**************************************************************')
+    console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(webhookPayload)}`)
+    
+    const { sourceCodeRepository } = webhookPayload
+    const repoName = sourceCodeRepository.split('/').pop()
 
-        const repoCheck= new RepoDetailsCheckStrategy(repoName, OWNER, octokit )
-        try {
-            const response = await repoCheck.makeOctokitRequest();
-            console.log('Repository Details:', response);
-          } catch (error) {
-            // Handle errors here
-            console.error('Error:', error.message);
-          }
-        // const repoDetails = await getRepoDetails(OWNER, repoName, octokit)
-        // repoDetails.sourceCodeRepository = sourceCodeRepository
+    const checkName = 'allChecks' // have this passed in in future - default to all-checks
+    // const checkName = 'allLanguages' 
+    // const checkName = 'getRepoDetails' 
+    const branchName = 'main' // TODO - come back for this after initial pass - when picked up by repodetails
+    const check = await initializeChecker(checkName, repoName, OWNER, octokit, branchName)
 
-        // await publish(`${NATS_PUB_STREAM}.${repoName}`, repoDetails) 
-   
-    }
+    const payload = await check.formatResponse(check) 
+    const subject = `${NATS_PUB_STREAM}.${checkName}.${repoName}` 
+  
+  // TODO - include or append original payload here - or just the sourcecoderepository
+    await publish(subject, payload) 
+  }
 })();
 
 await nc.closed();

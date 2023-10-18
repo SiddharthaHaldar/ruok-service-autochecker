@@ -1,38 +1,45 @@
 // export async function getBranchProtectionDetails(owner, repo, octokit, branch) {
-
 // https://docs.github.com/en/rest/branches/branches?apiVersion=2022-11-28#get-branch-protection
 
 
 import { OctokitCheckStrategy } from './octokit-check-strategy.js'
 
 export class BranchProtectionStrategy extends OctokitCheckStrategy {
-    constructor(repoName, owner, octokit, branchName = 'main') {
-      super(repoName, owner, octokit, branchName);
+  constructor(repoName, owner, octokit, branchName = 'main') {
+    super(repoName, owner, octokit, branchName);
 
-      this.endpoint = 'GET /repos/{owner}/{repo}/branches/{branch}/protection'
-      this.options = {
-        owner: this.owner,
-        repo: this.repo,
-        branch: this.branchName,
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      };
+    this.options = {
+      owner: this.owner,
+      repo: this.repo,
+      branch: this.branchName,
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
     }
+    this.endpoint = 'GET /repos/{owner}/{repo}/branches/main/protection'
+  }
   
-      async formatResponse() {
-        try {
-          const response = await this.makeOctokitRequest();
-    
-          return {
-            'branch_protection': response.data 
-          }
-        } catch (error) {
-          console.error("An error occurred while formatting the response:", error.message);
-          throw error;
+  async formatResponse() {
+    try {
+      const response = await this.makeOctokitRequest()
+      return {
+        'branch_protection': response.data 
+      }
+    } catch (error) {
+      if(error.message == 'Branch not protected') {
+        // if (error.status === 404) {
+        return {
+          'branch_protection': false 
+        }
+      } else {
+        return {
+          'branch_protection': `error: ${error.message}` 
         }
       }
+
+    }
   }
+}
 
 // Sample payload
   // {
