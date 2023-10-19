@@ -42,3 +42,9 @@ k8s:
 	echo DEPLOY MAIN APPLICATION AFTER CRDS ARE INSTALLED
 	sleep 2
 	kubectl apply -k ./k8s/
+
+port-forward:
+	kubectl port-forward svc/example-simple-single-ea 8529:8529 &
+	kubectl port-forward svc/nats 4222:4222 &
+	kubectl port-forward svc/webhook-server 3000:3000 &
+	kubectl port-forward svc/api 4000:4000
