@@ -9,7 +9,7 @@ import 'dotenv/config'
 // Get config variables from environment
 const {
   WEBHOOK_SECRET,
-  WEBHOOK_SERVER_PORT,
+  WEBHOOK_SERVER_PORT_NUMBER,
   NATS_SERVER,
   NATS_PUB_STREAM
 } = process.env
@@ -34,20 +34,23 @@ app.post('/', async (req, res) => {
   // x-hub-signature-256 jwt that came with the request.
   if (!verifySignature(req)) {
     res.status(401).send("Unauthorized");
+    console.log("Unauthorized Request");
     return;
   }
   // extract relevant information to put into queue.
+  const wholePayload = req.body.repository
   const sourceCodeRepository = req.body.repository.url
   const eventType = req.headers['x-github-event']
   // publish message to NATS
   await nc.publish(NATS_PUB_STREAM, jc.encode({
     eventType,
     sourceCodeRepository,
+    wholePayload,
   }))
   // TODO: replace this with a proper logger
   console.log("successfully published event: ", eventType)
 })
 
-app.listen(WEBHOOK_SERVER_PORT, () => {
-  console.log(`Webhook server listening on port ${WEBHOOK_SERVER_PORT}`)
+app.listen(WEBHOOK_SERVER_PORT_NUMBER, () => {
+  console.log(`Webhook server listening on port ${WEBHOOK_SERVER_PORT_NUMBER}`)
 })

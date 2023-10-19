@@ -7,13 +7,12 @@ import { request, gql, GraphQLClient } from 'graphql-request'
 import 'dotenv-safe/config.js'
 
 const { 
-  DB_NAME = "dataServices",
-  // DB_URL = "http://database:8529",
-  DB_URL = "http://0.0.0.0:8529",
-  DB_USER = "root",
-  DB_PASS = 'yourpassword',
-  NATS_URL = "nats://0.0.0.0:4222",
-  API_URL = "http://0.0.0.0:4000/graphql"
+  DB_NAME,
+  DB_URL,
+  DB_USER, 
+  DB_PASS,
+  NATS_URL,
+  API_URL,
 } = process.env;
 
 const NATS_PUB_STREAM = "gitHub.saveToDatabase.>" 
@@ -32,7 +31,7 @@ const db = new Database({
 const nc = await connect({ 
   servers: NATS_URL,
 })
-const jc = JSONCodec(); // for encoding NAT's messages
+const jc = JSONCodec(); 
 console.log('🚀 Connected to NATS server...');
 
 async function publish( subject, payload) {
@@ -46,20 +45,16 @@ process.on('SIGINT', () => process.exit(0))
 ;(async () => {
  
     for await (const message of sub) {
-        console.log('\n**************************************************************')
-        console.log(`Recieved from ... ${message.subject} \n`)
-        
-        const payloadFromDoneCollector  = await jc.decode(message.data)
-        console.log(payloadFromDoneCollector)
+      const payload  = await jc.decode(message.data)
+      console.log('\n**************************************************************')
+      console.log(`Recieved from ... ${message.subject} \n${payload}`)
+      
+      const repoName = message.subject.split(".").reverse()[0]
 
-        const serviceName = message.subject.split(".").reverse()[0]
-
-        // get gitHubRepository from services collection for that serviceName
-        const gitHubRepository = await getSourceCodeRepositoryByServiceName(serviceName, GraphQLClient)
-  
-        const upsertService = await upsertGitHubScanIntoDatabase(serviceName, gitHubRepository, payloadFromDoneCollector, graphQLClient)
- 
-        console.log(`Saved ${serviceName} scan results to database - services collection`)
+        // // get gitHubRepository from services collection for that serviceName
+        // const gitHubRepository = await getSourceCodeRepositoryByServiceName(serviceName, GraphQLClient)
+        // const upsertService = await upsertGitHubScanIntoDatabase(serviceName, gitHubRepository, payloadFromDoneCollector, graphQLClient)
+        // console.log(`Saved ${serviceName} scan results to database - services collection`)
     }
 })();
 

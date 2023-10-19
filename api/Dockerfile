@@ -16,3 +16,5 @@ COPY ./src ./src
 COPY ./index.js .
 
 CMD ["npm", "--no-update-notifier", "start"]
+
+EXPOSE 4000
