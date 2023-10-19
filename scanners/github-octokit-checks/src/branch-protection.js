@@ -84,12 +84,27 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
       }`,
       graphqlVars,
     )
-    //   _____      _                  _   
-    //  | ____|_  _| |_ _ __ __ _  ___| |_ 
-    //  |  _| \ \/ / __| '__/ _` |/ __| __|
-    //  | |___ >  <| |_| | | (_| | (__| |_ 
-    //  |_____/_/\_\\__|_|  \__,_|\___|\__|
+    //   __  __      _            _       _        
+    //  |  \/  | ___| |_ __ _  __| | __ _| |_ __ _ 
+    //  | |\/| |/ _ \ __/ _` |/ _` |/ _` | __/ _` |
+    //  | |  | |  __/ || (_| | (_| | (_| | || (_| |
+    //  |_|  |_|\___|\__\__,_|\__,_|\__,_|\__\__,_|
 
+   const metadata = this.extractMetadata(repoBranches, branchProtectionRules); 
+
+    //    ____ _               _    
+    //   / ___| |__   ___  ___| | __
+    //  | |   | '_ \ / _ \/ __| |/ /
+    //  | |___| | | |  __/ (__|   < 
+    //   \____|_| |_|\___|\___|_|\_\
+
+    const checkPasses = this.passesCheck(metadata);
+    return {
+      checkPasses,
+      metadata, 
+    }
+  }
+  extractMetadata(repoBranches, branchProtectionRules) {
     const branches = repoBranches.organization.repository.refs.edges.map(({ node }) => node.branchName)
     const rules = branchProtectionRules.repository.branchProtectionRules.edges
       .map(({ node }) => ({ [node.pattern]: node }))
@@ -99,24 +114,13 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
           [item[key]]: item,
         };
       });
-
-    //    ____ _               _    
-    //   / ___| |__   ___  ___| | __
-    //  | |   | '_ \ / _ \/ __| |/ /
-    //  | |___| | | |  __/ (__|   < 
-    //   \____|_| |_|\___|\___|_|\_\
-
-    const checkPasses = this.passesCheck(rules, branches);
     return {
-      checkPasses,
-      metadata: {
-        rules,
-        branches,
-      }
+      branches,
+      rules,
     }
   }
-  passesCheck(rules, branches) {
+  passesCheck(metadata) {
     // At least one protected branch rule matches branch in repository
-    return branches.map(branch => branch in rules).includes(true)
+    return metadata.branches.map(branch => branch in metadata.rules).includes(true)
   }
 }
