@@ -20,14 +20,14 @@ build: build-api-image build-webhook-server-image
 
 # Main RUOK API
 build-api-image:
-	$(CONTAINER_RUNTIME) build ./api/ -t $(APP_NAME)-api:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./api/ -t localhost/$(APP_NAME)-api:$(APP_VERSION)
 
 # Scanners
 # TODO
 
 # Webhook Server API
 build-webhook-server-image:
-	$(CONTAINER_RUNTIME) build ./webhook-server/ -t $(APP_NAME)-webhook-server:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./webhook-server/ -t localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
 
 #       _            _             
 #    __| | ___ _ __ | | ___  _   _ 
