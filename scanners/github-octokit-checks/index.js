@@ -35,30 +35,6 @@ async function publish(subject, payload) {
     console.log(`Sent to ... ${subject}: `, payload)
   }
 
-// Initialize Checkers //TODO - move to src???
-async function initializeChecker(checkName, repoName, OWNER, octokit, branchName='main') {
-    switch (checkName) {
-        case 'getRepoDetails':
-            return new GetRepoDetailsStrategy(repoName, OWNER, octokit, branchName)
-        case 'dependabot':
-            return new AutomatedSecurityFixesStrategy(repoName, OWNER, octokit, branchName) 
-        case 'allLanguages':
-            return new ProgrammingLanguagesStrategy(repoName, OWNER, octokit, branchName)
-        case 'codeContributers':
-            return new CodeContributorsStrategy(repoName, OWNER, octokit, branchName)
-        case 'vunerabilityAlertsEnabled':
-            return new VunerabilityAlertsEnabledStrategy(repoName, OWNER, octokit, branchName)
-        case 'pullRequestProtection':
-            return new PullRequestProtectionStrategy(repoName, OWNER, octokit, branchName)
-        case 'branchProtection':
-            return new BranchProtectionStrategy(repoName, OWNER, octokit, branchName)
-        case 'allChecks':
-            return new AllChecksStrategy(repoName, OWNER, octokit, branchName)
-        default:
-            throw new Error(`Unknown checker: ${checkName}`)
-    }
-}
-
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 ;(async () => {
@@ -76,8 +52,8 @@ process.on('SIGINT', () => process.exit(0))
     // const checkName = 'allLanguages' 
     // const checkName = 'getRepoDetails' 
     const branchName = 'main' // TODO - come back for this after initial pass - when picked up by repodetails
-    const check = await initializeChecker(checkName, repoName, OWNER, octokit, branchName)
-
+    const check = new AllChecksStrategy(repoName, OWNER, octokit, branchName);
+    
     const payload = await check.formatResponse(check) 
     const subject = `${NATS_PUB_STREAM}.${checkName}.${repoName}` 
   
