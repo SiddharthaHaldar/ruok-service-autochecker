@@ -47,7 +47,7 @@ process.on('SIGINT', () => process.exit(0))
     for await (const message of sub) {
       const payload  = await jc.decode(message.data)
       console.log('\n**************************************************************')
-      console.log(`Recieved from ... ${message.subject} \n${ppayload}`)
+      console.log(`Recieved from ... ${message.subject} \n${payload}`)
       
       const repoName = message.subject.split(".").reverse()[0]
 

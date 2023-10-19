@@ -17,9 +17,9 @@ const { NATS_URL, GITHUB_TOKEN } = process.env;
 
 const OWNER = 'PHACDataHub'
 
-const NATS_SUB_STREAM = "GitHubEvent" // Note - for checks that need branch, the substream will be different
+const NATS_SUB_STREAM = "GitHubEvent" // Note - for checks that need branch, the substream will be different (right now blanketing with 'main')
 const NATS_PUB_STREAM = "gitHub.saveToDatabase.octokit" // Note - for checks that need branch - the pubstream will be different 
-
+                                                        // Also note - this will be appended with repo name when published. 
 // Authenicate with GitHub 
 const octokit = new Octokit({ auth: GITHUB_TOKEN,});
 
@@ -59,18 +59,17 @@ async function initializeChecker(checkName, repoName, OWNER, octokit, branchName
     }
 }
 
-
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 ;(async () => {
  
   for await (const message of sub) {
-    const webhookPayload = await jc.decode(message.data)
+    const gitHubEventPayload = await jc.decode(message.data)
 
     console.log('\n**************************************************************')
-    console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(webhookPayload)}`)
+    console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(gitHubEventPayload)}`)
     
-    const { sourceCodeRepository } = webhookPayload
+    const { sourceCodeRepository } = gitHubEventPayload
     const repoName = sourceCodeRepository.split('/').pop()
 
     const checkName = 'allChecks' // have this passed in in future - default to all-checks

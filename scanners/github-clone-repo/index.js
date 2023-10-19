@@ -11,7 +11,7 @@ const NATS_PUB_STREAM = 'gitHub.cloned'
 
 // NATs connection 
 const nc = await connect({ servers: NATS_URL,})
-const jc = JSONCodec(); // for encoding NAT's messages
+const jc = JSONCodec()
 
 const sub = nc.subscribe(NATS_SUB_STREAM)
 console.log('🚀 Connected to NATS server - listening on ...', sub.subject, "channel...");

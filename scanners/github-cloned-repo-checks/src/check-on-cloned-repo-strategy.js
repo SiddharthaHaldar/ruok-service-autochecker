@@ -2,9 +2,10 @@
 
 
 export class CheckOnClonedRepoStrategy {
-    constructor(repoName) {
+    constructor(repoName, repoPath) {
         this.repoName = repoName
-        this.clonedRepoPath = `../../temp-cloned-repo/${repoName}`
+        this.clonedrepoPath = repoPath
+        // this.clonedRepoPath = `../../temp-cloned-repo/${repoName}`
     }
     async doRepoCheck() {
         return this.doRepoCheck()
