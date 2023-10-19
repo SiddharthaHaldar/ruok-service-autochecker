@@ -18,3 +18,5 @@ COPY ./util.js .
 USER node
 
 CMD ["npm", "--no-update-notifier", "start"]
+
+EXPOSE 3000
