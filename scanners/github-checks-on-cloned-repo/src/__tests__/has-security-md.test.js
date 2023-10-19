@@ -1,6 +1,6 @@
 
 import * as fs from 'fs';
-import { searchForFile, hasSecurityMd  } from '../has-security-md.js';
+import { searchForFile, hasSecurityMd  } from '../wipe-later/old-separated-scanners/github-cloned-has-security-md-check/src/has-security-md.js';
 
 describe('searchForFile function', () => {
     let testDirectory;

@@ -1,5 +1,5 @@
 # [Choice] Node.js version (use -bookworm, and -bullseye variants on local arm64/Apple Silicon): 20, 18, 20-bookworm, 18-bookworm, 20-bullseye, 18-bullseye, 20-buster, 18-buster
-ARG VARIANT=16-bullseye 
+ARG VARIANT=16-bullseye
 # modified in devcontainer.json
 FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:${VARIANT}
 

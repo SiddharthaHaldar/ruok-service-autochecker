@@ -1,6 +1,6 @@
 
 import * as fs from 'fs';
-import { searchForFile, hasDependabotYaml } from '../has-dependabot-yaml.js';
+import { searchForFile, hasDependabotYaml } from '../wipe-later/old-separated-scanners/github-cloned-has-dependabot-yaml-check/src/has-dependabot-yaml.js';
 
 describe('searchForFile function', () => {
     let testDirectory;

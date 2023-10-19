@@ -17,8 +17,8 @@ const { NATS_URL, GITHUB_TOKEN } = process.env;
 
 const OWNER = 'PHACDataHub'
 
-const NATS_SUB_STREAM = "GitHubEvent"
-const NATS_PUB_STREAM = "gitHub.octokit" 
+const NATS_SUB_STREAM = "GitHubEvent" // Note - for checks that need branch, the substream will be different
+const NATS_PUB_STREAM = "gitHub.saveToDatabase.octokit" // Note - for checks that need branch - the pubstream will be different 
 
 // Authenicate with GitHub 
 const octokit = new Octokit({ auth: GITHUB_TOKEN,});

@@ -30,7 +30,7 @@ process.on('SIGINT', () => process.exit(0))
         console.log('\n**************************************************************')
         console.log(`Recieved from ... ${message.subject}: \n ${JSON.stringify(webhookPayload)}`)
 
-        const { sourceCodeRepository, eventType} = webhookPayload 
+        const { sourceCodeRepository } = webhookPayload 
         const { repoName, cloneUrl } = await extractUrlParts(sourceCodeRepository)
         
         await cloneRepository(cloneUrl, repoName)

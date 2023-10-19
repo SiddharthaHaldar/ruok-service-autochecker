@@ -1,4 +1,4 @@
-import { searchForDirectory, searchTests } from '../has-tests-directory.js';
+import { searchForDirectory, searchTests } from '../wipe-later/old-separated-scanners/github-cloned-has-tests-directory-check/src/has-tests-directory.js';
 import * as fs from 'fs';
 
 // TODO use mock-fs https://www.npmjs.com/package/mock-fs
