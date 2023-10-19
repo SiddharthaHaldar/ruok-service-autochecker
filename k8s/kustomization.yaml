@@ -5,7 +5,9 @@ resources:
 - ./deployment-nats.yaml
 - ./deployment-ruok-api.yaml
 - ./deployment-webhook-server.yaml
-- ./nats-svc.yaml
+- ./svc-nats.yaml
+- ./svc-ruok-api.yaml
+- ./svc-webhook-server.yaml
 patches:
 - target:
     version: v1
