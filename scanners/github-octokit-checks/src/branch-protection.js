@@ -26,8 +26,8 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
     //   \____|_|  \__,_| .__/|_| |_|\__\_\_____|
     //                  |_|        
     const graphqlVars = {
-      orgName: "PHACDataHub",
-      repoName: "ruok-service-autochecker"
+      orgName: this.owner,
+      repoName: this.repo,
     }
     const branchProtectionRules = await this.octokit.graphql(
       `query MyQuery($orgName: String!, $repoName: String!)  {
