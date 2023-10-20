@@ -42,11 +42,6 @@ const jc = JSONCodec();
 const sub = nc.subscribe(NATS_SUB_STREAM)
 console.log('🚀 Connected to NATS server - listening on ...', sub.subject, "channel...");
 
-async function publish(subject, payload) {
-  nc.publish(subject, jc.encode(payload))
-  console.log(`Sent to ... ${subject}: `, payload)
-}
-
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
   ; (async () => {
@@ -78,8 +73,6 @@ process.on('SIGINT', () => process.exit(0))
         OPTIONS { overwriteMode: "update"}
       `
       const results = await db.query(upsertQuery)
-      var tmp=1
-
     }
   })();
 
