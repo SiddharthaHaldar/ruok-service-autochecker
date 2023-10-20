@@ -20,12 +20,20 @@ export class AutomatedSecurityFixesStrategy extends OctokitCheckStrategy {
   async formatResponse() {
     try {
       const response = await this.makeOctokitRequest();
-
+      const {
+        enabled,
+        paused
+      } = response.data;
       return {
-        'dependabot': response.data 
+        checkPasses: enabled,
+        metadata: {
+          enabled: enabled,
+          paused: paused,
+
+        } 
       }
     } catch (error) {
-      return {
+      throw {
         'dependabot': `error: ${error.message}` 
       }
     }

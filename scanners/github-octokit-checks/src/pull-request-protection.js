@@ -20,17 +20,19 @@ export class PullRequestProtectionStrategy extends OctokitCheckStrategy {
             const response = await this.makeOctokitRequest();
             if (response.status == 204) {
                 return {
-                    'pull_request_protection_enabled': true 
+                    checkPasses: true,
+                    metadata: null,
                 }   
             }
         } catch (error) {
           // if (error.status == 404){
           if (error.message == 'Branch not protected'){
             return {
-                'pull_request_protection': false
+                checkPasses: false,
+                metadata: null,
             }  
           } else {
-            return {
+            throw {
               'pull_request_protection': `error: ${error.message}`
             }
           }
