@@ -1,2 +1,0 @@
-# load the contents of the `.env` file upon entering the directory.
-dotenv
