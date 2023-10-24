@@ -15,15 +15,47 @@ export class ProgrammingLanguagesStrategy extends OctokitCheckStrategy {
   }
 
   async formatResponse() {
-    try {
-      const response = await this.makeOctokitRequest();
+    //    ____                 _      ___  _     
+    //   / ___|_ __ __ _ _ __ | |__  / _ \| |    
+    //  | |  _| '__/ _` | '_ \| '_ \| | | | |    
+    //  | |_| | | | (_| | |_) | | | | |_| | |___ 
+    //   \____|_|  \__,_| .__/|_| |_|\__\_\_____|
+    //                  |_|        
+    const graphqlVars = {
+      orgName: this.owner,
+      repoName: this.repo,
+    }
 
+    const repoLanguages = await this.octokit.graphql(
+      `query($orgName:String!, $repoName: String!) {
+        repository(owner: $orgName, name: $repoName) {
+          languages(first:10) {
+            edges {
+              node {
+                name
+                color
+              }
+            }
+          }
+        }
+      }`,
+      graphqlVars,
+    )
+    //   __  __      _            _       _        
+    //  |  \/  | ___| |_ __ _  __| | __ _| |_ __ _ 
+    //  | |\/| |/ _ \ __/ _` |/ _` |/ _` | __/ _` |
+    //  | |  | |  __/ || (_| | (_| | (_| | || (_| |
+    //  |_|  |_|\___|\__\__,_|\__,_|\__,_|\__\__,_|
+    const metadata = repoLanguages.repository.languages.edges.reduce((obj, item) => {
       return {
-        'all_languages': response.data 
-      }
-    } catch (error) {
-      console.error("An error occurred while formatting the response:", error.message);
-      throw error;
+        ...obj,
+        [item.node.name]: item.node.color,
+      };
+    }, {});
+
+    return {
+      checkPasses: null,
+      metadata,
     }
   }
 }
