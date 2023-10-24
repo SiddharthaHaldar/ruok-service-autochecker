@@ -48,6 +48,11 @@ K8s Cluster: {
     icon: ./img/arangodb.png
   }
 
+  GraphQL API: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
+
   Web Application: {
     shape: image
     icon: https://icons.terrastruct.com/dev%2Fdocker.svg
@@ -85,11 +90,15 @@ K8s Cluster.Clone Repo Scanner -> K8s Cluster.NATS Queue: Subscribe to Repo Even
 K8s Cluster.Octokit API Scanner -> K8s Cluster.NATS Queue: Subscribe to Repo Events
 
 # Scanners write metrics of interest to ArangoDB.
-K8s Cluster.Clone Repo Scanner -> K8s Cluster.Arangodb: Write Metrics
-K8s Cluster.Octokit API Scanner -> K8s Cluster.Arangodb: Write Metrics
+K8s Cluster.Clone Repo Scanner -> K8s Cluster.GraphQL API: Mutation Query
+K8s Cluster.Octokit API Scanner -> K8s Cluster.GraphQL API: Mutation Query
+
+K8s Cluster.GraphQL API -> K8s Cluster.Arangodb: Write Metrics
+K8s Cluster.GraphQL API -> K8s Cluster.Arangodb: Write Metrics
 
 # Web application fetches data from arangodb and presents it on UI
-K8s Cluster.Web Application -> K8s Cluster.Arangodb: Reads
+K8s Cluster.Web Application -> K8s Cluster.GraphQL API: Query
+K8s Cluster.GraphQL API <- K8s Cluster.Arangodb: Reads
 
 # Users are served pages from web application
 Users -> K8s Cluster.Web Application: Visit
