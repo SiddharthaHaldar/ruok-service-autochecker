@@ -9,10 +9,6 @@ export function Server({
       schema, 
       context, 
       cors: { origin: "*"},
-    //   plugins: [
-    //     maxAliasesPlugin({n: 4}), // default 15
-    //     maxDepthPlugin({n: 6}), // Number of depth allowed | Default: 6
-    //   ],
       graphqlEndpoint: '/graphql', 
     })
   
