@@ -1,21 +1,23 @@
-import { HasApiDirectory, hasDependabotYaml } from './has-api-directory.js'
+import { HasApiDirectory } from './has-api-directory.js'
 import { HasDependabotYaml } from './has-dependabot-yaml.js'
 import { HasTestsDirectory } from './has-tests-directory.js'
 import { HasSecurityMd } from "./has-security-md.js"
 import { DotDockerIgnoreDetails, DotGitIgnoreDetails }  from "./get-dotignore-details.js"
-import { CheckOnClonedRepoStrategy } from './check-on-cloned-repo-strategy.js'
+import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 
 
-export class AllChecks extends CheckOnClonedRepoStrategy {
-    constructor(repoName) {
-      super(repoName);
+export class AllChecks extends CheckOnClonedRepoInterface {
+    constructor(repoName, clonedRepoPath) {
+      super(repoName, clonedRepoPath);
+      this.clonedRepoPath = clonedRepoPath;
+      this.repoName = repoName
       this.checkers = [
-        new HasApiDirectory(repoName),
-        new HasDependabotYaml(repoName),
-        new HasTestsDirectory(repoName),
-        new HasSecurityMd(repoName),
-        new DotDockerIgnoreDetails(repoName),
-        new DotGitIgnoreDetails(repoName),
+        new HasApiDirectory(repoName, clonedRepoPath),
+        new HasDependabotYaml(repoName, clonedRepoPath),
+        new HasTestsDirectory(repoName, clonedRepoPath),
+        new HasSecurityMd(repoName, clonedRepoPath),
+        new DotDockerIgnoreDetails(repoName, clonedRepoPath),
+        new DotGitIgnoreDetails(repoName, clonedRepoPath),
       ];
     }
   
@@ -23,7 +25,6 @@ export class AllChecks extends CheckOnClonedRepoStrategy {
       const checkResults = await Promise.all(
         this.checkers.map(async (checker) => {
           const result = await checker.doRepoCheck();
-          console.log(`Ran ${checker.checkName()}: ${JSON.stringify(result)}`);
           return result;
         })
       )
@@ -40,8 +41,5 @@ export class AllChecks extends CheckOnClonedRepoStrategy {
       return allResults;
     }
   
-    checkName() {
-      return 'allChecks';
-    }
   }
   
