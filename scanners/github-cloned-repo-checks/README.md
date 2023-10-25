@@ -18,7 +18,7 @@ Check passes if an 'api' directory exists at root of project. No metadata
 
 #### Sample HasApiDirectory
 
-```Bash
+```bash
 "hasApiDirectory":{"checkPasses":true,"metadata":null,"lastUpdated":1698174245826}
 ```
 
@@ -30,7 +30,7 @@ Check passes if dependabot.y* (either dependabot.yaml or dependabot.yml) is in t
 
 #### Sample dependabotYaml
 
-```Bash
+```bash
 "hasDependabotYaml":{"checkPasses":false,"metadata":null,"lastUpdated":1698174245826}
 ```
 
@@ -40,7 +40,7 @@ Check passes if a Security (can have any extension) file is in the root of the r
 
 #### Sample hasSecurityMd
 
-```Bash
+```bash
 "hasSecurityMd":{"checkPasses":true,"metadata":null,"lastUpdated":1698174245826}
 ```
 
@@ -50,7 +50,7 @@ Check passes if one exists.  Metadata includes dockerignore path(s) and what var
 
 #### Sample dotDockerIgnoreDetails
 
-```Bash
+```bash
 "dotDockerIgnoreDetails":{"checkPasses":false,"metadata":null,"lastUpdated":1698174245826}
 ```
 
@@ -60,7 +60,7 @@ Check passes if a .gitignore exists in the repository.  Metadata includes docker
 
 #### Sample dotGitIgnoreDetails
 
-```Bash
+```bash
 "dotGitIgnoreDetails":{"checkPasses":true,"metadata":{"gitIgnoreFiles":[{"ignoreFilePath":".gitignore","hasDotenv":true,"hasDoubleStarSlashStarDotenv":true,"hasDoubleStarSlashDotenvStar":false}]},"lastUpdated":1698174245828}
 ```
 
