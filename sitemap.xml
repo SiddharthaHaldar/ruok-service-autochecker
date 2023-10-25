@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
+         <loc>https://phacdatahub.github.io/ruok-service-autochecker/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/architecture/</loc>
          <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
@@ -27,6 +32,11 @@
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/checks/source-code-repo-checks/</loc>
+         <lastmod>2023-10-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://phacdatahub.github.io/ruok-service-autochecker/checks/url-checks/</loc>
          <lastmod>2023-10-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
