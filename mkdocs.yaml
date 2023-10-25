@@ -31,5 +31,6 @@ nav:
   - GitHub Webhooks: github-webhooks.md
   - GraphQL API: graphql-api.md
   - Compliance Checks:
-    - Source Code Repository Checks: source-code-repo-checks.md
+    - Source Code Repository Checks: checks/source-code-repo-checks.md
+    - URL Checks: checks/url-checks.md
     
