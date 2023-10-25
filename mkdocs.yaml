@@ -1,4 +1,5 @@
 site_name: Observatory (R U OK?) Documentation
+site_url: https://phacdatahub.github.io/ruok-service-autochecker/
 
 theme:
   name: material
