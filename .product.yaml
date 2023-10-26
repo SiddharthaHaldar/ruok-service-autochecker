@@ -1,11 +1,12 @@
 projectName: Observatory
-containerRepositories: northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app
 serviceUrls:
   - https://safeinputs.phac.alpha.canada.ca
-  - https://safeinputs.phac.alpha.canada.ca/graphql
   - https://hopic-sdpac.phac-aspc.alpha.canada.ca
   - https://hopic-sdpac.k8s.phac-aspc.alpha.canada.ca
+apiUrls:
+  - https://safeinputs.phac.alpha.canada.ca/graphql
 domains:
   - entreessecurisees.aspc.alpha.canada.ca
   - safeinputs.phac-aspc.alpha.canada.ca
   - safeinputs.phac.alpha.canada.ca
+containerRegistryUrls: northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app
