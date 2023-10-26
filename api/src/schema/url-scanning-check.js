@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const typeDef = gql`
-type URLCheck {
+type URLScanningCheck {
     accessibility: AccessibilityReport
 }
 

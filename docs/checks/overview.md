@@ -9,6 +9,20 @@ When a repository event webhook is received, Observatory performs a series of au
 | URL Scanning Checks       | Perform security and compliance checks against the live instance(s) of the product                                          | Various automated scanning tools that interact with a public URL (e.g. [axe-core](https://github.com/dequelabs/axe-core) for accessibility scanning). |
 | Container Image Checks    | Perform scans on the OCI image(s) associated with a product (only applicable to products that build and deploy OCI images). | Automated tooling to run scans against the built container (e.g. [Trivy](https://github.com/aquasecurity/trivy)).                                     |
 
+The top-level data model for the GraphQL schema looks as follows:
+
+```graphql
+type RepositoryCheck {
+    _key: String!
+    remoteRepositoryCheck: RemoteRepositoryCheck
+    repositoryContentCheck: RepositoryContentCheck
+    containerImageCheck: [ContainerImageCheck]
+    urlScanningCheck: [URLScanningCheck]
+}
+```
+
+Note our assumption that one repository may deploy services behind multiple URLs and each repository may build more than one OCI image.
+
 The sections below expand on each Check Type in greater detail, and also show the parts of our GraphQL schema that expose these Check Types.
 
 ## Remote Repository Checks
