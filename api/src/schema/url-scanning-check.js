@@ -6,9 +6,9 @@ type URLCheck {
 }
 
 type AccessibilityReport {
-    minimumColourContrast: ComplianceCheck
-    ariaLabelsIncluded: ComplianceCheck
-
+   objectAlt: ComplianceCheck 
+   areaAlt: ComplianceCheck
+   ariaAllowedAttribute: ComplianceCheck
 }
 `
 
