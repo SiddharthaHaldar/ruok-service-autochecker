@@ -33,12 +33,22 @@ K8s Cluster: {
     icon: ./img/nats.png
   }
 
-  Clone Repo Scanner: {
+  Remote Repo Scanner: {
     shape: image
     icon: https://icons.terrastruct.com/dev%2Fdocker.svg
   }
 
-  Octokit API Scanner: {
+  Repo Content Scanner: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
+
+  URL Scanning Scanner: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
+
+  Container Image Scanner: {
     shape: image
     icon: https://icons.terrastruct.com/dev%2Fdocker.svg
   }
@@ -90,8 +100,10 @@ K8s Cluster.Clone Repo Scanner -> K8s Cluster.NATS Queue: Subscribe to Repo Even
 K8s Cluster.Octokit API Scanner -> K8s Cluster.NATS Queue: Subscribe to Repo Events
 
 # Scanners write metrics of interest to ArangoDB.
-K8s Cluster.Clone Repo Scanner -> K8s Cluster.GraphQL API: Mutation Query
-K8s Cluster.Octokit API Scanner -> K8s Cluster.GraphQL API: Mutation Query
+K8s Cluster.Remote Repo Scanner -> K8s Cluster.GraphQL API: Mutation Query
+K8s Cluster.Repo Content Scanner -> K8s Cluster.GraphQL API: Mutation Query
+K8s Cluster.URL Scanning Scanner -> K8s Cluster.GraphQL API: Mutation Query
+K8s Cluster.Container Image Scanner -> K8s Cluster.GraphQL API: Mutation Query
 
 K8s Cluster.GraphQL API -> K8s Cluster.Arangodb: Write Metrics
 K8s Cluster.GraphQL API -> K8s Cluster.Arangodb: Write Metrics

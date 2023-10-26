@@ -731,7 +731,7 @@
 <span class="normal">4</span>
 <span class="normal">5</span>
 <span class="normal">6</span>
-<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="err">RepositoryCheck</span><span class="w"> </span><span class="p">{</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="err">ProductCheck</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nl">_key</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
 <span class="w">    </span><span class="nl">remoteRepositoryCheck</span><span class="p">:</span><span class="w"> </span><span class="n">RemoteRepositoryCheck</span>
 <span class="w">    </span><span class="nl">repositoryContentCheck</span><span class="p">:</span><span class="w"> </span><span class="n">RepositoryContentCheck</span>
@@ -739,6 +739,8 @@
 <span class="w">    </span><span class="nl">urlScanningCheck</span><span class="p">:</span><span class="w"> </span><span class="err">[</span><span class="n">URLScanningCheck</span><span class="err">]</span>
 <span class="p">}</span>
 </code></pre></div></td></tr></table></div>
+<p>Observatory uses GraphQL as a layer to unify the data model for reporting on ITSG-33 and related compliance requirements. Roughly speaking, Observatory's "scanners" can be thought of as writing many pieces of security information about a given product. Similarly, the same data model exposed by the GraphQL API can be queried to report on the status of various compliance requirements.</p>
+<p><img alt="GraphQL API" src="../../diagrams/scanners.svg" /></p>
 <p>Note our assumption that one repository may deploy services behind multiple URLs and each repository may build more than one OCI image.</p>
 <p>The sections below expand on each Check Type in greater detail, and also show the parts of our GraphQL schema that expose these Check Types.</p>
 <h2 id="remote-repository-checks">Remote Repository Checks</h2>
@@ -1016,7 +1018,7 @@
 <span class="normal">76</span>
 <span class="normal">77</span>
 <span class="normal">78</span>
-<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="err">RepositoryCheck</span><span class="w"> </span><span class="p">{</span>
+<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="err">ProductCheck</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nl">_key</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
 <span class="w">    </span><span class="nl">remoteRepositoryCheck</span><span class="p">:</span><span class="w"> </span><span class="n">RemoteRepositoryCheck</span>
 <span class="w">    </span><span class="nl">repositoryContentCheck</span><span class="p">:</span><span class="w"> </span><span class="n">RepositoryContentCheck</span>
