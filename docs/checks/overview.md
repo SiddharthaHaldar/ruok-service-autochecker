@@ -33,7 +33,6 @@ There are many idioms, best practices, and security requirements for remote sour
 
 ```graphql
 --8<-- "api/src/schema/remote-repository-check.js:4:9"
-...
 --8<-- "api/src/schema/compliance-check.js:4:7"
 ```
 
@@ -119,3 +118,21 @@ Any products that build and deploy OCI images perform a series of checks on the 
 
 ## Global GraphQL Schema
 
+```graphql
+type RepositoryCheck {
+    _key: String!
+    remoteRepositoryCheck: RemoteRepositoryCheck
+    repositoryContentCheck: RepositoryContentCheck
+    containerImageCheck: [ContainerImageCheck]
+    urlScanningCheck: [URLScanningCheck]
+}
+
+--8<-- "api/src/schema/remote-repository-check.js:4:9"
+--8<-- "api/src/schema/compliance-check.js:4:7"
+
+--8<-- "api/src/schema/repository-content-check.js:4:36"
+
+--8<-- "api/src/schema/url-scanning-check.js:4:11"
+
+--8<-- "api/src/schema/container-image-check.js:4:20"
+```
