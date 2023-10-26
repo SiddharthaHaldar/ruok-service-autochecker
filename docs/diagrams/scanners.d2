@@ -1,0 +1,67 @@
+Product Check
+
+# ArangoDB: {
+#     shape: cylinder
+# }
+
+GraphQL API: {
+    shape: circle
+    style.fill: "#f268c6"
+}
+
+Remote Repository Checks
+Repository Content Checks
+Container Image Checks: {
+    style.multiple: true
+}
+URL Scanning Checks: {
+    style.multiple: true
+}
+
+Vulnerability Alerts Enabled -> GraphQL API
+Automated Security Fixes Enabled -> GraphQL API
+Branch Protection Enabled -> GraphQL API
+
+Has Security\.md File -> GraphQL API
+Gitleaks -> GraphQL API
+File Size Limits -> GraphQL API
+Hadolint Dockerfiles -> GraphQL API
+
+Trivy Scanning -> GraphQL API
+Gitleaks -> GraphQL API
+
+Accessibility Scanning (axe-puppeteer) -> GraphQL API
+
+Product Check -> Remote Repository Checks
+Product Check -> Repository Content Checks
+Product Check -> Container Image Checks
+Product Check -> URL Scanning Checks
+
+Remote Repository Checks -> Vulnerability Alerts Enabled
+Remote Repository Checks -> Automated Security Fixes Enabled
+Remote Repository Checks -> Branch Protection Enabled
+
+Repository Content Checks -> Has Security\.md File
+Repository Content Checks -> Gitleaks
+Repository Content Checks -> File Size Limits
+Repository Content Checks -> Hadolint Dockerfiles
+
+Container Image Checks -> Trivy Scanning
+Container Image Checks -> Gitleaks
+
+URL Scanning Checks -> Accessibility Scanning (axe-puppeteer)
+
+ITSG-33 AC-4: { style.fill: honeydew }
+ITSG-33 AC-16: { style.fill: pink }
+ITSG-33 CA-7: { style.fill: pink }
+ITSG-33 CM-5: { style.fill: honeydew }
+ITSG-33 CP-9: { style.fill: honeydew }
+
+GraphQL API -> ITSG-33 AC-4
+GraphQL API -> ITSG-33 AC-16
+GraphQL API -> ITSG-33 CA-7
+GraphQL API -> ITSG-33 CM-5
+GraphQL API -> ITSG-33 CP-9
+
+# GraphQL API -> ArangoDB: writes
+# GraphQL API <- ArangoDB: reads

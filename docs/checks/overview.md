@@ -12,7 +12,7 @@ When a repository event webhook is received, Observatory performs a series of au
 The top-level data model for the GraphQL schema looks as follows:
 
 ```graphql
-type RepositoryCheck {
+type ProductCheck {
     _key: String!
     remoteRepositoryCheck: RemoteRepositoryCheck
     repositoryContentCheck: RepositoryContentCheck
@@ -21,9 +21,16 @@ type RepositoryCheck {
 }
 ```
 
+Observatory uses GraphQL as a layer to unify the data model for reporting on ITSG-33 and related compliance requirements. Roughly speaking, Observatory's "scanners" can be thought of as writing many pieces of security information about a given product. Similarly, the same data model exposed by the GraphQL API can be queried to report on the status of various compliance requirements.
+
+![GraphQL API](../diagrams/scanners.svg)
+
+
 Note our assumption that one repository may deploy services behind multiple URLs and each repository may build more than one OCI image.
 
 The sections below expand on each Check Type in greater detail, and also show the parts of our GraphQL schema that expose these Check Types.
+
+
 
 ## Remote Repository Checks
 
@@ -119,7 +126,7 @@ Any products that build and deploy OCI images perform a series of checks on the 
 ## Global GraphQL Schema
 
 ```graphql
-type RepositoryCheck {
+type ProductCheck {
     _key: String!
     remoteRepositoryCheck: RemoteRepositoryCheck
     repositoryContentCheck: RepositoryContentCheck
