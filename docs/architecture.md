@@ -2,7 +2,7 @@
 
 The core architecture uses an event-driven workflow based on [GitHub Webhooks](github-webhooks.md) for repository events. Note that nothing about this architecture relies on event updates coming exclusively from webhooks, although this provides a convenient way to receive push notifications for the time being.
 
-![Architecture Diagram](./diagrams/architecture.svg)
+![Simplified Architecture Diagram](./diagrams/architecture-simple.svg)
 
 A webhook server listens for various webhook events. Two primary sources of events are considered, although the event sources are highly extensible.
 
@@ -28,3 +28,7 @@ Endpoint Scanners write the updated endpoint nodes back to the GraphQL API via t
 Consumers of the GraphQL API (such as the web application) are able to read data about product subgraphs, using any valid entrypoint into the subgraph. A special kind of `Product` label can be added with pointers to one or more endpoints in a subgraph, which allows clients such as the web application to attach a meaningful label to a subgraph of connected endpoints.
 
 Importantly, note that Graph Updater components are aware of graph structure, but have no knowledge of node attributes added by Endpoint Scanner. Conversely, Endpoint Scanners are aware of attributes for the type of endpoint node they scan, but have no knowledge of the graph structure maintained by the Graph Updater components. In this way, there is a clean separation of concerns between the Graph Updater components and the Endpoint Scanner components.
+
+## Detailed Architecture Diagram
+
+![Architecture Diagram Detailed](./diagrams/architecture.svg)
