@@ -1,0 +1,146 @@
+title: |md
+  # Architecture
+|
+
+direction: left
+
+GitHub Product Repository: {
+  shape: image
+  icon: https://icons.terrastruct.com/dev%2Fgithub.svg
+}
+
+GitHub DNS Repository: {
+  shape: image
+  icon: https://icons.terrastruct.com/dev%2Fgithub.svg
+}
+
+SMEE Proxy Server: {
+  shape: image
+  icon: ./img/smee.png
+}
+
+Users: {
+  shape: image
+  icon: https://icons.terrastruct.com/essentials%2F359-users.svg
+}
+
+K8s Cluster: {
+  Webhook Server: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
+
+  SMEE Proxy Client: {
+    shape: image
+    icon: ./img/smee.png
+  }
+  #   _   _    _  _____ ____  
+  #  | \ | |  / \|_   _/ ___| 
+  #  |  \| | / _ \ | | \___ \ 
+  #  | |\  |/ ___ \| |  ___) |
+  #  |_| \_/_/   \_\_| |____/ 
+  "": {
+    NATS: {
+      shape: image
+      icon: ./img/nats.png
+    }
+
+    EventsUpdate: {
+      shape: queue
+    }
+
+    EventsScanner: {
+      shape: queue
+    }
+  }
+  #   _   _           _       _                
+  #  | | | |_ __   __| | __ _| |_ ___ _ __ ___ 
+  #  | | | | '_ \ / _` |/ _` | __/ _ \ '__/ __|
+  #  | |_| | |_) | (_| | (_| | ||  __/ |  \__ \
+  #   \___/| .__/ \__,_|\__,_|\__\___|_|  |___/
+  #        |_|                    
+  Graph Updater: {
+    shape: image
+    icon: https://icons.terrastruct.com/essentials%2F092-network.svg
+  }
+
+  #   ____                                      
+  #  / ___|  ___ __ _ _ __  _ __   ___ _ __ ___ 
+  #  \___ \ / __/ _` | '_ \| '_ \ / _ \ '__/ __|
+  #   ___) | (_| (_| | | | | | | |  __/ |  \__ \
+  #  |____/ \___\__,_|_| |_|_| |_|\___|_|  |___/
+  Endpoint Scanner: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fnodejs.svg
+  }
+
+  Arangodb: {
+    shape: image
+    icon: ./img/arangodb.png
+  }
+
+  GraphQL API: {
+    shape: image
+    icon: ./img/graphql.svg
+  }
+
+  Web Application: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+  }
+}
+
+# Webhook server registers with GitHub repos/organization for webhook events
+GitHub Product Repository -> K8s Cluster.Webhook Server: Event Webhook
+GitHub DNS Repository -> K8s Cluster.Webhook Server: Event Webhook
+
+# In development environments, webhooks are directed towards SMEE proxy server,
+# then the SMEE proxy redirects the webhook to a client listening on localhost.
+GitHub Product Repository -> SMEE Proxy Server: dev {
+  style: {
+    stroke: red
+  }
+}
+
+GitHub DNS Repository -> SMEE Proxy Server: dev {
+  style: {
+    stroke: red
+  }
+}
+
+SMEE Proxy Server -> K8s Cluster.SMEE Proxy Client: dev {
+  style: {
+    stroke: red
+  }
+}
+
+K8s Cluster.SMEE Proxy Client -> K8s Cluster.Webhook Server: dev {
+  style: {
+    stroke: red
+  }
+}
+
+# Webhook server publishes events in NATS queue
+K8s Cluster.Webhook Server -> K8s Cluster."".EventsUpdate: pub repo endpoints
+
+# Updaters Workflow
+K8s Cluster.Graph Updater -> K8s Cluster."".EventsUpdate: Sub
+
+K8s Cluster.Graph Updater -> K8s Cluster.GraphQL API: merge + update
+
+K8s Cluster.Graph Updater -> K8s Cluster."".EventsScanner: pub endpoints
+
+# Scanners Workflow
+K8s Cluster.Endpoint Scanner -> K8s Cluster."".EventsScanner: sub
+
+K8s Cluster.Endpoint Scanner -> K8s Cluster.GraphQL API: update
+
+K8s Cluster.GraphQL API -> K8s Cluster.Arangodb: Write Metrics
+
+# Web application fetches data from arangodb and presents it on UI
+K8s Cluster.Web Application -> K8s Cluster.GraphQL API: Query
+K8s Cluster.GraphQL API <- K8s Cluster.Arangodb: Reads
+
+# Users are served pages from web application
+Users -> K8s Cluster.Web Application: Visit
+
