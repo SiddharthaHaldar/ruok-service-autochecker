@@ -3,6 +3,7 @@ webEndpoints:
   - https://safeinputs.phac.alpha.canada.ca
   - https://hopic-sdpac.phac-aspc.alpha.canada.ca
   - https://hopic-sdpac.k8s.phac-aspc.alpha.canada.ca
+apiEndpoints:
   - https://safeinputs.phac.alpha.canada.ca/graphql
 domains:
   - entreessecurisees.aspc.alpha.canada.ca
