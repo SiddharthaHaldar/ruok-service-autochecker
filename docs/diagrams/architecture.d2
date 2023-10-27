@@ -2,7 +2,14 @@ title: |md
   # Architecture
 |
 
-GitHub: {
+direction: left
+
+GitHub Product Repository: {
+  shape: image
+  icon: https://icons.terrastruct.com/dev%2Fgithub.svg
+}
+
+GitHub DNS Repository: {
   shape: image
   icon: https://icons.terrastruct.com/dev%2Fgithub.svg
 }
@@ -27,30 +34,79 @@ K8s Cluster: {
     shape: image
     icon: ./img/smee.png
   }
+  #   _   _    _  _____ ____  
+  #  | \ | |  / \|_   _/ ___| 
+  #  |  \| | / _ \ | | \___ \ 
+  #  | |\  |/ ___ \| |  ___) |
+  #  |_| \_/_/   \_\_| |____/ 
+  "": {
+    NATS: {
+      shape: image
+      icon: ./img/nats.png
+    }
 
-  NATS Queue: {
+    RepoEventsUpdate: {
+      shape: queue
+    }
+
+    WebEventsUpdate: {
+      shape: queue
+    }
+
+    ContainerEventsUpdate: {
+      shape: queue
+    }
+
+    RepoEventsScanner: {
+      shape: queue
+    }
+
+    WebEventsScanner: {
+      shape: queue
+    }
+
+    ContainerEventsScanner: {
+      shape: queue
+    }
+  }
+  #   _   _           _       _                
+  #  | | | |_ __   __| | __ _| |_ ___ _ __ ___ 
+  #  | | | | '_ \ / _` |/ _` | __/ _ \ '__/ __|
+  #  | |_| | |_) | (_| | (_| | ||  __/ |  \__ \
+  #   \___/| .__/ \__,_|\__,_|\__\___|_|  |___/
+  #        |_|                    
+  Repo Graph Updater: {
     shape: image
-    icon: ./img/nats.png
+    icon: https://icons.terrastruct.com/essentials%2F092-network.svg
   }
 
-  Remote Repo Scanner: {
+  Web Graph Updater: {
     shape: image
-    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: https://icons.terrastruct.com/essentials%2F092-network.svg
   }
 
-  Repo Content Scanner: {
+  Container Graph Updater: {
     shape: image
-    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: https://icons.terrastruct.com/essentials%2F092-network.svg
+  }
+  #   ____                                      
+  #  / ___|  ___ __ _ _ __  _ __   ___ _ __ ___ 
+  #  \___ \ / __/ _` | '_ \| '_ \ / _ \ '__/ __|
+  #   ___) | (_| (_| | | | | | | |  __/ |  \__ \
+  #  |____/ \___\__,_|_| |_|_| |_|\___|_|  |___/
+  Repo Endpoint Scanner: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev%2Fnodejs.svg
   }
 
-  URL Scanning Scanner: {
+  Web Endpoint Scanner: {
     shape: image
-    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: https://icons.terrastruct.com/dev%2Fnodejs.svg
   }
 
-  Container Image Scanner: {
+  Container Endpoint Scanner: {
     shape: image
-    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: https://icons.terrastruct.com/dev%2Fnodejs.svg
   }
 
   Arangodb: {
@@ -60,7 +116,7 @@ K8s Cluster: {
 
   GraphQL API: {
     shape: image
-    icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+    icon: ./img/graphql.svg
   }
 
   Web Application: {
@@ -70,11 +126,18 @@ K8s Cluster: {
 }
 
 # Webhook server registers with GitHub repos/organization for webhook events
-GitHub -> K8s Cluster.Webhook Server: Event Webhook
+GitHub Product Repository -> K8s Cluster.Webhook Server: Event Webhook
+GitHub DNS Repository -> K8s Cluster.Webhook Server: Event Webhook
 
 # In development environments, webhooks are directed towards SMEE proxy server,
 # then the SMEE proxy redirects the webhook to a client listening on localhost.
-GitHub -> SMEE Proxy Server: dev {
+GitHub Product Repository -> SMEE Proxy Server: dev {
+  style: {
+    stroke: red
+  }
+}
+
+GitHub DNS Repository -> SMEE Proxy Server: dev {
   style: {
     stroke: red
   }
@@ -93,19 +156,32 @@ K8s Cluster.SMEE Proxy Client -> K8s Cluster.Webhook Server: dev {
 }
 
 # Webhook server publishes events in NATS queue
-K8s Cluster.Webhook Server -> K8s Cluster.NATS Queue: Publish Repo Events
+K8s Cluster.Webhook Server -> K8s Cluster."".RepoEventsUpdate: pub repo endpoints
+K8s Cluster.Webhook Server -> K8s Cluster."".WebEventsUpdate: pub web endpoints
+K8s Cluster.Webhook Server -> K8s Cluster."".ContainerEventsUpdate: pub container endpoints
 
-# Scanners subscribe to certain repo events
-K8s Cluster.Clone Repo Scanner -> K8s Cluster.NATS Queue: Subscribe to Repo Events
-K8s Cluster.Octokit API Scanner -> K8s Cluster.NATS Queue: Subscribe to Repo Events
+# Updaters Workflow
+K8s Cluster.Repo Graph Updater -> K8s Cluster."".RepoEventsUpdate: Sub
+K8s Cluster.Web Graph Updater -> K8s Cluster."".WebEventsUpdate: Sub
+K8s Cluster.Container Graph Updater -> K8s Cluster."".ContainerEventsUpdate: Sub
 
-# Scanners write metrics of interest to ArangoDB.
-K8s Cluster.Remote Repo Scanner -> K8s Cluster.GraphQL API: Mutation Query
-K8s Cluster.Repo Content Scanner -> K8s Cluster.GraphQL API: Mutation Query
-K8s Cluster.URL Scanning Scanner -> K8s Cluster.GraphQL API: Mutation Query
-K8s Cluster.Container Image Scanner -> K8s Cluster.GraphQL API: Mutation Query
+K8s Cluster.Repo Graph Updater -> K8s Cluster.GraphQL API: merge + update
+K8s Cluster.Web Graph Updater -> K8s Cluster.GraphQL API: merge + update
+K8s Cluster.Container Graph Updater -> K8s Cluster.GraphQL API: merge + update
 
-K8s Cluster.GraphQL API -> K8s Cluster.Arangodb: Write Metrics
+K8s Cluster.Repo Graph Updater -> K8s Cluster."".RepoEventsScanner: pub endpoints
+K8s Cluster.Web Graph Updater -> K8s Cluster."".WebEventsScanner: pub endpoints
+K8s Cluster.Container Graph Updater -> K8s Cluster."".ContainerEventsScanner: pub endpoints
+
+# Scanners Workflow
+K8s Cluster.Repo Endpoint Scanner -> K8s Cluster."".RepoEventsScanner: sub
+K8s Cluster.Web Endpoint Scanner -> K8s Cluster."".WebEventsScanner: sub
+K8s Cluster.Container Endpoint Scanner -> K8s Cluster."".ContainerEventsScanner: sub
+
+K8s Cluster.Repo Endpoint Scanner -> K8s Cluster.GraphQL API: update
+K8s Cluster.Web Endpoint Scanner -> K8s Cluster.GraphQL API: update
+K8s Cluster.Container Endpoint Scanner -> K8s Cluster.GraphQL API: update
+
 K8s Cluster.GraphQL API -> K8s Cluster.Arangodb: Write Metrics
 
 # Web application fetches data from arangodb and presents it on UI
