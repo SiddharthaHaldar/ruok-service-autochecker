@@ -3,6 +3,7 @@ ARG VARIANT=18-bullseye
 # modified in devcontainer.json
 FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:${VARIANT}
 
+
 #       _                 _              _     
 #    __| | _____   __    | |_ ___   ___ | |___ 
 #   / _` |/ _ \ \ / /____| __/ _ \ / _ \| / __|
@@ -27,6 +28,23 @@ RUN curl -fsSL https://github.com/nats-io/natscli/releases/download/v0.1.1/nats-
 # Install dependencies for Chrome
 RUN sudo apt-get update && \
     sudo apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2
+
+#   ____        _   _                 
+#  |  _ \ _   _| |_| |__   ___  _ __  
+#  | |_) | | | | __| '_ \ / _ \| '_ \ 
+#  |  __/| |_| | |_| | | | (_) | | | |
+#  |_|    \__, |\__|_| |_|\___/|_| |_|
+#         |___/                       
+
+RUN apt-get update
+RUN apt-get install -y python3.10
+RUN apt-get install -y curl
+RUN curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh --output miniconda.sh && \
+    bash miniconda.sh -bfp /home/node/.local/bin/condabin && \
+    rm miniconda.sh
+
+RUN sudo echo "export PATH=$PATH:/home/node/.local/bin/condabin/bin" >> ~/.zshrc && \
+    sudo echo "export PATH=$PATH:/home/node/.local/bin/condabin/bin" >> ~/.bashrc
 
 # Start container as non-root user
 USER node
