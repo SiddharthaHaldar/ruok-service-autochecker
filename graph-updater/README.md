@@ -35,7 +35,7 @@ mutation {
 
 This mutation adds two additional nodes to the subgraph: `https://some-third-webapp.phac.alpha.gc.ca`, and a product label called `myproduct`. At this point in time, the subgraph looks like the following.
 
-![Arango graph example](docs/img/arango-graph-example.png)
+![Arango graph example](docs/img/arango-graph-mutation-example.png)
 
 This graph now has the property that a search for *any* endpoint on the graph will return *all* endpoints on the graph. For example, the following graphql query returns the following result:
 
