@@ -13,15 +13,24 @@ from pydantic import HttpUrl
 from strawberry.types import Info
 from strawberry.fastapi import GraphQLRouter
 
+DB_NAME = "ruok"
+# TODO: replace test account creds with creds passed via env vars
+USERNAME = "root"
+PASSWORD = ""
+# TODO: pass graph/vertex/edge collection names from config
+GRAPH_NAME = "endpoints"
+VERTEX_COLLECTION = "endpointNodes"
+EDGE_COLLECTION = "endpointEdges"
+
 
 class GraphDB:
     def __init__(self):
         self.client = ArangoClient()
         # TODO: remove hard-coded test values
-        self.db = self.client.db("ruok", username="root", password="")
-        self.graph = self.db.graph("endpointGraph")
-        self.nodes = self.graph.vertex_collection("endpointNodes")
-        self.edges = self.graph.edge_collection("endpointEdges")
+        self.db = self.client.db(DB_NAME, username=USERNAME, password=PASSWORD)
+        self.graph = self.db.graph(GRAPH_NAME)
+        self.nodes = self.graph.vertex_collection(VERTEX_COLLECTION)
+        self.edges = self.graph.edge_collection(EDGE_COLLECTION)
 
     def __del__(self):
         self.client.close()
@@ -44,8 +53,8 @@ class GraphDB:
             self.edges.insert(
                 {
                     "_key": edge_key,
-                    "_from": f"endpointNodes/{self._key_safe_url(endpoint1)}",
-                    "_to": f"endpointNodes/{self._key_safe_url(endpoint2)}",
+                    "_from": f"{VERTEX_COLLECTION}/{self._key_safe_url(endpoint1)}",
+                    "_to": f"{VERTEX_COLLECTION}/{self._key_safe_url(endpoint2)}",
                 }
             )
 
@@ -67,19 +76,48 @@ class GraphDB:
             self.insert_edge(url, root_url)
         return urls
 
-    def get_endpoint(self, url):
-        return self.nodes.get(self._key_safe_url(url))["url"]
+    def insert_product(self, product, urls):
+        if not self.nodes.get(product):
+            self.nodes.insert({"_key": product})
+        for url in urls:
+            self.insert_endpoint(url)
+            self.insert_edge(product, url)
+            self.insert_edge(url, product)
 
+    def get_endpoint(self, url):
+        if not self.nodes.get(self._key_safe_url(url)):
+            return {
+                "vertices": [],
+                "paths": [],
+            }
+        return self.graph.traverse(
+            start_vertex=f"{VERTEX_COLLECTION}/{self._key_safe_url(url)}",
+            direction="outbound",
+            strategy="bfs",
+            vertex_uniqueness="global",
+            edge_uniqueness="global"
+        )
+
+
+@strawberry.type
+class Endpoint:
+    url: str
 
 @strawberry.type
 class Query:
     @strawberry.field
-    def endpoint(self, url: str) -> str:
+    def endpoint(self, url: str) -> List[Endpoint]:
         client = GraphDB()
-        endpoint = client.get_endpoint(url)
+        endpoints = client.get_endpoint(url)
         client.close()
+        eps = []
+        for vertex in endpoints["vertices"]:
+            if "url" in vertex.keys():
+                eps.append(Endpoint(url=vertex["url"]))
+            else:
+                eps.append(Endpoint(url=vertex["_key"]))
         # TODO: how to marshal endpoint into a type with strawberry?
-        return endpoint
+        return eps
 
     @strawberry.field
     def product(self, name: str) -> str:
@@ -102,6 +140,13 @@ class Mutation:
         client.insert_endpoints(urls)
         client.close()
         return urls
+
+    @strawberry.mutation
+    def product(self, name: str, urls: List[str]) -> str:
+        client = GraphDB()
+        client.insert_product(name, urls)
+        client.close()
+        return name
 
 
 schema = strawberry.Schema(Query, Mutation)
