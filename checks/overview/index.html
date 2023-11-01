@@ -746,25 +746,7 @@
 <h2 id="remote-repository-checks">Remote Repository Checks</h2>
 <p>There are many idioms, best practices, and security requirements for remote source code repositories. Observatory automatically performs a number of these checks using information retrievable from the <a href="https://github.com/octokit/octokit.js">GitHub Octokit API</a>.</p>
 <h3 id="graphql-schema">GraphQL Schema</h3>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="err">RemoteRepositoryCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">vulnerabilityAlertsEnabled</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="w">    </span><span class="nl">automatedSecurityFixesEnabled</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="w">    </span><span class="nl">branchProtectionEnabled</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="p">}</span>
-<span class="err">`</span>
-<span class="k">type</span><span class="w"> </span><span class="err">ComplianceCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">checkPasses</span><span class="p">:</span><span class="w"> </span><span class="n">Boolean</span>
-<span class="w">    </span><span class="nl">metadata</span><span class="p">:</span><span class="w"> </span><span class="n">JSON</span>
-<span class="p">}</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>
 </code></pre></div></td></tr></table></div>
 <h3 id="vulnerability-alerts-enabled">Vulnerability Alerts Enabled</h3>
 <blockquote>
@@ -781,71 +763,7 @@
 <h2 id="repository-content-checks">Repository Content Checks</h2>
 <p>A number of checks are performed by scanning a deep clone of the repository's contents. The purpose of these checks is to perform scanning on all of the source code, configuration, etc. contained in the repository.</p>
 <h3 id="graphql-schema_1">GraphQL Schema</h3>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="err">RemoteRepositoryCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">hasSecurityMd</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="w">    </span><span class="nl">gitleaksReport</span><span class="p">:</span><span class="w"> </span><span class="n">GitleaksComplianceCheck</span>
-<span class="w">    </span><span class="nl">fileSizeCheck</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="w">    </span><span class="nl">hadolintDockerfile</span><span class="p">:</span><span class="w"> </span><span class="n">HadolintComplianceCheck</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">HadolintComplianceCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">checkPasses</span><span class="p">:</span><span class="w"> </span><span class="n">Boolean</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">hadolintReport</span><span class="p">:</span><span class="w"> </span><span class="err">[</span><span class="n">HadolintReport</span><span class="err">]</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">HadolintReport</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">dockerfilePath</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">rule</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">severity</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">description</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">GitleaksComplianceCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">checkPasses</span><span class="p">:</span><span class="w"> </span><span class="n">Boolean</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">gitleaksReport</span><span class="p">:</span><span class="w"> </span><span class="err">[</span><span class="n">GitleaksReport</span><span class="err">]</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">GitleaksReport</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">finding</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">ruleId</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">file</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">line</span><span class="p">:</span><span class="w"> </span><span class="n">Int</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">commit</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">author</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">email</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">date</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>
 </code></pre></div></td></tr></table></div>
 <h3 id="has-securitymd">Has <code>Security.md</code></h3>
 <p>A best practice with any open source code repository is to provide instructions via a <code>Security.md</code> file at the project root for how security vulnerabilities should be reported (see <a href="https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository">GitHub's code security documentation</a> for more information). This check verifies whether a repository contains a <code>Security.md</code> file.</p>
@@ -886,217 +804,27 @@
 <h2 id="url-service-scanning-checks">URL (Service) Scanning Checks</h2>
 <p>Some products have one or more services exposed through URLs. URL compliance checks perform a series of automated accessibility and security compliance checks using information that can be retrieved via these public URLs.</p>
 <h3 id="graphql-schema_2">GraphQL Schema</h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>
+</code></pre></div></td></tr></table></div>
+<h2 id="container-image-checks">Container Image Checks</h2>
+<p>Any products that build and deploy OCI images perform a series of checks on the built image artifact(s).</p>
+<h3 id="graphql-schema_3">GraphQL Schema</h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>
+</code></pre></div></td></tr></table></div>
+<h2 id="global-graphql-schema">Global GraphQL Schema</h2>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
 <span class="normal">3</span>
 <span class="normal">4</span>
 <span class="normal">5</span>
 <span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="err">URLScanningCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">accessibility</span><span class="p">:</span><span class="w"> </span><span class="n">AccessibilityReport</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">AccessibilityReport</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="nl">objectAlt</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span><span class="w"> </span>
-<span class="w">   </span><span class="nl">areaAlt</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="w">   </span><span class="nl">ariaAllowedAttribute</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-</code></pre></div></td></tr></table></div>
-<h2 id="container-image-checks">Container Image Checks</h2>
-<p>Any products that build and deploy OCI images perform a series of checks on the built image artifact(s).</p>
-<h3 id="graphql-schema_3">GraphQL Schema</h3>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="err">ContainerImageCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">trivyReport</span><span class="p">:</span><span class="w"> </span><span class="n">TrivyComplianceCheck</span>
-<span class="w">    </span><span class="nl">gitleaksReport</span><span class="p">:</span><span class="w"> </span><span class="n">GitleaksComplianceCheck</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">trivyComplianceCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">checkPasses</span><span class="p">:</span><span class="w"> </span><span class="n">Boolean</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">trivyReport</span><span class="p">:</span><span class="w"> </span><span class="err">[</span><span class="n">TrivyReport</span><span class="err">]</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">TrivyReport</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">library</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">vulnerability</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">severity</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">installedVersion</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">fixedVersion</span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
-<span class="w">    </span><span class="nl">title</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-</code></pre></div></td></tr></table></div>
-<h2 id="global-graphql-schema">Global GraphQL Schema</h2>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="err">ProductCheck</span><span class="w"> </span><span class="p">{</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="err">ProductCheck</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nl">_key</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
 <span class="w">    </span><span class="nl">remoteRepositoryCheck</span><span class="p">:</span><span class="w"> </span><span class="n">RemoteRepositoryCheck</span>
 <span class="w">    </span><span class="nl">repositoryContentCheck</span><span class="p">:</span><span class="w"> </span><span class="n">RepositoryContentCheck</span>
 <span class="w">    </span><span class="nl">containerImageCheck</span><span class="p">:</span><span class="w"> </span><span class="err">[</span><span class="n">ContainerImageCheck</span><span class="err">]</span>
 <span class="w">    </span><span class="nl">urlScanningCheck</span><span class="p">:</span><span class="w"> </span><span class="err">[</span><span class="n">URLScanningCheck</span><span class="err">]</span>
 <span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">RemoteRepositoryCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">vulnerabilityAlertsEnabled</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="w">    </span><span class="nl">automatedSecurityFixesEnabled</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="w">    </span><span class="nl">branchProtectionEnabled</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="p">}</span>
-<span class="err">`</span>
-<span class="k">type</span><span class="w"> </span><span class="err">ComplianceCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">checkPasses</span><span class="p">:</span><span class="w"> </span><span class="n">Boolean</span>
-<span class="w">    </span><span class="nl">metadata</span><span class="p">:</span><span class="w"> </span><span class="n">JSON</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">RemoteRepositoryCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">hasSecurityMd</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="w">    </span><span class="nl">gitleaksReport</span><span class="p">:</span><span class="w"> </span><span class="n">GitleaksComplianceCheck</span>
-<span class="w">    </span><span class="nl">fileSizeCheck</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="w">    </span><span class="nl">hadolintDockerfile</span><span class="p">:</span><span class="w"> </span><span class="n">HadolintComplianceCheck</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">HadolintComplianceCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">checkPasses</span><span class="p">:</span><span class="w"> </span><span class="n">Boolean</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">hadolintReport</span><span class="p">:</span><span class="w"> </span><span class="err">[</span><span class="n">HadolintReport</span><span class="err">]</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">HadolintReport</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">dockerfilePath</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">rule</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">severity</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">description</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">GitleaksComplianceCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">checkPasses</span><span class="p">:</span><span class="w"> </span><span class="n">Boolean</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">gitleaksReport</span><span class="p">:</span><span class="w"> </span><span class="err">[</span><span class="n">GitleaksReport</span><span class="err">]</span>
-<span class="p">}</span>
-
-<span class="k">type</span><span class="w"> </span><span class="err">GitleaksReport</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">finding</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">ruleId</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">file</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">line</span><span class="p">:</span><span class="w"> </span><span class="n">Int</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">commit</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">author</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">email</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">date</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-
-<span class="n">type</span><span class="w"> </span><span class="n">URLScanningCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">accessibility</span><span class="p">:</span><span class="w"> </span><span class="n">AccessibilityReport</span>
-<span class="p">}</span>
-
-<span class="n">type</span><span class="w"> </span><span class="n">AccessibilityReport</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="nl">objectAlt</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span><span class="w"> </span>
-<span class="w">   </span><span class="nl">areaAlt</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-<span class="w">   </span><span class="nl">ariaAllowedAttribute</span><span class="p">:</span><span class="w"> </span><span class="n">ComplianceCheck</span>
-
-<span class="n">type</span><span class="w"> </span><span class="n">ContainerImageCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">trivyReport</span><span class="p">:</span><span class="w"> </span><span class="n">TrivyComplianceCheck</span>
-<span class="w">    </span><span class="nl">gitleaksReport</span><span class="p">:</span><span class="w"> </span><span class="n">GitleaksComplianceCheck</span>
-<span class="p">}</span>
-
-<span class="n">type</span><span class="w"> </span><span class="n">trivyComplianceCheck</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">checkPasses</span><span class="p">:</span><span class="w"> </span><span class="n">Boolean</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">trivyReport</span><span class="p">:</span><span class="w"> </span><span class="err">[</span><span class="n">TrivyReport</span><span class="err">]</span>
-<span class="p">}</span>
-
-<span class="n">type</span><span class="w"> </span><span class="n">TrivyReport</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nl">library</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">vulnerability</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">severity</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">installedVersion</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
-<span class="w">    </span><span class="nl">fixedVersion</span><span class="p">:</span><span class="w"> </span><span class="n">String</span>
-<span class="w">    </span><span class="nl">title</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="err">!</span>
 </code></pre></div></td></tr></table></div>
 
               
