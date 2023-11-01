@@ -1,11 +1,19 @@
+from arango import ArangoClient
+
+from constants import Settings
+
+
 class GraphDB:
     def __init__(self):
         self.client = ArangoClient()
-        # TODO: remove hard-coded test values
-        self.db = self.client.db(DB_NAME, username=USERNAME, password=PASSWORD)
-        self.graph = self.db.graph(GRAPH_NAME)
-        self.nodes = self.graph.vertex_collection(VERTEX_COLLECTION)
-        self.edges = self.graph.edge_collection(EDGE_COLLECTION)
+        self.db = self.client.db(
+            Settings().DB_NAME,
+            username=Settings().USERNAME,
+            password=Settings().PASSWORD,
+        )
+        self.graph = self.db.graph(Settings().GRAPH_NAME)
+        self.nodes = self.graph.vertex_collection(Settings().VERTEX_COLLECTION)
+        self.edges = self.graph.edge_collection(Settings().EDGE_COLLECTION)
 
     def __del__(self):
         self.client.close()
@@ -28,8 +36,8 @@ class GraphDB:
             self.edges.insert(
                 {
                     "_key": edge_key,
-                    "_from": f"{VERTEX_COLLECTION}/{self._key_safe_url(endpoint1)}",
-                    "_to": f"{VERTEX_COLLECTION}/{self._key_safe_url(endpoint2)}",
+                    "_from": f"{Settings().VERTEX_COLLECTION}/{self._key_safe_url(endpoint1)}",
+                    "_to": f"{Settings().VERTEX_COLLECTION}/{self._key_safe_url(endpoint2)}",
                 }
             )
 
@@ -66,9 +74,9 @@ class GraphDB:
                 "paths": [],
             }
         return self.graph.traverse(
-            start_vertex=f"{VERTEX_COLLECTION}/{self._key_safe_url(url)}",
+            start_vertex=f"{Settings().VERTEX_COLLECTION}/{self._key_safe_url(url)}",
             direction="outbound",
             strategy="bfs",
             vertex_uniqueness="global",
-            edge_uniqueness="global"
+            edge_uniqueness="global",
         )
