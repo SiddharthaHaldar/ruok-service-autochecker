@@ -41,10 +41,9 @@ RUN apt-get install -y python3.10
 RUN apt-get install -y curl
 RUN curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh --output miniconda.sh && \
     bash miniconda.sh -bfp /home/node/.local/bin/condabin && \
-    rm miniconda.sh
-
-RUN sudo echo "export PATH=$PATH:/home/node/.local/bin/condabin/bin" >> ~/.zshrc && \
-    sudo echo "export PATH=$PATH:/home/node/.local/bin/condabin/bin" >> ~/.bashrc
+    rm miniconda.sh && \
+    sudo chown -R /home/node && \
+    sudo echo "export PATH=$PATH:/home/node/.local/bin/condabin/bin" >> /home/node/.zshrc
 
 # Start container as non-root user
 USER node
