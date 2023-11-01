@@ -1,64 +1,106 @@
-## API
+# Graph Updater
 
-Now start up with docker compose up 
+## GraphQL Query Examples
 
-Start up ArangoDB
-```
-docker run -e ARANGO_ROOT_PASSWORD=yourpassword -p 8529:8529 -d --name arangodb arangodb
+The semantics of queries is that a query for any endpoint on a subgraph returns the entire subgraph.
 
-```
-Create a 'dataServices' database
-```
-curl -u root:yourpassword -X POST --header 'accept: application/json' \
-     --data '{"name": "dataServices", "createCollection": true }' \
-     --dump - http://localhost:8529/_api/database
-```
+For example, suppose we make the following mutation:
 
-Create a 'dataServicesCollection' (NOTE *should be able to do this on the fly, but not behaving yet so just using _system and creating collection there - to add this to the database created above change last line to  *--dump - http://localhost:8529/_db/dataServices/_api/collection*  
-```
-curl -u root:yourpassword -X POST --header 'accept: application/json' \
-     --data '{"name": "dataServicesCollection"}' \
-     --dump - http://localhost:8529/_api/collection
-
-```
-<!-- this adds it to the actual db  --dump - http://localhost:8529/_db/dataServices/_api/collection -->
-## Installing dependencies
-
-```bash
-$ npm install
-```
-
-## Running it
-Start up nats server [nats.io](https://docs.nats.io/running-a-nats-service/introduction/installation) for cli or use docker [image](https://hub.docker.com/_/nats) with 
-``` 
-docker pull nats:latest
-docker run -p 4222:4222 -ti nats:latest
-```
-Start API
-```bash
-$ npm start
-```
-## Interact with Graphical 
-http://0.0.0.0:4000/graphql
-and modify mutation in the UI
-```
+```graphql
 mutation {
-  createDataService(serviceName: "testService", domain: "something.alpha.phac.ca") {
-    serviceName
-    domain
+  endpoints(urls: [
+    "https://github.com/someorg/somerepo2",
+    "https://another-site.phac.gc.ca",
+    "https://some-other-api.phac-aspc.gc.ca"
+  ])
+}
+```
+
+This mutation creates 3 connected enpoints: `https://github.com/someorg/somerepo2`, `https://another-site.phac.gc.ca`, `https://some-other-api.phac-aspc.gc.ca`.
+
+Suppose at a later date, we make some additional associations and attach these endpoints to a product with another mutation:
+
+```graphql
+mutation {
+  product(
+    name: "myproduct"
+    urls: [
+      "https://github.com/someorg/somerepo2",
+      "https://some-other-api.phac-aspc.gc.ca",
+      "https://some-third-webapp.phac.alpha.gc.ca"
+    ]  
+  )
+}
+```
+
+This mutation adds two additional nodes to the subgraph: `https://some-third-webapp.phac.alpha.gc.ca`, and a product label called `myproduct`. At this point in time, the subgraph looks like the following.
+
+![Arango graph example](docs/img/arango-graph-mutation-example.png)
+
+This graph now has the property that a search for *any* endpoint on the graph will return *all* endpoints on the graph. For example, the following graphql query returns the following result:
+
+```graphql
+query {
+  endpoint(url: "myproduct") {
+    url
   }
 }
 ```
-Log into the ArangoDB UI @ http://localhost:8529 root, yourpassword - choose _system db and view the records 
 
-## To stop and remove container(s)
+```json
+{
+  "data": {
+    "endpoint": [
+      {
+        "url": "myproduct"
+      },
+      {
+        "url": "https://github.com/someorg/somerepo2"
+      },
+      {
+        "url": "https://some-other-api.phac-aspc.gc.ca"
+      },
+      {
+        "url": "https://some-third-webapp.phac.alpha.gc.ca"
+      },
+      {
+        "url": "https://another-site.phac.gc.ca"
+      }
+    ]
+  }
+}
 ```
-docker stop arangodb
-docker stop nats
-docker rm arangodb
-docker rm nats
+
+Similarly, a GraphQL query for a different vertex on the graph also returns the entire subgraph (although in a different order since the graph traversal started from a different vertex as last time).
+
+```graphql
+query {
+  endpoint(url: "https://another-site.phac.gc.ca") {
+    url
+  }
+}
 ```
 
-## TODO
-Docker compose with set up
-
+```json
+{
+  "data": {
+    "endpoint": [
+      {
+        "url": "https://another-site.phac.gc.ca"
+      },
+      {
+        "url": "https://github.com/someorg/somerepo2"
+      },
+      {
+        "url": "https://some-other-api.phac-aspc.gc.ca"
+      },
+      {
+        "url": "myproduct"
+      },
+      {
+        "url": "https://some-third-webapp.phac.alpha.gc.ca"
+      }
+    ]
+  }
+}
+```
