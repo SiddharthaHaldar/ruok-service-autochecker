@@ -17,7 +17,10 @@ install: (https://aquasecurity.github.io/trivy/v0.18.3/installation/)
 wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
 sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
 ``` -->
+https://cloud.google.com/artifact-analysis/docs/quickstart-scanning-os-manually
+https://cloud.google.com/artifact-analysis/docs/quickstart-scanning-nodejs-automatically
 
+gcloud services enable containerscanning.googleapis.com  artifactregistry.googleapis.com
 
 This is a good explaination
 https://www.bluetab.net/en/container-vulnerability-scanning-with-trivy/
