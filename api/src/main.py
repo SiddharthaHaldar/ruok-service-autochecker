@@ -1,32 +1,24 @@
 from typing import List
 
-from arango import ArangoClient
 
 import strawberry
 
 import uvicorn
 
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 
-from pydantic import HttpUrl
 
-from strawberry.types import Info
 from strawberry.fastapi import GraphQLRouter
 
-DB_NAME = "ruok"
-# TODO: replace test account creds with creds passed via env vars
-USERNAME = "root"
-PASSWORD = ""
-# TODO: pass graph/vertex/edge collection names from config
-GRAPH_NAME = "endpoints"
-VERTEX_COLLECTION = "endpointNodes"
-EDGE_COLLECTION = "endpointEdges"
+from model import GraphDB
 
+from constants import Settings
 
 
 @strawberry.type
 class Endpoint:
     url: str
+
 
 @strawberry.type
 class Query:
@@ -84,4 +76,4 @@ app = FastAPI()
 app.include_router(graphql_app, prefix="/graphql")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host=Settings().GRAPHQL_HOST, port=Settings().GRAPHQL_PORT)
