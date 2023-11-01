@@ -24,6 +24,12 @@ RUN curl -fsSL https://github.com/nats-io/natscli/releases/download/v0.1.1/nats-
     chmod +x nats-0.1.1-linux-amd64/nats && \
     mv nats-0.1.1-linux-amd64/nats /usr/local/bin/nats && \
     rm -r nats-0.1.1-linux-amd64 && rm nats-0.1.1-linux-amd64.zip
+# Install dependencies for Chrome
+RUN sudo apt-get update && \
+    sudo apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2
 
 # Start container as non-root user
 USER node
+
+# Install puppeteer globally as node user
+RUN npm install -g puppeteer
