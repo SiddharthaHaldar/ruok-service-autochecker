@@ -27,9 +27,8 @@ build-api-image:
 
 # Webhook Server API
 build-webhook-server-image:
-	$(CONTAINER_RUNTIME) build ./webhook-server/ -t localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./event/collectors/github-webhook-server/ -t localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
 
-#
 kind-push-api:
 	kind load docker-image localhost/$(APP_NAME)-api:$(APP_VERSION)
 
@@ -56,5 +55,5 @@ k8s:
 port-forward:
 	kubectl port-forward svc/example-simple-single-ea 8529:8529 &
 	kubectl port-forward svc/nats 4222:4222 &
-	kubectl port-forward svc/webhook-server 3000:3000 &
+	# kubectl port-forward svc/webhook-server 3000:3000 &
 	kubectl port-forward svc/api 4000:4000
