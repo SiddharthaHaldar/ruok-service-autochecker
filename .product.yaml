@@ -9,4 +9,5 @@ domains:
   - entreessecurisees.aspc.alpha.canada.ca
   - safeinputs.phac-aspc.alpha.canada.ca
   - safeinputs.phac.alpha.canada.ca
-containerEndpoints: northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app
+containerEndpoints:
+  - northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app
