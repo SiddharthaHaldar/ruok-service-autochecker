@@ -20,4 +20,4 @@ patches:
         - name: NATS_SERVER
           value: nats:4222
         - name: NATS_PUB_STREAM
-          value: GitHubEvent
+          value: EventsUpdate
