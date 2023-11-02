@@ -27,7 +27,7 @@ build-api-image:
 
 # Webhook Server API
 build-webhook-server-image:
-	$(CONTAINER_RUNTIME) build ./event/collectors/github-webhook-server/ -t localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./event-collectors/github-webhook-server/ -t localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
 
 kind-push-api:
 	kind load docker-image localhost/$(APP_NAME)-api:$(APP_VERSION)
