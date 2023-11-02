@@ -1,7 +1,7 @@
-import { GithubEndpoint } from "./src/github-endpoint.js"
-import { WebEndpoint } from "./src/web-endpoint.js"
-import { ContainerEndpoint } from "./src/container-endpoint.js"
-import { GenericEndpoint } from "../graph-updater/src/generic-endpoint.js"
+import { GithubEndpoint } from "./github-endpoint.js"
+import { WebEndpoint } from "./web-endpoint.js"
+import { ContainerEndpoint } from "./container-endpoint.js"
+import { GenericEndpoint } from "./generic-endpoint.js"
 
 export function endpoint(kind) {
   switch (kind) {
