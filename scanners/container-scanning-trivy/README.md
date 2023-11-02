@@ -14,6 +14,10 @@ https://cloud.google.com/artifact-analysis/docs/os-scanning-automatically
 
 
 
+Authenticating users GCP
+https://cloud.google.com/nodejs/getting-started/authenticate-users
+https://cloud.google.com/nodejs/docs/reference/google-auth-library/latest
+
 Scan private containers (givebe permissions)
 trivy cloudlifeacr.azurecr.io/myhealth.web:latest
 
@@ -71,3 +75,146 @@ for file system
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy fs .
 ```
 run in server mode?
+
+INSTALL gcloud cli----------------------------------------------------
+
+https://cloud.google.com/sdk/docs/install
+```
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates gnupg curl sudo
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.asc] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.asc
+sudo apt-get update && sudo apt-get install google-cloud-cli
+```
+
+(note in docker single run step)
+```
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-cli -y
+```
+-----------------------------------------
+
+
+https://medium.com/google-cloud/centrally-managing-artifact-registry-container-image-vulnerabilities-on-google-cloud-part-two-ad730e7cf649
+
+```
+gcloud auth login (will need to do this programatically - see above)
+gcloud config set project 'phx-01h1yptgmche7jcy01wzzpw2rf'
+gcloud services enable securitycenter.googleapis.com
+gcloud services enable containerscanning.googleapis.com
+gcloud services enable containeranalysis.googleapis.com 
+```
+
+```
+
+gcloud iam service-accounts create scan-vuln \
+--description="Service Account to create process image scan vulnerabilities" \
+--display-name="Image Vulnerability Processor"
+```
+export project-id-source=phx-01h1yptgmche7jcy01wzzpw2rf
+service-account-source=scan-vuln
+```
+gcloud projects add-iam-policy-binding phx-01h1yptgmche7jcy01wzzpw2rf --member=serviceAccount:scan-vuln@phx-01h1yptgmche7jcy01wzzpw2rf.iam.gserviceaccount.com \
+--role=roles/containeranalysis.occurrences.viewer \
+<!-- --role=roles/containeranalysis.occurrences.list -->
+```
+gcloud projects add-iam-policy-binding phx-01h1yptgmche7jcy01wzzpw2rf  --member=serviceAccount:scan-vuln@phx-01h1yptgmche7jcy01wzzpw2rf.iam.gserviceaccount.com --role=roles/containeranalysis.occurrences.list
+
+
+<!-- gsutil iam ch serviceAccount:scan-vuln@phx-01h1yptgmche7jcy01wzzpw2rf.iam.gserviceaccount.com:objectCreator gs://<bucket-name>``` -->
+
+
+https://cloud.google.com/artifact-analysis/docs/os-scanning-automatically
+```
+gcloud artifacts docker images list --show-occurrences \
+northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app2/hello-world-three
+```
+most recent --show-occurrences-from=25
+
+tag 
+gcloud artifacts docker images describe \
+LOCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE_ID:TAG \
+--show-package-vulnerability
+```
+gcloud artifacts docker images list --show-occurrences \
+northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app2/hello-world-three --occurrence-filter=FILTER_EXPRESSION
+```
+FILTER_EXPRESSION https://cloud.google.com/artifact-analysis/docs/os-scanning-automatically#filtering
+LOCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE_ID
+
+
+WITH API (https://cloud.google.com/artifact-analysis/docs/nodejs-scanning-automatically)
+Occurrences:
+```
+ curl -X GET -H "Content-Type: application/json" -H \
+    "Authorization: Bearer $(gcloud auth print-access-token)" \
+    https://containeranalysis.googleapis.com/v1/projects/PROJECT_ID/occurrences
+```
+
+To get a summary of vulnerabilities in your project:
+
+
+ curl -X GET -H "Content-Type: application/json" -H \
+    "Authorization: Bearer $(gcloud auth print-access-token)" \
+    https://containeranalysis.googleapis.com/v1/projects/PROJECT_ID/occurrences:vulnerabilitySummary
+To get details on a specific occurrence:
+
+
+ curl -X GET -H "Content-Type: application/json" -H \
+    "Authorization: Bearer $(gcloud auth print-access-token)" \
+    https://containeranalysis.googleapis.com/v1/projects/PROJECT_ID/occurrences/OCCURRENCE_ID
+
+
+OR filter for KIND = VULNERABILITY
+
+gcloud artifacts docker images list --show-occurrences \
+northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app2/hello-world-three  --occurrence-filter=kind="VULNERABILITY"
+
+
+gcloud artifacts docker images list --show-occurrences \
+--occurrence-filter='kind="VULNERABILITY"' --format=json \
+northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app2/hello-world-three  
+
+
+----- Vulnerability summary for gcp project
+curl -X GET -H "Content-Type: application/json" -H \
+    "Authorization: Bearer $(gcloud auth print-access-token)" \
+    https://containeranalysis.googleapis.com/v1/projects/phx-01h1yptgmche7jcy01wzzpw2rf/occurrences:vulnerabilitySummary
+
+
+______________________________________________________________
+trying this [tutorial](https://medium.com/google-cloud/centrally-managing-artifact-registry-container-image-vulnerabilities-on-google-cloud-part-one-d86fb4791601)
+
+export SOURCE_PROJECT_ID=phx-01h1yptgmche7jcy01wzzpw2rf
+export SHARED_PROJECT_ID=
+
+----enable services
+gcloud config set project phx-01h1yptgmche7jcy01wzzpw2rf
+gcloud services enable cloudresourcemanager.googleapis.com
+gcloud services enable artifactregistry.googleapis.com
+gcloud services enable cloudbuild.googleapis.com
+gcloud services enable containerscanning.googleapis.com
+
+
+----create bucket
+gsutil mb -l us-central1 -p <project-id-shared> gs://<bucket-name>
+
+-----create service account 
+
+gcloud iam service-accounts create imageVulnProcessor \
+--description="Service Account to create process image scan vulnerabilities" \
+--display-name="Image Vulnerability Processor"
+
+---- add permissions to read vulnerabilites 
+
+gcloud projects add-iam-policy-binding phx-01h1yptgmche7jcy01wzzpw2rf --member=serviceAccount:imageVulnProcessor@phx-01h1yptgmche7jcy01wzzpw2rf.iam.gserviceaccount.com --role=roles/containeranalysis.occurrences.viewer
+gsutil iam ch serviceAccount:imageVulnProcessor@phx-01h1yptgmche7jcy01wzzpw2rf.iam.gserviceaccount.com:objectCreator gs://containerVulnerabilities
+
+--- create artifact registry (when pushed auto scanned with container scanning api)
+
+gcloud artifacts repositories create <repo-name> --location=us-central1 --repository-format=docker --project=<project-id-source>
+
+----create pub-sub container-analysis-occurances
+gcloud pubsub topics create container-analysis-occurrences-v1 --project=phx-01h1yptgmche7jcy01wzzpw2rf 
+
+--- create cloud function (https://cloud.google.com/functions/docs/create-deploy-http-python)

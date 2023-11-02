@@ -3,12 +3,17 @@
 
 * TODO(developer): Uncomment these variables before running the sample
  */
+
+
+//  in shell
+// gcloud config set project PROJECT_ID
+
 const projectId = 'phx-01h1yptgmche7jcy01wzzpw2rf'// Your GCP Project ID
 // If you are using Google Container Registry
 // const imageUrl = 'https://gcr.io/my-project/my-repo/my-image@sha256:123' // Image to attach metadata to
 // If you are using Google Artifact Registry
 
-const imageUrl = 'https://northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app2/hello-world-three:d02289a4d62f' // Image to attach metadata to
+const imageUrl = 'https://northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app2/hello-world-three@d02289a4d62f' // Image to attach metadata to
 
 // Import the library and create a client
 // const {ContainerAnalysisClient} = require('@google-cloud/containeranalysis');
