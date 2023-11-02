@@ -8,5 +8,6 @@ deploy
 temp-cloned-repo/
 # Ignore developer-specific IDE configuration
 .vscode/launch.json
+.vscode/settings.json
 .devcontainer/devcontainer.json
 

@@ -1,20 +1,12 @@
-FROM node:18-alpine
+FROM python:3.11.6-bullseye
 
-ENV NODE_ENV production
+RUN apt-get update
 
-WORKDIR /app
+WORKDIR /code
 
-RUN apk --no-cache add curl
+COPY requirements.txt /code/requirements.txt
+RUN pip install -r requirements.txt
 
-COPY package*.json ./
+COPY ./src/ /code
 
-RUN npm ci
-
-# COPY . . 
-COPY ./.env ./.env.example ./
-COPY ./src ./src
-COPY ./index.js .
-
-CMD ["npm", "--no-update-notifier", "start"]
-
-EXPOSE 4000
+CMD ["python", "main.py"]

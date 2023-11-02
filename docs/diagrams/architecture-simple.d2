@@ -45,27 +45,11 @@ K8s Cluster: {
       icon: ./img/nats.png
     }
 
-    RepoEventsUpdate: {
+    EventsUpdate: {
       shape: queue
     }
 
-    WebEventsUpdate: {
-      shape: queue
-    }
-
-    ContainerEventsUpdate: {
-      shape: queue
-    }
-
-    RepoEventsScanner: {
-      shape: queue
-    }
-
-    WebEventsScanner: {
-      shape: queue
-    }
-
-    ContainerEventsScanner: {
+    EventsScanner: {
       shape: queue
     }
   }
@@ -75,36 +59,17 @@ K8s Cluster: {
   #  | |_| | |_) | (_| | (_| | ||  __/ |  \__ \
   #   \___/| .__/ \__,_|\__,_|\__\___|_|  |___/
   #        |_|                    
-  Repo Graph Updater: {
+  Graph Updater: {
     shape: image
     icon: https://icons.terrastruct.com/essentials%2F092-network.svg
   }
 
-  Web Graph Updater: {
-    shape: image
-    icon: https://icons.terrastruct.com/essentials%2F092-network.svg
-  }
-
-  Container Graph Updater: {
-    shape: image
-    icon: https://icons.terrastruct.com/essentials%2F092-network.svg
-  }
   #   ____                                      
   #  / ___|  ___ __ _ _ __  _ __   ___ _ __ ___ 
   #  \___ \ / __/ _` | '_ \| '_ \ / _ \ '__/ __|
   #   ___) | (_| (_| | | | | | | |  __/ |  \__ \
   #  |____/ \___\__,_|_| |_|_| |_|\___|_|  |___/
-  Repo Endpoint Scanner: {
-    shape: image
-    icon: https://icons.terrastruct.com/dev%2Fnodejs.svg
-  }
-
-  Web Endpoint Scanner: {
-    shape: image
-    icon: https://icons.terrastruct.com/dev%2Fnodejs.svg
-  }
-
-  Container Endpoint Scanner: {
+  Endpoint Scanner: {
     shape: image
     icon: https://icons.terrastruct.com/dev%2Fnodejs.svg
   }
@@ -156,31 +121,19 @@ K8s Cluster.SMEE Proxy Client -> K8s Cluster.Webhook Server: dev {
 }
 
 # Webhook server publishes events in NATS queue
-K8s Cluster.Webhook Server -> K8s Cluster."".RepoEventsUpdate: pub repo endpoints
-K8s Cluster.Webhook Server -> K8s Cluster."".WebEventsUpdate: pub web endpoints
-K8s Cluster.Webhook Server -> K8s Cluster."".ContainerEventsUpdate: pub container endpoints
+K8s Cluster.Webhook Server -> K8s Cluster."".EventsUpdate: pub repo endpoints
 
 # Updaters Workflow
-K8s Cluster.Repo Graph Updater -> K8s Cluster."".RepoEventsUpdate: Sub
-K8s Cluster.Web Graph Updater -> K8s Cluster."".WebEventsUpdate: Sub
-K8s Cluster.Container Graph Updater -> K8s Cluster."".ContainerEventsUpdate: Sub
+K8s Cluster.Graph Updater -> K8s Cluster."".EventsUpdate: Sub
 
-K8s Cluster.Repo Graph Updater -> K8s Cluster.GraphQL API: merge + update
-K8s Cluster.Web Graph Updater -> K8s Cluster.GraphQL API: merge + update
-K8s Cluster.Container Graph Updater -> K8s Cluster.GraphQL API: merge + update
+K8s Cluster.Graph Updater -> K8s Cluster.GraphQL API: merge + update
 
-K8s Cluster.Repo Graph Updater -> K8s Cluster."".RepoEventsScanner: pub endpoints
-K8s Cluster.Web Graph Updater -> K8s Cluster."".WebEventsScanner: pub endpoints
-K8s Cluster.Container Graph Updater -> K8s Cluster."".ContainerEventsScanner: pub endpoints
+K8s Cluster.Graph Updater -> K8s Cluster."".EventsScanner: pub endpoints
 
 # Scanners Workflow
-K8s Cluster.Repo Endpoint Scanner -> K8s Cluster."".RepoEventsScanner: sub
-K8s Cluster.Web Endpoint Scanner -> K8s Cluster."".WebEventsScanner: sub
-K8s Cluster.Container Endpoint Scanner -> K8s Cluster."".ContainerEventsScanner: sub
+K8s Cluster.Endpoint Scanner -> K8s Cluster."".EventsScanner: sub
 
-K8s Cluster.Repo Endpoint Scanner -> K8s Cluster.GraphQL API: update
-K8s Cluster.Web Endpoint Scanner -> K8s Cluster.GraphQL API: update
-K8s Cluster.Container Endpoint Scanner -> K8s Cluster.GraphQL API: update
+K8s Cluster.Endpoint Scanner -> K8s Cluster.GraphQL API: update
 
 K8s Cluster.GraphQL API -> K8s Cluster.Arangodb: Write Metrics
 
@@ -190,3 +143,4 @@ K8s Cluster.GraphQL API <- K8s Cluster.Arangodb: Reads
 
 # Users are served pages from web application
 Users -> K8s Cluster.Web Application: Visit
+

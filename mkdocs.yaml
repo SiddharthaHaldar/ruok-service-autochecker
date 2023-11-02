@@ -1,0 +1,36 @@
+site_name: Observatory (R U OK?) Documentation
+site_url: https://phacdatahub.github.io/ruok-service-autochecker/
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: blue
+
+repo_url: https://github.com/PHACDataHub/ruok-service-autochecker
+
+extra:
+  social:
+    - icon: fontawesome/brands/github 
+      link: https://github.com/PHACDataHub/ruok-service-autochecker 
+
+plugins:
+  - search:
+      separator: '[\s\-\.]+'
+
+markdown_extensions:
+  - pymdownx.snippets
+  - pymdownx.highlight:
+      linenums: true
+  - pymdownx.superfences 
+
+nav:
+  - Architecture: architecture.md
+  - Deployment: deployment.md
+  - Development Environment: development-environment.md
+  - GitHub Webhooks: github-webhooks.md
+  - GraphQL API: graphql-api.md
+  - Register a Repository: register-repository.md
+  - Compliance Checks:
+    - Overview: checks/overview.md 
+    
