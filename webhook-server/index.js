@@ -8,7 +8,6 @@ import 'dotenv/config'
 
 // Get config variables from environment
 const {
-  WEBHOOK_SECRET,
   WEBHOOK_SERVER_PORT_NUMBER,
   NATS_SERVER,
   NATS_PUB_STREAM
