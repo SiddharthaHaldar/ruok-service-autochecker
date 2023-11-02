@@ -12,7 +12,7 @@ const {
     API_URL,
   } = process.env;
   
-const NATS_SUB_STREAM="WebEvent"
+const NATS_SUB_STREAM="EventsScanner"
 
 // API connection 
 const graphQLClient = new GraphQLClient(API_URL);
