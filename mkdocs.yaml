@@ -26,6 +26,7 @@ markdown_extensions:
 
 nav:
   - Architecture: architecture.md
+  - Configuration: configuration.md
   - Deployment: deployment.md
   - Development Environment: development-environment.md
   - GitHub Webhooks: github-webhooks.md
