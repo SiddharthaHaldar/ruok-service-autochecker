@@ -7,6 +7,9 @@ class Settings(BaseSettings):
 
     GRAPHQL_HOST: str = Field("127.0.0.1")
     GRAPHQL_PORT: int = Field(4000)
+
+    DB_HOST: str = Field("http://127.0.0.1:8529")
+
     DB_NAME: str = Field("ruok")
     USERNAME: str = Field("changeme")
     PASSWORD: str = Field("changeme")
