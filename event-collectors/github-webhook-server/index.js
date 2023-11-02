@@ -5,6 +5,7 @@ import { verifySignature } from './src/util.js'
 
 // Load .env file
 import 'dotenv/config.js'
+import { endpointKind } from './src/endpoint.js'
 
 // Get config variables from environment
 const {
@@ -37,26 +38,38 @@ app.post('/', async (req, res) => {
     return;
   }
 
-  // Figure out what kind 
-  // extract relevant information to put into queue.
-  const cloneUrl = req.body.repository.ssh_url
-  const repoName = req.body.repository.name
-  const orgName = req.body.repository.owner.login
-  const sourceCodeRepository = req.body.repository.html_url // or svn_url
-  const eventType = req.headers['x-github-event']
-  const productName = `${orgName}_${repoName}`
-
-  // publish message to NATS
-  await nc.publish(NATS_PUB_STREAM, jc.encode({
-    eventType,
-    sourceCodeRepository,
-    cloneUrl,
-    repoName,
-    productName
-  }))
+  // Get relevant properties to attach to the endpoint event
+  const httpsUrl = req.body.repository.html_url;
+  const orgName = req.body.repository.owner.login;
+  const eventType = req.headers['x-github-event'];
+  const repoName = req.body.repository.name;
+  const cloneUrl = req.body.repository.ssh_url;
+  const productName = `${orgName}_${repoName}`;
+  
+  // Figure out what kind of endpoint(s) are contained in this webhook
+  // notification
+  const endpointKinds = endpointKind(httpsUrl);
+  
+  // For each endpoint, formulate a message and publish it to the
+  // appropriate NATS queue.
+  for (i = 0; i < endpointKinds.length; i++) {
+    const endpoint = endpointKinds[i];
+    await nc.publish(NATS_PUB_STREAM, jc.encode({
+      endpoint: httpsUrl,
+      endpointKind: endpoint,
+      eventType,
+      sourceCodeRepository,
+      cloneUrl,
+      repoName,
+      productName,
+    }))
+  }
+  
   // TODO: replace this with a proper logger
   console.log("successfully published event: ", eventType)
-})
+});
+
+
 
 app.listen(WEBHOOK_SERVER_PORT_NUMBER, () => {
   console.log(`Webhook server listening on port ${WEBHOOK_SERVER_PORT_NUMBER}`)
