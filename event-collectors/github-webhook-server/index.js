@@ -52,13 +52,14 @@ app.post('/', async (req, res) => {
   
   // For each endpoint, formulate a message and publish it to the
   // appropriate NATS queue.
-  for (i = 0; i < endpointKinds.length; i++) {
+  for (let i = 0; i < endpointKinds.length; i++) {
     const endpoint = endpointKinds[i];
     await nc.publish(NATS_PUB_STREAM, jc.encode({
       endpoint: httpsUrl,
       endpointKind: endpoint,
       eventType,
-      sourceCodeRepository,
+      // TODO: unify duplicate value - probably standardize on `endpoint`?
+      sourceCodeRepository: httpsUrl,
       cloneUrl,
       repoName,
       productName,
@@ -66,7 +67,7 @@ app.post('/', async (req, res) => {
   }
   
   // TODO: replace this with a proper logger
-  console.log("successfully published event: ", eventType)
+  console.log("successfully published event: ", eventType, "from", orgName, "/", repoName)
 });
 
 
