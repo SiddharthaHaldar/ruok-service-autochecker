@@ -1,7 +1,7 @@
 import { connect, JSONCodec } from 'nats'
 import { Octokit } from "octokit"
 
-import { endpoint, endpointKind } from './endpoint.js';
+import { endpoint } from './src/endpoint.js';
 
 import 'dotenv-safe/config.js'
 
