@@ -1,58 +1,57 @@
+import { Octokit } from "octokit"
+
+import { load } from "js-yaml";
+
+import 'dotenv-safe/config.js'
+
+const { GITHUB_TOKEN } = process.env
+
+const GRAPH_METADATA_NAME = ".product.yaml";
 
 export class GithubEndpoint {
   constructor() {
-    // this.endpoint = 'GET /repos/{owner}/{repo}/languages'
-    // this.options = {
-    //   owner: this.owner,
-    //   repo: this.repo,
-    //   headers: {
-    //     'X-GitHub-Api-Version': '2022-11-28',
-    //   },
-    // };
+    this.octokit = new Octokit({ auth: GITHUB_TOKEN, });
   }
 
-  async formatResponse() {
-    //    ____                 _      ___  _     
-    //   / ___|_ __ __ _ _ __ | |__  / _ \| |    
-    //  | |  _| '__/ _` | '_ \| '_ \| | | | |    
-    //  | |_| | | | (_| | |_) | | | | |_| | |___ 
-    //   \____|_|  \__,_| .__/|_| |_|\__\_\_____|
-    //                  |_|        
-    const graphqlVars = {
-      orgName: this.owner,
-      repoName: this.repo,
-    }
+  /**
+   * For GitHub endpoints, graph metadata is specified in `.product.yaml`
+   * files in the repository root.
+   */
+  async getGraphMetaData(payload) {
+    const {
+      orgName,
+      repoName,
+    } = payload;
 
-    const repoLanguages = await this.octokit.graphql(
-      `query($orgName:String!, $repoName: String!) {
-        repository(owner: $orgName, name: $repoName) {
-          languages(first:10) {
-            edges {
-              node {
-                name
-                color
-              }
-            }
-          }
-        }
-      }`,
-      graphqlVars,
+    const response = await this.octokit.request(
+      'GET /repos/{owner}/{repo}/contents/{path}', {
+      owner: orgName,
+      repo: repoName,
+      path: GRAPH_METADATA_NAME
+    }
     )
-    //   __  __      _            _       _        
-    //  |  \/  | ___| |_ __ _  __| | __ _| |_ __ _ 
-    //  | |\/| |/ _ \ __/ _` |/ _` |/ _` | __/ _` |
-    //  | |  | |  __/ || (_| | (_| | (_| | || (_| |
-    //  |_|  |_|\___|\__\__,_|\__,_|\__,_|\__\__,_|
-    const metadata = repoLanguages.repository.languages.edges.reduce((obj, item) => {
-      return {
-        ...obj,
-        [item.node.name]: item.node.color,
-      };
-    }, {});
+    // base64 decode to ascii, then parse ascii string to yaml object
+    const productDotYaml = load(
+      Buffer
+        .from(response.data.content, 'base64')
+        .toString('ascii')
+    );
+    var productEndpoints = this.extractEndpoints(productDotYaml);
 
-    return {
-      checkPasses: null,
-      metadata,
-    }
+    let tmp = 1;
+    return "test"
+  }
+
+  /**
+   * Given a yaml object, extract all endpoints and return a set of all endpoints
+   * found.
+   * @param {Object} yamlObj 
+   */
+  extractEndpoints(yamlObj) {
+    return new Set([
+      ...(yamlObj.webEndpoints || []),
+      ...(yamlObj.githubEndpoints || []),
+      ...(yamlObj.containerEndpoints || []),
+    ])
   }
 }

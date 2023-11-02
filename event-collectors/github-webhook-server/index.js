@@ -62,6 +62,7 @@ app.post('/', async (req, res) => {
       sourceCodeRepository: httpsUrl,
       cloneUrl,
       repoName,
+      orgName,
       productName,
     }))
   }
