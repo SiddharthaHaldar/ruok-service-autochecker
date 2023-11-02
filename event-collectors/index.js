@@ -1,10 +1,10 @@
 import express from 'express'
 import { connect, JSONCodec } from 'nats'
 
-import { verifySignature } from './util.js'
+import { verifySignature } from './src/util.js'
 
 // Load .env file
-import 'dotenv/config'
+import 'dotenv/config.js'
 
 // Get config variables from environment
 const {
@@ -36,6 +36,8 @@ app.post('/', async (req, res) => {
     console.log("Unauthorized Request");
     return;
   }
+
+  // Figure out what kind 
   // extract relevant information to put into queue.
   const cloneUrl = req.body.repository.ssh_url
   const repoName = req.body.repository.name
