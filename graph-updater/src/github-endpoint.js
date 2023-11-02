@@ -2,6 +2,8 @@ import { Octokit } from "octokit"
 
 import { load } from "js-yaml";
 
+import { GraphQLClient, gql } from 'graphql-request';
+
 import 'dotenv-safe/config.js'
 
 const { GITHUB_TOKEN } = process.env
@@ -39,6 +41,20 @@ export class GithubEndpoint {
     var productEndpoints = this.extractEndpoints(productDotYaml);
 
     let tmp = 1;
+
+    // Call GraphQL API and request the endpoints query with all urls extracted
+    // from the .product.yaml file.
+    const graphqlClient = new GraphQLClient("http://localhost:4000/graphql")
+    // Need to create a string serialized array of urls
+    const endpointsString = `["${Array.from(productEndpoints).join('", "')}"]`
+    const query = gql`
+    {
+      endpoints(urls: ${endpointsString}) {
+        url
+      }
+    }
+    `
+    const graphqlResponse = await graphqlClient.request(query);
     return "test"
   }
 
