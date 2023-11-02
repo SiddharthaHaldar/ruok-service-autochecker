@@ -33,8 +33,14 @@ class Query:
                 eps.append(Endpoint(url=vertex["url"]))
             else:
                 eps.append(Endpoint(url=vertex["_key"]))
-        # TODO: how to marshal endpoint into a type with strawberry?
         return eps
+
+    @strawberry.field
+    def endpoints(self, urls: List[str]) -> List[Endpoint]:
+        client = GraphDB()
+        endpoints = client.get_endpoints(urls)
+        client.close()
+        return [Endpoint(url=vertex) for vertex in endpoints] 
 
     @strawberry.field
     def product(self, name: str) -> str:

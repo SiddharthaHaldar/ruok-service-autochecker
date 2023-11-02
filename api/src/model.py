@@ -81,3 +81,13 @@ class GraphDB:
             vertex_uniqueness="global",
             edge_uniqueness="global",
         )
+
+    def get_endpoints(self, urls):
+        unique_urls = set()
+        for url in urls:
+            url_vertices = self.get_endpoint(url)["vertices"]
+            if url_vertices:
+                unique_urls = unique_urls.union(
+                    [v["url"] if "url" in v.keys() else v["_key"] for v in url_vertices]
+                )
+        return list(unique_urls)
