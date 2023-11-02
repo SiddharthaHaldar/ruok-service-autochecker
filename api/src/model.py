@@ -5,7 +5,8 @@ from constants import Settings
 
 class GraphDB:
     def __init__(self):
-        self.client = ArangoClient()
+        # Add Arangodb host + port
+        self.client = ArangoClient(hosts=Settings().DB_HOST)
         self.db = self.client.db(
             Settings().DB_NAME,
             username=Settings().USERNAME,
