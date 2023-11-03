@@ -43,7 +43,7 @@ process.on('SIGINT', () => process.exit(0))
       // related to this endpoint?); polymorphic method getGraphMetadata knows how to
       // parse the endpointEventPayload object to extract metadata about related endpoints.
       const endpointHandler = getEndpoint(endpointKind);
-      const newEndpoints = endpointHandler.getGraphMetaData(endpointEventPayload)
+      const newEndpoints = await endpointHandler.getGraphMetaData(endpointEventPayload)
       // Create string serialized array of endpoints associated with this endpoint
       const newEndpointsString = `["${Array.from(newEndpoints).join('", "')}"]`;
 
@@ -87,10 +87,9 @@ process.on('SIGINT', () => process.exit(0))
       }
 
       // Queue up new endpoints to be analyzed by the appropriate scanners
-      let tmp = 1;
-      await publishToNats(nc, CONTAINER_ENDPOINT_QUEUE, endpointDispatch["containerEndpoint"]);
-      await publishToNats(nc, WEB_ENDPOINT_QUEUE, endpointDispatch["webEndpoint"]);
-      await publishToNats(nc, GITHUB_ENDPOINT_QUEUE, endpointDispatch["githubEndpoint"])
+      await publishToNats(nc, jc, CONTAINER_ENDPOINT_QUEUE, endpointDispatch["containerEndpoint"]);
+      await publishToNats(nc, jc, WEB_ENDPOINT_QUEUE, endpointDispatch["webEndpoint"]);
+      await publishToNats(nc, jc, GITHUB_ENDPOINT_QUEUE, endpointDispatch["githubEndpoint"])
 
       // TODO: anything under event collectors should not include any extra metadata beyond
       // the URL itself, because any given event endpoint won't necessarily include info about

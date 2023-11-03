@@ -5,9 +5,9 @@
  * @param {*} queueName 
  * @param {*} endpointList 
  */
-export async function publishToNats(natsClient, queueName, endpointList) {
+export async function publishToNats(natsClient, encoder, queueName, endpointList) {
   for (let i = 0; i < endpointList.length; i++) {
-    await natsClient.publish(queueName, jc.encode({
+    await natsClient.publish(queueName, encoder.encode({
       endpoint: endpointList[i],
     }));
   }
