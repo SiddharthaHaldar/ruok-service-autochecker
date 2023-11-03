@@ -5,7 +5,6 @@ import { verifySignature } from './src/util.js'
 
 // Load .env file
 import 'dotenv/config.js'
-import { endpointKind } from './src/endpoint.js'
 
 // Get config variables from environment
 const {
@@ -40,35 +39,15 @@ app.post('/', async (req, res) => {
 
   // Get relevant properties to attach to the endpoint event
   const httpsUrl = req.body.repository.html_url;
-  const orgName = req.body.repository.owner.login;
-  const eventType = req.headers['x-github-event'];
-  const repoName = req.body.repository.name;
-  const cloneUrl = req.body.repository.ssh_url;
-  const productName = `${orgName}_${repoName}`;
-  
-  // Figure out what kind of endpoint(s) are contained in this webhook
-  // notification
-  const endpointKinds = endpointKind(httpsUrl);
-  
+
   // For each endpoint, formulate a message and publish it to the
   // appropriate NATS queue.
-  for (let i = 0; i < endpointKinds.length; i++) {
-    const endpoint = endpointKinds[i];
-    await nc.publish(NATS_PUB_STREAM, jc.encode({
-      endpoint: httpsUrl,
-      endpointKind: endpoint,
-      eventType,
-      // TODO: unify duplicate value - probably standardize on `endpoint`?
-      sourceCodeRepository: httpsUrl,
-      cloneUrl,
-      repoName,
-      orgName,
-      productName,
-    }))
-  }
-  
+  await nc.publish(NATS_PUB_STREAM, jc.encode({
+    endpoint: httpsUrl,
+  }))
+
   // TODO: replace this with a proper logger
-  console.log("successfully published event: ", eventType, "from", orgName, "/", repoName)
+  console.log("successfully published event for", httpsUrl);
 });
 
 
