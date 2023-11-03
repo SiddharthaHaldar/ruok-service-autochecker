@@ -2,13 +2,12 @@ import { Octokit } from "octokit"
 
 import { load } from "js-yaml";
 
-import { GraphQLClient, gql } from 'graphql-request';
-
 import 'dotenv-safe/config.js'
 
 const { GITHUB_TOKEN } = process.env
 
 const GRAPH_METADATA_NAME = ".product.yaml";
+
 
 export class GithubEndpoint {
   constructor() {
@@ -20,11 +19,12 @@ export class GithubEndpoint {
    * files in the repository root.
    */
   async getGraphMetaData(payload) {
-    const {
-      orgName,
-      repoName,
-    } = payload;
-
+    // GitHub urls always follow `github.com/orgName/repoName`, so from this
+    // structure we can construct the org name and repo name.
+    const prefix = (new URL(payload.endpoint)).pathname.split("/")
+    const orgName = prefix[1];
+    const repoName = prefix[2];
+    // Try and get a .product.yaml file from the root of the repository
     const response = await this.octokit.request(
       'GET /repos/{owner}/{repo}/contents/{path}', {
       owner: orgName,
@@ -32,32 +32,26 @@ export class GithubEndpoint {
       path: GRAPH_METADATA_NAME
     }
     )
-    // base64 decode to ascii, then parse ascii string to yaml object
-    const productDotYaml = load(
-      Buffer
-        .from(response.data.content, 'base64')
-        .toString('ascii')
-    );
-    var productEndpoints = this.extractEndpoints(productDotYaml);
-
-    let tmp = 1;
-
-    // Call GraphQL API and request the endpoints query with all urls extracted
-    // from the .product.yaml file.
-    const graphqlClient = new GraphQLClient("http://localhost:4000/graphql")
-    // Need to create a string serialized array of urls
-    const endpointsString = `["${Array.from(productEndpoints).join('", "')}"]`
-    const query = gql`
-    {
-      endpoints(urls: ${endpointsString}) {
-        url
-      }
+    var extraEndpoints = new Set([]);
+    if (response.status === 200) {
+      // base64 decode to ascii, then parse ascii string to yaml object
+      const productDotYaml = load(
+        Buffer
+          .from(response.data.content, 'base64')
+          .toString('ascii')
+      );
+      // Create list of endpoints associated with this endpoint
+      var extraEndpoints = this.extractEndpoints(productDotYaml);
     }
-    `
-    const graphqlResponse = await graphqlClient.request(query);
-    return "test"
+    var newEndpoints = new Set([
+      ...extraEndpoints,
+      payload.endpoint
+    ]);
+
+    return newEndpoints;
   }
 
+  
   /**
    * Given a yaml object, extract all endpoints and return a set of all endpoints
    * found.
