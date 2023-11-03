@@ -10,6 +10,7 @@ import 'dotenv-safe/config.js'
 
 const {
   NATS_URL,
+  GRAPHQL_URL,
 } = process.env;
 
 const NATS_SUB_STREAM = "EventsUpdate" // Note - for checks that need branch, the substream will be different (right now blanketing with 'main')
@@ -54,7 +55,7 @@ process.on('SIGINT', () => process.exit(0))
       }
       `;
       // New GraphQL client - TODO: remove hard-coded URL
-      const graphqlClient = new GraphQLClient("http://localhost:4000/graphql")
+      const graphqlClient = new GraphQLClient(GRAPHQL_URL);
       // Write mutation to GraphQL API
       const mutationResponse = await graphqlClient.request(mutation);
 
@@ -88,8 +89,11 @@ process.on('SIGINT', () => process.exit(0))
 
       // Queue up new endpoints to be analyzed by the appropriate scanners
       await publishToNats(nc, jc, CONTAINER_ENDPOINT_QUEUE, endpointDispatch["containerEndpoint"]);
+      console.log("published container endpoint events");
       await publishToNats(nc, jc, WEB_ENDPOINT_QUEUE, endpointDispatch["webEndpoint"]);
+      console.log("published web endpoint events");
       await publishToNats(nc, jc, GITHUB_ENDPOINT_QUEUE, endpointDispatch["githubEndpoint"])
+      console.log("published github endpoint event");
 
       // TODO: anything under event collectors should not include any extra metadata beyond
       // the URL itself, because any given event endpoint won't necessarily include info about
