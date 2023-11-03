@@ -27,6 +27,8 @@ class GraphDB:
         return url.replace("://", "-").replace("/", "-")
 
     def insert_endpoint(self, url):
+        if url == '':
+            return url
         if not self.nodes.get(self._key_safe_url(url)):
             self.nodes.insert({"url": url, "_key": self._key_safe_url(url)})
         return url
@@ -85,6 +87,8 @@ class GraphDB:
     def get_endpoints(self, urls):
         unique_urls = set()
         for url in urls:
+            if url == '':
+                continue
             url_vertices = self.get_endpoint(url)["vertices"]
             if url_vertices:
                 unique_urls = unique_urls.union(
