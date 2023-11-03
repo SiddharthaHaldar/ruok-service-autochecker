@@ -224,21 +224,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
-        Configuration
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../deployment/" class="md-nav__link">
         Deployment
       </a>
@@ -370,26 +355,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#useful-code-snippets" class="md-nav__link">
-    Useful Code Snippets
-  </a>
-  
-    <nav class="md-nav" aria-label="Useful Code Snippets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#nats-cli" class="md-nav__link">
-    NATS CLI
-  </a>
-  
-</li>
-        
           <li class="md-nav__item">
   <a href="#related-issues" class="md-nav__link">
     Related Issues
@@ -466,18 +431,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_8">
+        <label class="md-nav__link" for="__nav_7">
           Compliance Checks
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Compliance Checks" data-md-level="1">
-        <label class="md-nav__title" for="__nav_8">
+        <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
           Compliance Checks
         </label>
@@ -612,26 +577,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#useful-code-snippets" class="md-nav__link">
-    Useful Code Snippets
-  </a>
-  
-    <nav class="md-nav" aria-label="Useful Code Snippets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#nats-cli" class="md-nav__link">
-    NATS CLI
-  </a>
-  
-</li>
-        
           <li class="md-nav__item">
   <a href="#related-issues" class="md-nav__link">
     Related Issues
@@ -715,17 +660,6 @@
 <p>KinD doesn't spin up a local registry out of the box, so it's necessary to run <code>kind load docker-image &lt;your image:tag&gt;</code> to load a locally build container image into the KinD cluster.</p>
 <p>If you're using Podman Desktop, there is a UI convenience for this by navigating to the <strong>Images</strong> tab, then for the image(s) you want to load into the KinD cluster, click <strong>"Push image to Kind cluster"</strong> (see screenshot below).</p>
 <p><img alt="Push image to KinD" src="../img/podman-push-image-to-kind.png" /></p>
-<h2 id="useful-code-snippets">Useful Code Snippets</h2>
-<h3 id="nats-cli">NATS CLI</h3>
-<p>Connect to nats on <code>localhost</code></p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>nats<span class="w"> </span>context<span class="w"> </span>add<span class="w"> </span><span class="nb">local</span><span class="w"> </span>--description<span class="w"> </span><span class="s2">&quot;Localhost&quot;</span><span class="w"> </span>--select
-</code></pre></div></td></tr></table></div>
-<p>Subscribe to a queue group</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>nats<span class="w"> </span>sub<span class="w"> </span>EventsUpdate
-</code></pre></div></td></tr></table></div>
-<p>Publish to a queue group</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>nats<span class="w"> </span>pub<span class="w"> </span><span class="s2">&quot;ClonedRepoEvent.&gt;&quot;</span><span class="w"> </span><span class="s1">&#39;{&quot;webEndpoints&quot;: [&quot;https://www.canada.ca/en/public-health.html&quot;]}&#39;</span><span class="sb">`</span>
-</code></pre></div></td></tr></table></div>
 <h3 id="related-issues">Related Issues</h3>
 <ul>
 <li><a href="https://github.com/kubernetes-sigs/kind/issues/2872">KinD - Running with rootless podman doesn't work as documented</a></li>
