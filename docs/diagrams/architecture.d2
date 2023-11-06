@@ -14,10 +14,10 @@ GitHub DNS Repository: {
   icon: https://icons.terrastruct.com/dev%2Fgithub.svg
 }
 
-SMEE Proxy Server: {
-  shape: image
-  icon: ./img/smee.png
-}
+# SMEE Proxy Server: {
+#   shape: image
+#   icon: ./img/smee.png
+# }
 
 Users: {
   shape: image
@@ -30,10 +30,10 @@ K8s Cluster: {
     icon: https://icons.terrastruct.com/dev%2Fdocker.svg
   }
 
-  SMEE Proxy Client: {
-    shape: image
-    icon: ./img/smee.png
-  }
+  # SMEE Proxy Client: {
+  #   shape: image
+  #   icon: ./img/smee.png
+  # }
   #   _   _    _  _____ ____  
   #  | \ | |  / \|_   _/ ___| 
   #  |  \| | / _ \ | | \___ \ 
@@ -44,28 +44,20 @@ K8s Cluster: {
       shape: image
       icon: ./img/nats.png
     }
-
-    RepoEventsUpdate: {
+    
+    EventsUpdate: {
       shape: queue
     }
 
-    WebEventsUpdate: {
+    EndpointScanner\.githubEndpoints: {
       shape: queue
     }
 
-    ContainerEventsUpdate: {
+    EndpointScanner\.webEndpoints: {
       shape: queue
     }
 
-    RepoEventsScanner: {
-      shape: queue
-    }
-
-    WebEventsScanner: {
-      shape: queue
-    }
-
-    ContainerEventsScanner: {
+    EndpointScanner\.containerEndpoints: {
       shape: queue
     }
   }
@@ -75,20 +67,11 @@ K8s Cluster: {
   #  | |_| | |_) | (_| | (_| | ||  __/ |  \__ \
   #   \___/| .__/ \__,_|\__,_|\__\___|_|  |___/
   #        |_|                    
-  Repo Graph Updater: {
+  Graph Updater: {
     shape: image
     icon: https://icons.terrastruct.com/essentials%2F092-network.svg
   }
 
-  Web Graph Updater: {
-    shape: image
-    icon: https://icons.terrastruct.com/essentials%2F092-network.svg
-  }
-
-  Container Graph Updater: {
-    shape: image
-    icon: https://icons.terrastruct.com/essentials%2F092-network.svg
-  }
   #   ____                                      
   #  / ___|  ___ __ _ _ __  _ __   ___ _ __ ___ 
   #  \___ \ / __/ _` | '_ \| '_ \ / _ \ '__/ __|
@@ -131,52 +114,46 @@ GitHub DNS Repository -> K8s Cluster.Webhook Server: Event Webhook
 
 # In development environments, webhooks are directed towards SMEE proxy server,
 # then the SMEE proxy redirects the webhook to a client listening on localhost.
-GitHub Product Repository -> SMEE Proxy Server: dev {
-  style: {
-    stroke: red
-  }
-}
+# GitHub Product Repository -> SMEE Proxy Server: dev {
+#   style: {
+#     stroke: red
+#   }
+# }
 
-GitHub DNS Repository -> SMEE Proxy Server: dev {
-  style: {
-    stroke: red
-  }
-}
+# GitHub DNS Repository -> SMEE Proxy Server: dev {
+#   style: {
+#     stroke: red
+#   }
+# }
 
-SMEE Proxy Server -> K8s Cluster.SMEE Proxy Client: dev {
-  style: {
-    stroke: red
-  }
-}
+# SMEE Proxy Server -> K8s Cluster.SMEE Proxy Client: dev {
+#   style: {
+#     stroke: red
+#   }
+# }
 
-K8s Cluster.SMEE Proxy Client -> K8s Cluster.Webhook Server: dev {
-  style: {
-    stroke: red
-  }
-}
+# K8s Cluster.SMEE Proxy Client -> K8s Cluster.Webhook Server: dev {
+#   style: {
+#     stroke: red
+#   }
+# }
 
 # Webhook server publishes events in NATS queue
-K8s Cluster.Webhook Server -> K8s Cluster."".RepoEventsUpdate: pub repo endpoints
-K8s Cluster.Webhook Server -> K8s Cluster."".WebEventsUpdate: pub web endpoints
-K8s Cluster.Webhook Server -> K8s Cluster."".ContainerEventsUpdate: pub container endpoints
+K8s Cluster.Webhook Server -> K8s Cluster."".EventsUpdate: Update endpoint events
 
 # Updaters Workflow
-K8s Cluster.Repo Graph Updater -> K8s Cluster."".RepoEventsUpdate: Sub
-K8s Cluster.Web Graph Updater -> K8s Cluster."".WebEventsUpdate: Sub
-K8s Cluster.Container Graph Updater -> K8s Cluster."".ContainerEventsUpdate: Sub
+K8s Cluster.Graph Updater -> K8s Cluster."".EventsUpdate: Sub
 
-K8s Cluster.Repo Graph Updater -> K8s Cluster.GraphQL API: merge + update
-K8s Cluster.Web Graph Updater -> K8s Cluster.GraphQL API: merge + update
-K8s Cluster.Container Graph Updater -> K8s Cluster.GraphQL API: merge + update
+K8s Cluster.Graph Updater -> K8s Cluster.GraphQL API: update
 
-K8s Cluster.Repo Graph Updater -> K8s Cluster."".RepoEventsScanner: pub endpoints
-K8s Cluster.Web Graph Updater -> K8s Cluster."".WebEventsScanner: pub endpoints
-K8s Cluster.Container Graph Updater -> K8s Cluster."".ContainerEventsScanner: pub endpoints
+K8s Cluster.Graph Updater -> K8s Cluster."".EndpointScanner\.githubEndpoints: pub
+K8s Cluster.Graph Updater -> K8s Cluster."".EndpointScanner\.webEndpoints: pub
+K8s Cluster.Graph Updater -> K8s Cluster."".EndpointScanner\.containerEndpoints: pub
 
 # Scanners Workflow
-K8s Cluster.Repo Endpoint Scanner -> K8s Cluster."".RepoEventsScanner: sub
-K8s Cluster.Web Endpoint Scanner -> K8s Cluster."".WebEventsScanner: sub
-K8s Cluster.Container Endpoint Scanner -> K8s Cluster."".ContainerEventsScanner: sub
+K8s Cluster.Repo Endpoint Scanner -> K8s Cluster."".EndpointScanner\.githubEndpoints: sub
+K8s Cluster.Web Endpoint Scanner -> K8s Cluster."".EndpointScanner\.webEndpoints: sub
+K8s Cluster.Container Endpoint Scanner -> K8s Cluster."".EndpointScanner\.containerEndpoints: sub
 
 K8s Cluster.Repo Endpoint Scanner -> K8s Cluster.GraphQL API: update
 K8s Cluster.Web Endpoint Scanner -> K8s Cluster.GraphQL API: update
