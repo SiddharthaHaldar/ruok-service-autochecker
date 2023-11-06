@@ -13,12 +13,14 @@ def write_vuln_to_bucket(bucket_name, vuln_text, destination_object_name):
 
 def image_vuln_pubsub_handler(event, context):
     #get the Pub/Sub message containing the vulnerability occurrence id
+    occurrence_id = ''
     data = json.loads(base64.b64decode(event['data']).decode('utf-8'))
 
-    if data.get('kind') == 'VULNERABILITY' and 'name' in data:
-        occurrence_id = data['name']
-    else:
-        return
+    if data['kind'] == 'VULNERABILITY':
+        if 'name' in data:
+            occurrence_id=data['name']
+    if occurrence_id == '':
+      return
 
     #load in environment variables for GCS bucket.  
     bucket_name = os.environ.get("BUCKET_NAME", "")
@@ -28,25 +30,23 @@ def image_vuln_pubsub_handler(event, context):
         return
 
     print('Bucket name:', bucket_name)
-
-    # #get the occurrence via the grafeas client
-    # occurrence_name = (data['name'])
-    # client = containeranalysis_v1.ContainerAnalysisClient()
-    # grafeas_client = client.get_grafeas_client()
-    # o = grafeas_client.get_occurrence(name=occurrence_name)
-
-    # #write to storage
-    # write_vuln_to_bucket(bucket_name, str(o), str(o.name))
-        # Get the occurrence via the Container Analysis client
+    
+    #get the occurrence via the grafeas client
+    occurrence_name = (data['name'])
     client = containeranalysis_v1.ContainerAnalysisClient()
-    occurrence = client.get_occurrence(name=occurrence_id)
+    grafeas_client = client.get_grafeas_client()
+    o = grafeas_client.get_occurrence(name=occurrence_name)
 
-    # Extract vulnerability details from the occurrence
-    vuln_summary = client.get_occurrence_vulnerability_summary(name=occurrence_id)
+    #write to storage
+    write_vuln_to_bucket(bucket_name, str(o), str(o.name))
 
-    # Save vulnerability details to GCS
-    if vuln_summary:
-        write_vuln_to_bucket(bucket_name, json.dumps(vuln_summary), f"{occurrence_id}.json")
+    # # Extract vulnerability details from the occurrence
+    # vulnerability_details = ""
+    # if 'details' in occurrence:
+    #     # This example assumes vulnerability details are stored as JSON
+    #     vulnerability_details = json.dumps(occurrence['details'])
 
-
+    # # Save vulnerability details to GCS
+    # if vulnerability_details:
+    #     write_vuln_to_bucket(bucket_name, vulnerability_details, f"{occurrence_name}.json")
 
