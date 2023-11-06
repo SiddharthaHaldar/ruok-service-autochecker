@@ -20,6 +20,7 @@ class Endpoint:
     url: str
 
 
+
 @strawberry.type
 class Query:
     @strawberry.field
