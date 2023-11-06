@@ -1,10 +1,11 @@
 # Following this tutorial  https://medium.com/google-cloud/centrally-managing-artifact-registry-container-image-vulnerabilities-on-google-cloud-part-one-d86fb4791601
-# for this we're using HelloDjango for the source, and Observatory for 
+# for this we're using LilaKelland projectfor the source, and Observatory for  project_id_observatory
 
 # NEED TO AUTHENTICATE FIRST
 
-# ENV variables - from command line
-export PROJECT_ID_SOURCE=phx-01h41bw3b0xsf9rmpzmxbee2s9
+# ENV variables - from command line 
+# PROJECT_ID_SOURCE is where artifact registry vulnerabilitys are fed from
+export PROJECT_ID_SOURCE=phx-01h41bw3b0xsf9rmpzmxbee2s9  
 export PROJECT_ID_SOURCE_2=phx-01h41bw3b0xsf9rmpzmxbee2s9
 export PROJECT_ID_OBSERVATORY=phx-01he5zk45pe
 export SERVICE_ACCOUNT_SOURCE=containerVuln
@@ -27,6 +28,9 @@ export PATH_TO_CLOUD_FUNCTION=
 # export SOURCE_REPO_NAME=northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app2/hello-world-three
 # northamerica-northeast1-docker.pkg.dev/phx-01h1yptgmche7jcy01wzzpw2rf/hello-world-app2/hello-world-three
 
+# Auth login (TODO set up service account with access )
+# gcloud config set account `ACCOUNT` 
+
 # Enable services 
 gcloud config set project $PROJECT_ID_SOURCE
 gcloud services enable cloudresourcemanager.googleapis.com
@@ -35,6 +39,10 @@ gcloud services enable cloudbuild.googleapis.com
 gcloud services enable containerscanning.googleapis.com
 gcloud services enable cloudfunctions.googleapis.com
 gcloud services enable eventarc.googleapis.com
+gcloud services enable monitoring 
+gcloud services list --project=$PROJECT_ID_OBSERVATORY
+
+# monitoring - enables logs for troubleshooting 
 
 # Create service account for Cloud Function
 gcloud iam service-accounts create $SERVICE_ACCOUNT_SOURCE \
@@ -46,11 +54,18 @@ gcloud projects add-iam-policy-binding $PROJECT_ID_SOURCE \
  --member=serviceAccount:$SERVICE_ACCOUNT_SOURCE@$PROJECT_ID_SOURCE.iam.gserviceaccount.com \
  --role=roles/containeranalysis.occurrences.viewer
  
-# Create bucket 
-gcloud storage buckets create gs://$BUCKET_NAME
+# Create bucket (observatory)
+gsutil mb -l $REGION -p $PROJECT_ID_OBSERVATORY gs://$BUCKET_NAME
 
 # Add permissions (GCS Object Createor)
 gsutil iam ch serviceAccount:$SERVICE_ACCOUNT_SOURCE@$PROJECT_ID_SOURCE.iam.gserviceaccount.com:objectCreator gs://$BUCKET_NAME
+gsutil iam ch serviceAccount:176013304796-compute@developer.gserviceaccount.com:objectCreator gs://$BUCKET_NAME
+
+# UH OH - it works now and not sure if this is needed
+# gcloud projects add-iam-policy-binding $PROJECT_ID_OBSERVATORY \
+#   --member=serviceAccount:$SERVICE_ACCOUNT_SOURCE@$PROJECT_ID_SOURCE.iam.gserviceaccount.com \
+#   --role=roles/storage.objectCreator
+
 
 # Create Artifact Registry (this should already exisit so not doing this step, but would need to change region)
 gcloud artifacts repositories create $SOURCE_REPO_NAME \
@@ -66,6 +81,8 @@ gcloud pubsub topics create container-analysis-occurrences-v1 \
 # https://cloud.google.com/functions/docs/create-deploy-gcloud#functions-clone-sample-repository-python
 # https://cloud.google.com/functions/docs/deploy
 # https://cloud.google.com/functions/docs/configuring/env-var
+
+# TODO = replace cloud function with path to cloud function
 gcloud functions deploy image-vuln-cf-trigger \
     --gen2 \
     --runtime=python38 \
@@ -79,4 +96,8 @@ gcloud functions deploy image-vuln-cf-trigger \
     
     # --allow-unauthenticated for testing, remove once working and authenticate
     
-
+# REDEPLOY (TODO - need docker - doing this in local terminal )
+gcloud auth configure-docker $REGION-docker.pkg.dev
+docker build --tag nginx .
+docker tag nginx $REGION-docker.pkg.dev/$PROJECT_ID_SOURCE/$SOURCE_REPO_NAME/nginx-test:staging1
+docker push $REGION-docker.pkg.dev/$PROJECT_ID_SOURCE/$SOURCE_REPO_NAME/nginx-test:staging1

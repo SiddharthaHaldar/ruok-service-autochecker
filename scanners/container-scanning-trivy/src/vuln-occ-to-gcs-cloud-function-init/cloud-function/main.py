@@ -22,6 +22,7 @@ def image_vuln_pubsub_handler(event, context):
         print("Bucket name not set")
         return
 
+    print('Bucket name:', bucket_name)
     #get the occurrence via the grafeas client
     occurrence_name = (data['name'])
     client = containeranalysis_v1.ContainerAnalysisClient()
@@ -30,3 +31,5 @@ def image_vuln_pubsub_handler(event, context):
 
     #write to storage
     write_vuln_to_bucket(bucket_name, str(o), str(o.name))
+
+# image_vuln_pubsub_handler(event, context)

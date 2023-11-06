@@ -1,0 +1,2 @@
+FROM nginx as hi
+
