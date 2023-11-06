@@ -1,7 +1,6 @@
 // https://cloud.google.com/artifact-registry/docs/nodejs/store-nodejs
 
 import { connect, JSONCodec} from 'nats'
-// import { cloneRepository, removeClonedRepository} from './src/clone-repo-functions.js'
 import { GraphQLClient } from 'graphql-request'
 import 'dotenv-safe/config.js'
 
@@ -14,7 +13,6 @@ const NATS_SUB_STREAM="WebEvent"
 
 // API connection 
 const graphQLClient = new GraphQLClient(API_URL);
-
 
 // NATs connection 
 const nc = await connect({ servers: NATS_URL,})
