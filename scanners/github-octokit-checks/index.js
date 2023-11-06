@@ -29,7 +29,7 @@ const db = new Database(dbConfig);
 
 const OWNER = 'PHACDataHub'
 
-const NATS_SUB_STREAM = "GitHubEvent" // Note - for checks that need branch, the substream will be different (right now blanketing with 'main')
+const NATS_SUB_STREAM = "EventsScanner" // Note - for checks that need branch, the substream will be different (right now blanketing with 'main')
 const NATS_PUB_STREAM = "gitHub.saveToDatabase.octokit" // Note - for checks that need branch - the pubstream will be different 
 // Also note - this will be appended with repo name when published. 
 // Authenicate with GitHub 

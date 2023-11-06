@@ -16,20 +16,23 @@ CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
 #  |_.__/ \__,_|_|_|\__,_|
 
 # Build all images in the repo
-build: build-api-image build-webhook-server-image
+build: build-api-image build-webhook-server-image build-graph-updater
 
-# Main RUOK API
+# GraphQL API
 build-api-image:
 	$(CONTAINER_RUNTIME) build ./api/ -t localhost/$(APP_NAME)-api:$(APP_VERSION)
 
 # Scanners
 # TODO
 
-# Webhook Server API
+# Webhook Server
 build-webhook-server-image:
-	$(CONTAINER_RUNTIME) build ./webhook-server/ -t localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./event-collectors/github-webhook-server/ -t localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
 
-#
+# Graph Updater
+build-graph-updater:
+	$(CONTAINER_RUNTIME) build ./graph-updater/ -t localhost/$(APP_NAME)-graph-updater:$(APP_VERSION)
+
 kind-push-api:
 	kind load docker-image localhost/$(APP_NAME)-api:$(APP_VERSION)
 

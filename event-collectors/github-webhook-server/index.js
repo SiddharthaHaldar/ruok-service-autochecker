@@ -1,14 +1,13 @@
 import express from 'express'
 import { connect, JSONCodec } from 'nats'
 
-import { verifySignature } from './util.js'
+import { verifySignature } from './src/util.js'
 
 // Load .env file
-import 'dotenv/config'
+import 'dotenv/config.js'
 
 // Get config variables from environment
 const {
-  WEBHOOK_SECRET,
   WEBHOOK_SERVER_PORT_NUMBER,
   NATS_SERVER,
   NATS_PUB_STREAM
@@ -37,25 +36,21 @@ app.post('/', async (req, res) => {
     console.log("Unauthorized Request");
     return;
   }
-  // extract relevant information to put into queue.
-  const cloneUrl = req.body.repository.ssh_url
-  const repoName = req.body.repository.name
-  const orgName = req.body.repository.owner.login
-  const sourceCodeRepository = req.body.repository.html_url // or svn_url
-  const eventType = req.headers['x-github-event']
-  const productName = `${orgName}_${repoName}`
 
-  // publish message to NATS
+  // Get relevant properties to attach to the endpoint event
+  const httpsUrl = req.body.repository.html_url;
+
+  // For each endpoint, formulate a message and publish it to the
+  // appropriate NATS queue.
   await nc.publish(NATS_PUB_STREAM, jc.encode({
-    eventType,
-    sourceCodeRepository,
-    cloneUrl,
-    repoName,
-    productName
+    endpoint: httpsUrl,
   }))
+
   // TODO: replace this with a proper logger
-  console.log("successfully published event: ", eventType)
-})
+  console.log("successfully published event for", httpsUrl);
+});
+
+
 
 app.listen(WEBHOOK_SERVER_PORT_NUMBER, () => {
   console.log(`Webhook server listening on port ${WEBHOOK_SERVER_PORT_NUMBER}`)

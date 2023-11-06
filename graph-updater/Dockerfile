@@ -12,11 +12,7 @@ RUN npm ci
 
 # COPY . . 
 COPY ./.env ./.env.example ./
+COPY ./src ./src
 COPY ./index.js .
-COPY ./util.js .
-
-USER node
 
 CMD ["npm", "--no-update-notifier", "start"]
-
-EXPOSE 3000

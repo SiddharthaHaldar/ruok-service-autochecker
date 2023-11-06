@@ -5,6 +5,7 @@ resources:
 - ./deployment-nats.yaml
 - ./deployment-ruok-api.yaml
 - ./deployment-webhook-server.yaml
+- ./deployment-graph-updater.yaml
 - ./svc-nats.yaml
 - ./svc-ruok-api.yaml
 - ./svc-webhook-server.yaml
@@ -20,4 +21,4 @@ patches:
         - name: NATS_SERVER
           value: nats:4222
         - name: NATS_PUB_STREAM
-          value: GitHubEvent
+          value: EventsUpdate

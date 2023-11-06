@@ -80,6 +80,28 @@ If you're using Podman Desktop, there is a UI convenience for this by navigating
 
 ![Push image to KinD](./img/podman-push-image-to-kind.png)
 
+## Useful Code Snippets
+
+### NATS CLI
+
+Connect to nats on `localhost`
+
+```bash
+nats context add local --description "Localhost" --select
+```
+
+Subscribe to a queue group
+
+```bash
+nats sub EventsUpdate
+```
+
+Publish to a queue group
+
+```bash
+nats pub "ClonedRepoEvent.>" '{"webEndpoints": ["https://www.canada.ca/en/public-health.html"]}'`
+```
+
 ### Related Issues
 - [KinD - Running with rootless podman doesn't work as documented](https://github.com/kubernetes-sigs/kind/issues/2872)
 - [KinD - Podman creation fails](https://github.com/kubernetes-sigs/kind/issues/2537)
