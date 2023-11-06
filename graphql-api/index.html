@@ -224,6 +224,21 @@
   
   
     <li class="md-nav__item">
+      <a href="../data-contracts/" class="md-nav__link">
+        Data Contracts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../configuration/" class="md-nav__link">
         Configuration
       </a>
@@ -354,6 +369,21 @@
   
   
     <li class="md-nav__item">
+      <a href="../scanners/" class="md-nav__link">
+        Scanners
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../register-repository/" class="md-nav__link">
         Register a Repository
       </a>
@@ -372,18 +402,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_8">
+        <label class="md-nav__link" for="__nav_10">
           Compliance Checks
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Compliance Checks" data-md-level="1">
-        <label class="md-nav__title" for="__nav_8">
+        <label class="md-nav__title" for="__nav_10">
           <span class="md-nav__icon md-icon"></span>
           Compliance Checks
         </label>
@@ -395,7 +425,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../checks/overview/" class="md-nav__link">
+      <a href="../checks/overview.md" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -485,7 +515,7 @@
 <p>Alternatively, if users wish to monitor individual URLs directly rather than create a product graph, this use case can be accommodated as well.</p>
 <h2 id="graphql-api_1">GraphQL API</h2>
 <p>Currently, the GraphQL API exposes the following queries and mutations.</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="o">--</span><span class="mi">8</span><span class="o">&lt;--</span> <span class="s2">&quot;api/srcmain.py:18:66</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="o">--</span><span class="mi">8</span><span class="o">&lt;--</span> <span class="s2">&quot;api/src/main.py:18:66</span>
 </code></pre></div></td></tr></table></div>
 <h2 id="examples">Examples</h2>
 <p>The semantics of queries is that a query for any endpoint on a subgraph returns the entire subgraph.</p>
@@ -527,7 +557,7 @@
 <span class="p">}</span>
 </code></pre></div></td></tr></table></div>
 <p>This mutation adds two additional nodes to the subgraph: <code>https://some-third-webapp.phac.alpha.gc.ca</code>, and a product label called <code>myproduct</code>. At this point in time, the subgraph looks like the following.</p>
-<p><img alt="Arango graph example" src="./img/arango-graph-mutation-example.png" /></p>
+<p><img alt="Arango graph example" src="../img/arango-graph-mutation-example.png" /></p>
 <p>This graph now has the property that a search for <em>any</em> endpoint on the graph will return <em>all</em> endpoints on the graph. For example, the following graphql query returns the following result:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
@@ -665,13 +695,13 @@
       
       
         
-        <a href="../register-repository/" class="md-footer__link md-footer__link--next" aria-label="Next: Register a Repository" rel="next">
+        <a href="../scanners/" class="md-footer__link md-footer__link--next" aria-label="Next: Scanners" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Register a Repository
+              Scanners
             </div>
           </div>
           <div class="md-footer__button md-icon">

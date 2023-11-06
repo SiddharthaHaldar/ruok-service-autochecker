@@ -224,6 +224,21 @@
   
   
     <li class="md-nav__item">
+      <a href="data-contracts/" class="md-nav__link">
+        Data Contracts
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="configuration/" class="md-nav__link">
         Configuration
       </a>
@@ -299,6 +314,21 @@
   
   
     <li class="md-nav__item">
+      <a href="scanners/" class="md-nav__link">
+        Scanners
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="register-repository/" class="md-nav__link">
         Register a Repository
       </a>
@@ -317,18 +347,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_8">
+        <label class="md-nav__link" for="__nav_10">
           Compliance Checks
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Compliance Checks" data-md-level="1">
-        <label class="md-nav__title" for="__nav_8">
+        <label class="md-nav__title" for="__nav_10">
           <span class="md-nav__icon md-icon"></span>
           Compliance Checks
         </label>
@@ -340,7 +370,7 @@
   
   
     <li class="md-nav__item">
-      <a href="checks/overview/" class="md-nav__link">
+      <a href="checks/overview.md" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -374,21 +404,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#term-glossary" class="md-nav__link">
-    Term Glossary
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -406,27 +421,8 @@
 
 
 <h1 id="observatory-r-u-ok">Observatory (R U OK?)</h1>
-<p>Observatory is an automated real-time scanning framework for products whose source code is managed on <a href="https://github.com/PHACDataHub/"><code>PHACDataHub</code></a>. The purpose of Observatory is to ensure compliance with requirements around concerns such as security and accessibility.</p>
-<h2 id="term-glossary">Term Glossary</h2>
-<p>For the purposes of Observatory, we use the glossary below to define several terms used throughout our GraphQL Schema and data models.</p>
-<table>
-<thead>
-<tr>
-<th>Term</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Product</strong></td>
-<td>Any software product managed under <a href="https://github.com/PHACDataHub/"><code>PHACDataHub</code></a>.</td>
-</tr>
-<tr>
-<td><strong>Service</strong></td>
-<td>Any software product managed under <a href="https://github.com/PHACDataHub/"><code>PHACDataHub</code></a> that is exposed through one or more service URLs (i.e. not all products deploy services).</td>
-</tr>
-</tbody>
-</table>
+<p>Observatory is an automated real-time scanning framework for various endpoints containing relevant products (e.g. GitHub URLs, Container Registry URLs, Webapp URLs, and so on). The purpose of Observatory is to ensure continuous compliance with requirements around concerns such as security and accessibility by performing various automated scans on these endpoints.</p>
+<p><img alt="RUOK Concept Overview" src="diagrams/scanners.svg" /></p>
 
               
             </article>

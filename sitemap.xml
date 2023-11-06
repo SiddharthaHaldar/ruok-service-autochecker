@@ -46,7 +46,7 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://phacdatahub.github.io/ruok-service-autochecker/checks/overview/</loc>
+         <loc>https://phacdatahub.github.io/ruok-service-autochecker/scanners/</loc>
          <lastmod>2023-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
