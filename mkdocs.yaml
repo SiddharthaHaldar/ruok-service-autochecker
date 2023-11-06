@@ -26,11 +26,13 @@ markdown_extensions:
 
 nav:
   - Architecture: architecture.md
+  - Data Contracts: data-contracts.md
   - Configuration: configuration.md
   - Deployment: deployment.md
   - Development Environment: development-environment.md
   - GitHub Webhooks: github-webhooks.md
   - GraphQL API: graphql-api.md
+  - Scanners: scanners.md
   - Register a Repository: register-repository.md
   - Compliance Checks:
     - Overview: checks/overview.md 

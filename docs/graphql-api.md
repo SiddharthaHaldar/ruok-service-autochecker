@@ -21,7 +21,7 @@ Alternatively, if users wish to monitor individual URLs directly rather than cre
 Currently, the GraphQL API exposes the following queries and mutations.
 
 ```python
---8<-- "api/srcmain.py:18:66
+--8<-- "api/src/main.py:18:66
 ```
 
 ## Examples
