@@ -2,52 +2,52 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/</loc>
-         <lastmod>2023-11-03</lastmod>
+         <lastmod>2023-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/architecture/</loc>
-         <lastmod>2023-11-03</lastmod>
+         <lastmod>2023-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/configuration/</loc>
-         <lastmod>2023-11-03</lastmod>
+         <lastmod>2023-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/data-contracts/</loc>
-         <lastmod>2023-11-03</lastmod>
+         <lastmod>2023-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/deployment/</loc>
-         <lastmod>2023-11-03</lastmod>
+         <lastmod>2023-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/development-environment/</loc>
-         <lastmod>2023-11-03</lastmod>
+         <lastmod>2023-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/github-webhooks/</loc>
-         <lastmod>2023-11-03</lastmod>
+         <lastmod>2023-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/graphql-api/</loc>
-         <lastmod>2023-11-03</lastmod>
+         <lastmod>2023-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/register-repository/</loc>
-         <lastmod>2023-11-03</lastmod>
+         <lastmod>2023-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://phacdatahub.github.io/ruok-service-autochecker/checks/overview/</loc>
-         <lastmod>2023-11-03</lastmod>
+         <lastmod>2023-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
