@@ -531,7 +531,7 @@
 <p>The only job of the event collectors is to determine which events are valid and relevant (i.e. corresponding to meaningful updates to an endpoint), and pass the endpoint URL along to the Graph Updater component.</p>
 <h2 id="graph-updater-and-graphql-api">Graph Updater and GraphQL API</h2>
 <p>Each kind of endpoint has zero or more ways to attach metadata about related endpoints (e.g. GitHub repository endpoints can have a <code>.product.yaml</code> file in the project root containing URLs related to that GitHub repository).</p>
-<p>After parsing this optional metadata, the Graph Updater component has one or more endpoint URLs, which form a graph </p>
+<p>After parsing this optional metadata, the Graph Updater component has one or more endpoint URLs, which form a graph of related endpoints.</p>
 <p>Currently, the Graph Updater makes the following mutation to the GraphQL API:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
@@ -543,8 +543,34 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></td></tr></table></div>
+<p>In this case, <code>$URLs</code> is an array of one or more endpoint URLs.</p>
+<p>Once the mutation above has been written to the GraphQL API, Graph Updater makes the following GraphQL query:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">query</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">endpoints</span><span class="p">(</span><span class="n">urls</span><span class="p">:</span><span class="w"> </span><span class="nv">$URLs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">url</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>The rationale here is that there may be existing vertices in the graph database that need to be re-scanned. For example, if the current URL was associated with <code>https://endpoint1</code> and <code>https://endpoint2</code>, and the graph of <code>https://endpoint2</code> and <code>https://endpoint3</code> already exists in the database, then we want to update each of <code>https://endpoint1</code>, <code>https://endpoint2</code>, and <code>https://endpoint3</code>.</p>
+<p>At this point, each endpoint is dispatched to the appropriate <code>EndpointScanner</code> queue (e.g. <code>EndpointScanner.githubEndpoints</code>) with the following payload.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+  &quot;endpoint&quot;: &quot;https://&lt;some-url&gt;&quot;
+}
+</code></pre></div></td></tr></table></div>
 <h2 id="graph-updater-and-scanners">Graph Updater and Scanners</h2>
+<blockquote>
+<p>TODO</p>
+</blockquote>
 <h2 id="scanners-and-graphql-api">Scanners and GraphQL API</h2>
+<blockquote>
+<p>TODO</p>
+</blockquote>
 
               
             </article>
