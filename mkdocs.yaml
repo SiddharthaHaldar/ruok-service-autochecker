@@ -34,6 +34,3 @@ nav:
   - GraphQL API: graphql-api.md
   - Scanners: scanners.md
   - Register a Repository: register-repository.md
-  - Compliance Checks:
-    - Overview: checks/overview.md 
-    
