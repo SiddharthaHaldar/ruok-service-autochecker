@@ -7,6 +7,7 @@ import { messages as enMessages } from "./locales/en/messages";
 import { messages as frMessages } from "./locales/fr/messages";
 
 import Inbox from "./Inbox";
+import App from "./KatApp";
 
 i18n.load({
   "en": enMessages,
@@ -15,11 +16,11 @@ i18n.load({
 
 i18n.activate("en");
 
-const App = () => (
+/*const App = () => (
   <I18nProvider i18n={i18n}>
     <Inbox />
   </I18nProvider>
-);
+);*/
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
