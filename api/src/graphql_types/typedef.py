@@ -3,7 +3,7 @@ from typing import NewType, List, Optional
 import strawberry
 
 
-@strawberry.interface
+@strawberry.type
 class Endpoint:
     url: str
 
