@@ -561,8 +561,14 @@
 </code></pre></div></td></tr></table></div>
 <h2 id="graph-updater">Graph Updater</h2>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>changeme
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>changeme
 <span class="nv">NATS_URL</span><span class="o">=</span>localhost:4222
+
+<span class="c1"># GRAPHQL_URL=http://localhost:4000/graphql</span>
+<span class="nv">GRAPHQL_URL</span><span class="o">=</span>http://api:4000/graphql
 </code></pre></div></td></tr></table></div>
 <h2 id="endpoint-scanners">Endpoint Scanners</h2>
 <h3 id="github-cloned-repo-checks">Github Cloned Repo Checks</h3>
@@ -573,11 +579,17 @@
 <span class="normal">2</span>
 <span class="normal">3</span>
 <span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>changeme
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>changeme
 <span class="nv">NATS_URL</span><span class="o">=</span>localhost:4222
 
 <span class="c1"># NATS sub stream</span>
 <span class="nv">NATS_SUB_STREAM</span><span class="o">=</span><span class="s2">&quot;EventsScanner.githubEndpoints&quot;</span>
+
+<span class="c1"># GRAPHQL_URL=http://localhost:4000/graphql</span>
+<span class="nv">GRAPHQL_URL</span><span class="o">=</span>http://api:4000/graphql
 </code></pre></div></td></tr></table></div>
 <h3 id="web-endpoint-checks">Web Endpoint Checks</h3>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
