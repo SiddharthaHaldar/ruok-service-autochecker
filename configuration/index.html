@@ -42,6 +42,8 @@
       
     
     
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
     <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -571,13 +573,11 @@
 <span class="normal">2</span>
 <span class="normal">3</span>
 <span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>changeme
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>changeme
 <span class="nv">NATS_URL</span><span class="o">=</span>localhost:4222
-<span class="nv">DB_NAME</span><span class="o">=</span>ruok
-<span class="nv">DB_URL</span><span class="o">=</span>http://localhost:8529
-<span class="nv">DB_USER</span><span class="o">=</span>changeme
-<span class="nv">DB_PASS</span><span class="o">=</span>changeme
+
+<span class="c1"># NATS sub stream</span>
+<span class="nv">NATS_SUB_STREAM</span><span class="o">=</span><span class="s2">&quot;EventsScanner.githubEndpoints&quot;</span>
 </code></pre></div></td></tr></table></div>
 <h3 id="web-endpoint-checks">Web Endpoint Checks</h3>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>

@@ -42,6 +42,8 @@
       
     
     
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
     <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -353,6 +355,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#full-graphql-api-specification" class="md-nav__link">
+    Full GraphQL API Specification
+  </a>
+  
+    <nav class="md-nav" aria-label="Full GraphQL API Specification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mutations" class="md-nav__link">
+    Mutations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation" class="md-nav__link">
+    Mutation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.endpoint" class="md-nav__link">
+    endpoint()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.endpoints" class="md-nav__link">
+    endpoints()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.githubEndpoint" class="md-nav__link">
+    githubEndpoint()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.product" class="md-nav__link">
+    product()
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -434,6 +491,61 @@
         <li class="md-nav__item">
   <a href="#examples" class="md-nav__link">
     Examples
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-graphql-api-specification" class="md-nav__link">
+    Full GraphQL API Specification
+  </a>
+  
+    <nav class="md-nav" aria-label="Full GraphQL API Specification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mutations" class="md-nav__link">
+    Mutations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation" class="md-nav__link">
+    Mutation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.endpoint" class="md-nav__link">
+    endpoint()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.endpoints" class="md-nav__link">
+    endpoints()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.githubEndpoint" class="md-nav__link">
+    githubEndpoint()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.product" class="md-nav__link">
+    product()
   </a>
   
 </li>
@@ -616,6 +728,297 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></td></tr></table></div>
+<h2 id="full-graphql-api-specification">Full GraphQL API Specification</h2>
+<h3 id="mutations">Mutations</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="graphql_types.mutation.Mutation"></a>
+  <div class="doc doc-contents first">
+
+
+            <details class="quote">
+              <summary>Source code in <code>api/src/graphql_types/mutation.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
+<span class="k">class</span> <span class="nc">Mutation</span><span class="p">:</span>
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">def</span> <span class="nf">endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Insert an endpoint with no additional metadata. This mutation should only</span>
+<span class="sd">        be used by the graph updater component to update the graph structure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">insert_endpoint</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">url</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">def</span> <span class="nf">githubEndpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="n">GithubEndpoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Insert a githubEndpoitn along with the appropriate metadata.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">insert_github_endpoint</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">url</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">def</span> <span class="nf">endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes a list of URLs to the graph. Each URL will be associated with</span>
+<span class="sd">        every other URL in the list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">insert_endpoints</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">urls</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attaches a product label to a list of URLs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">insert_product</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">urls</span><span class="p">)</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">name</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="graphql_types.mutation.Mutation.endpoint" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">endpoint</span><span class="p">(</span><span class="n">url</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Insert an endpoint with no additional metadata. This mutation should only
+be used by the graph updater component to update the graph structure.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>api/src/graphql_types/mutation.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<span class="k">def</span> <span class="nf">endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Insert an endpoint with no additional metadata. This mutation should only</span>
+<span class="sd">    be used by the graph updater component to update the graph structure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">insert_endpoint</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">url</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="graphql_types.mutation.Mutation.endpoints" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">endpoints</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Writes a list of URLs to the graph. Each URL will be associated with
+every other URL in the list.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>api/src/graphql_types/mutation.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<span class="k">def</span> <span class="nf">endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writes a list of URLs to the graph. Each URL will be associated with</span>
+<span class="sd">    every other URL in the list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">insert_endpoints</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">urls</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="graphql_types.mutation.Mutation.githubEndpoint" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">githubEndpoint</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Insert a githubEndpoitn along with the appropriate metadata.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>api/src/graphql_types/mutation.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<span class="k">def</span> <span class="nf">githubEndpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="n">GithubEndpoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Insert a githubEndpoitn along with the appropriate metadata.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">insert_github_endpoint</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">url</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="graphql_types.mutation.Mutation.product" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">product</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">urls</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Attaches a product label to a list of URLs.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>api/src/graphql_types/mutation.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attaches a product label to a list of URLs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">insert_product</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">urls</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">name</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
               
             </article>
