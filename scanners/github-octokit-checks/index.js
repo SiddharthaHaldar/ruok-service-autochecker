@@ -2,14 +2,17 @@
 
 import { connect, JSONCodec } from 'nats'
 import { Octokit } from "octokit"
+import { GraphQLClient, gql } from 'graphql-request';
 import { AllChecksStrategy } from './src/all-checks.js';
 
 import 'dotenv-safe/config.js'
+import { GithubEndpoint } from '../../graph-updater/src/github-endpoint.js';
 
 const {
   NATS_URL,
   GITHUB_TOKEN,
   NATS_SUB_STREAM,
+  GRAPHQL_URL,
 } = process.env;
 
 // Also note - this will be appended with repo name when published. 
@@ -38,11 +41,49 @@ process.on('SIGINT', () => process.exit(0))
       const orgName = prefix[1];
       const repoName = prefix[2];
 
-      const checkName = 'allChecks' // have this passed in in future - default to all-checks
       const branchName = 'main' // TODO - come back for this after initial pass - when picked up by repodetails
       const check = new AllChecksStrategy(repoName, orgName, octokit, branchName);
 
       const payload = await check.formatResponse(check);
+      // Mutation to add a graph for the new endpoints
+      // TODO: refactor this into a testable query builder function
+      const mutation = gql`
+        mutation {
+          githubEndpoint(
+            endpoint: {
+              url: "${gitHubEventPayload.endpoint}"
+              owner: "${orgName}"
+              repo: "${repoName}"
+              license: "${payload.GetRepoDetailsStrategy.metadata.license}"
+              visibility: "${payload.GetRepoDetailsStrategy.metadata.visibility}"
+              programmingLanguage: ["${Array.from(Object.keys(payload.ProgrammingLanguagesStrategy.metadata)).join('", "')}"]
+              automatedSecurityFixes: {
+                checkPasses: ${payload.AutomatedSecurityFixesStrategy.checkPasses}
+                metadata: {
+                  enabled: ${payload.AutomatedSecurityFixesStrategy.metadata.enabled}
+                  paused: ${payload.AutomatedSecurityFixesStrategy.metadata.paused}
+                }
+              },
+              vulnerabilityAlerts: {
+                checkPasses: ${payload.VunerabilityAlertsEnabledStrategy.checkPasses}
+                metadata: ${JSON.stringify(payload.VunerabilityAlertsEnabledStrategy.metadata)}
+              },
+              branchProtection: {
+                checkPasses: ${payload.BranchProtectionStrategy.checkPasses}
+                metadata: {
+                  branches: ["${Array.from(payload.BranchProtectionStrategy.metadata.branches).join('", "')}"]
+                  rules: ["${Array.from(payload.BranchProtectionStrategy.metadata.rules).join('", "')}"]
+                }
+              }
+            }
+          )
+        }
+        `;
+      // New GraphQL client - TODO: remove hard-coded URL
+      const graphqlClient = new GraphQLClient(GRAPHQL_URL);
+      // Write mutation to GraphQL API
+      const mutationResponse = await graphqlClient.request(mutation);
+      console.log("GraphQL mutation submitted", mutationResponse);
       let tmp = 1;
     }
   })();
