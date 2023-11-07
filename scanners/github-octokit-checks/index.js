@@ -6,7 +6,6 @@ import { GraphQLClient, gql } from 'graphql-request';
 import { AllChecksStrategy } from './src/all-checks.js';
 
 import 'dotenv-safe/config.js'
-import { GithubEndpoint } from '../../graph-updater/src/github-endpoint.js';
 
 const {
   NATS_URL,
@@ -52,6 +51,7 @@ process.on('SIGINT', () => process.exit(0))
           githubEndpoint(
             endpoint: {
               url: "${gitHubEventPayload.endpoint}"
+              kind: "Github"
               owner: "${orgName}"
               repo: "${repoName}"
               license: "${payload.GetRepoDetailsStrategy.metadata.license}"

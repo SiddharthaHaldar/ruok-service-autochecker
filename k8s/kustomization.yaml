@@ -6,6 +6,7 @@ resources:
 - ./deployment-ruok-api.yaml
 - ./deployment-webhook-server.yaml
 - ./deployment-graph-updater.yaml
+- ./deployment-octokit-scanner.yaml
 - ./svc-nats.yaml
 - ./svc-ruok-api.yaml
 - ./svc-webhook-server.yaml
