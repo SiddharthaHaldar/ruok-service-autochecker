@@ -106,14 +106,17 @@ export class BranchProtectionStrategy extends OctokitCheckStrategy {
   }
   extractMetadata(repoBranches, branchProtectionRules) {
     const branches = repoBranches.organization.repository.refs.edges.map(({ node }) => node.branchName)
-    const rules = branchProtectionRules.repository.branchProtectionRules.edges
-      .map(({ node }) => ({ [node.pattern]: node }))
-      .reduce((obj, item) => {
-        return {
-          ...obj,
-          [item[key]]: item,
-        };
-      });
+    const rules = branchProtectionRules.repository.branchProtectionRules.edges;
+    if (rules !== undefined && rules.length !== 0) {
+      rules
+        .map(({ node }) => ({ [node.pattern]: node }))
+        .reduce((obj, item) => {
+          return {
+            ...obj,
+            [item[key]]: item,
+          };
+        });
+    }
     return {
       branches,
       rules,
