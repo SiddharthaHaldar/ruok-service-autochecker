@@ -48,13 +48,17 @@ kind-push-all: kind-push-webhook-server kind-push-api
 #  | (_| |  __/ |_) | | (_) | |_| |
 #   \__,_|\___| .__/|_|\___/ \__, |
 #             |_|            |___/ 
-k8s:
+k8s-deploy:
     # Deploy CRDs separately from rest of manifests to avoid race condition
 	echo DEPLOY ARANGODB OPERATOR CRDS
 	kubectl apply -k ./k8s/arangodb-crds/
 	echo DEPLOY MAIN APPLICATION AFTER CRDS ARE INSTALLED
 	sleep 2
 	kubectl apply -k ./k8s/
+
+k8s-destroy:
+	kubectl delete -k ./k8s/
+	kubectl delete -k ./k8s/arangodb-crds/
 
 port-forward:
 	kubectl port-forward svc/example-simple-single-ea 8529:8529 &
