@@ -6,7 +6,7 @@ import strawberry
 
 from constants import Settings
 
-from graphql_types.typedef import GithubEndpoint, WebEndpoint
+from graphql_types.input_types import GithubEndpointInput, WebEndpointInput
 
 
 class GraphDB:
@@ -40,7 +40,7 @@ class GraphDB:
         return url
 
     def upsert_scanner_endpoint(
-        self, github_endpoint: Union[GithubEndpoint, WebEndpoint]
+        self, github_endpoint: Union[GithubEndpointInput, WebEndpointInput]
     ):
         update_dict = {
             **strawberry.asdict(github_endpoint),
@@ -88,6 +88,13 @@ class GraphDB:
             self.insert_endpoint(url)
             self.insert_edge(product, url)
             self.insert_edge(url, product)
+
+    def get_scanner_endpoint(self, url):
+        return self.nodes.get(self._key_safe_url(url))
+    
+    def get_scanner_endpoints(self, kind, limit):
+        cursor = self.nodes.find({"kind": kind}, skip=0, limit=limit)
+        return [document for document in cursor]
 
     def get_endpoint(self, url):
         if not self.nodes.get(self._key_safe_url(url)):

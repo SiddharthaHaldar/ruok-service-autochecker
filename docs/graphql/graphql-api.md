@@ -128,9 +128,3 @@ query {
   }
 }
 ```
-
-## Full GraphQL API Specification
-
-### Mutations
-
-::: graphql_types.mutation.Mutation

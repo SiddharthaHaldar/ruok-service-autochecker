@@ -21,28 +21,21 @@ class CheckPasses:
     check_passes: Optional[bool]
     metadata: Optional[JSON]
 
-
-@strawberry.input
-class CheckPassesInput:
-    check_passes: Optional[bool]
-    metadata: Optional[JSON]
-
-
-@strawberry.input
 @strawberry.type
 class GithubEndpoint(Endpoint):
     url: str
+    kind: str
+    _key: str
     owner: str
     repo: str
     license: str
     visibility: str
     programming_language: List[str]
-    automated_security_fixes: CheckPassesInput
-    vulnerability_alerts: CheckPassesInput
-    branch_protection: CheckPassesInput
+    automated_security_fixes: CheckPasses
+    vulnerability_alerts: CheckPasses
+    branch_protection: CheckPasses
 
-
-@strawberry.input
 @strawberry.type
 class WebEndpoint(Endpoint):
     url: str
+    kind: str

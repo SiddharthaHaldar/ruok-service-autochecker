@@ -2,7 +2,7 @@ import strawberry
 
 from typing import List
 
-from graphql_types.typedef import GithubEndpoint
+from graphql_types.input_types import GithubEndpointInput
 from model import GraphDB
 
 
@@ -20,7 +20,7 @@ class Mutation:
         return url
 
     @strawberry.mutation
-    def githubEndpoint(self, endpoint: GithubEndpoint) -> str:
+    def githubEndpoint(self, endpoint: GithubEndpointInput) -> str:
         """
         # Update/Insert Github Endpoint
 
@@ -28,7 +28,7 @@ class Mutation:
         exist, the endpoint document will be created. If the endpoint already exists, its
         fields will be updated with the values provided in the mutation.
 
-        # Example of how to use this as an input type:
+        # Example
 
         ```graphql
         mutation {
