@@ -18,7 +18,6 @@ plugins:
   - search:
       separator: '[\s\-\.]+'
   - mkdocstrings:
-      default_handler: python
       handlers:
         python:
           paths: [api/src]
