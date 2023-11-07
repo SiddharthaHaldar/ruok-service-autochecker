@@ -218,3 +218,64 @@ gcloud artifacts repositories create <repo-name> --location=us-central1 --reposi
 gcloud pubsub topics create container-analysis-occurrences-v1 --project=phx-01h1yptgmche7jcy01wzzpw2rf 
 
 --- create cloud function (https://cloud.google.com/functions/docs/create-deploy-http-python)
+```
+name: "projects/phx-01h41bw3b0xsf9rmpzmxbee2s9/occurrences/030e0ea0-bb58-474a-8aad-853fccaf3b59"
+resource_uri: "https://northamerica-northeast1-docker.pkg.dev/phx-01h41bw3b0xsf9rmpzmxbee2s9/gcf-artifacts/image--vuln--cf--trigger@sha256:5812843cce5793adc1350c5865ef0946114bf98dc897312e9593da840bbc83b1"
+note_name: "projects/goog-vulnz/notes/CVE-2020-21710"
+kind: VULNERABILITY
+create_time {
+  seconds: 1699305325
+  nanos: 363051000
+}
+update_time {
+  seconds: 1699305325
+  nanos: 363051000
+}
+vulnerability {
+  severity: MEDIUM
+  cvss_score: 5.5
+  cvssv3 {
+    base_score: 5.5
+    exploitability_score: 1.8
+    impact_score: 3.6
+    attack_vector: ATTACK_VECTOR_LOCAL
+    attack_complexity: ATTACK_COMPLEXITY_LOW
+    privileges_required: PRIVILEGES_REQUIRED_NONE
+    user_interaction: USER_INTERACTION_REQUIRED
+    scope: SCOPE_UNCHANGED
+    confidentiality_impact: IMPACT_NONE
+    integrity_impact: IMPACT_NONE
+    availability_impact: IMPACT_HIGH
+  }
+  package_issue {
+    affected_cpe_uri: "cpe:/o:canonical:ubuntu_linux:18.04"
+    affected_package: "ghostscript"
+    affected_version {
+      name: "9.26~dfsg+0"
+      revision: "0ubuntu0.18.04.18"
+      kind: NORMAL
+      full_name: "9.26~dfsg+0-0ubuntu0.18.04.18"
+    }
+    fixed_cpe_uri: "cpe:/o:canonical:ubuntu_linux:18.04"
+    fixed_package: "ghostscript"
+    fixed_version {
+      name: "9.26~dfsg+0"
+      revision: "0ubuntu0.18.04.18+esm2"
+      kind: NORMAL
+      full_name: "9.26~dfsg+0-0ubuntu0.18.04.18+esm2"
+    }
+    fix_available: true
+    package_type: "OS"
+    effective_severity: MEDIUM
+  }
+  short_description: "CVE-2020-21710"
+  long_description: "NIST vectors: CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H"
+  related_urls {
+    url: "http://people.ubuntu.com/~ubuntu-security/cve/CVE-2020-21710"
+    label: "More Info"
+  }
+  effective_severity: MEDIUM
+  fix_available: true
+  cvss_version: CVSS_VERSION_3
+}
+```

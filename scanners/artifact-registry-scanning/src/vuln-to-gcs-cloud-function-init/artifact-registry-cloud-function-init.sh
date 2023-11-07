@@ -99,8 +99,8 @@ gcloud functions deploy image-vuln-cf-trigger \
 # REDEPLOY (TODO - need docker - doing this in local terminal )
 gcloud auth configure-docker $REGION-docker.pkg.dev
 docker build --tag nginx .
-docker tag nginx $REGION-docker.pkg.dev/$PROJECT_ID_SOURCE/$SOURCE_REPO_NAME/nginx-test:staging5
-docker push $REGION-docker.pkg.dev/$PROJECT_ID_SOURCE/$SOURCE_REPO_NAME/nginx-test:staging5
+docker tag nginx $REGION-docker.pkg.dev/$PROJECT_ID_SOURCE/$SOURCE_REPO_NAME/nginx-test:staging27
+docker push $REGION-docker.pkg.dev/$PROJECT_ID_SOURCE/$SOURCE_REPO_NAME/nginx-test:staging27
 
 
 # Part 2 https://medium.com/google-cloud/centrally-managing-artifact-registry-container-image-vulnerabilities-on-google-cloud-part-two-ad730e7cf649
