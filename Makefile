@@ -16,14 +16,16 @@ CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
 #  |_.__/ \__,_|_|_|\__,_|
 
 # Build all images in the repo
-build: build-api-image build-webhook-server-image build-graph-updater
+build: build-api-image build-webhook-server-image build-graph-updater build-octokit-scanner
 
 # GraphQL API
 build-api-image:
 	$(CONTAINER_RUNTIME) build ./api/ -t localhost/$(APP_NAME)-api:$(APP_VERSION)
 
 # Scanners
-# TODO
+build-octokit-scanner:
+	$(CONTAINER_RUNTIME) build ./scanners/github-octokit-checks/ -t localhost/$(APP_NAME)-octokit-scanner:$(APP_VERSION)
+
 
 # Webhook Server
 build-webhook-server-image:
