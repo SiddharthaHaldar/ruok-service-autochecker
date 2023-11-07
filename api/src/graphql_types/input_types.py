@@ -16,13 +16,14 @@ class GithubEndpointInput:
     kind: str
     owner: str
     repo: str
-    license: str
-    visibility: str
-    programming_language: List[str]
-    automated_security_fixes: CheckPassesInput
-    vulnerability_alerts: CheckPassesInput
-    branch_protection: CheckPassesInput
-
+    license: Optional[str]
+    visibility: Optional[str]
+    programming_language: Optional[List[str]]
+    automated_security_fixes: Optional[CheckPassesInput]
+    vulnerability_alerts: Optional[CheckPassesInput]
+    branch_protection: Optional[CheckPassesInput]
+    has_security_md: Optional[CheckPassesInput]
+    has_dependabot_yaml: Optional[CheckPassesInput]
 
 @strawberry.input
 class WebEndpointInput:

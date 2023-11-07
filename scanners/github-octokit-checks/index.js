@@ -84,7 +84,6 @@ process.on('SIGINT', () => process.exit(0))
       // Write mutation to GraphQL API
       const mutationResponse = await graphqlClient.request(mutation);
       console.log("GraphQL mutation submitted", mutationResponse);
-      let tmp = 1;
     }
   })();
 

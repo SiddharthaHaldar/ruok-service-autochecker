@@ -1,6 +1,6 @@
 // github-has-dependabot-yaml-check/index.js
 
-import { connect, JSONCodec} from 'nats'
+import { connect, JSONCodec } from 'nats'
 
 import { initializeChecker } from './src/initialize-checker.js'
 import { cloneRepository, removeClonedRepository } from './src/clone-repo-functions.js'
@@ -8,68 +8,80 @@ import { Database } from "arangojs";
 import { GraphQLClient } from 'graphql-request'
 import 'dotenv-safe/config.js'
 
-const { 
-    DB_NAME,
-    DB_URL,
-    DB_USER, 
-    DB_PASS,
+const {
     NATS_URL,
-    API_URL,
-  } = process.env;
-  
-const NATS_SUB_STREAM="EventsScanner"
+    GRAPHQL_URL,
+    NATS_SUB_STREAM
+} = process.env;
+
 
 // API connection 
-const graphQLClient = new GraphQLClient(API_URL);
-
-// Database connection 
-const db = new Database({
-  url: DB_URL,
-  databaseName: DB_NAME,
-  auth: { username: DB_USER, password: DB_PASS },
-});
+const graphQLClient = new GraphQLClient(GRAPHQL_URL);
 
 // NATs connection 
-const nc = await connect({ servers: NATS_URL,})
+const nc = await connect({ servers: NATS_URL, })
 const jc = JSONCodec()
-
-async function publish(subject, payload) {
-    nc.publish(subject, jc.encode(payload)) 
-    console.log(`Sent to ... ${subject}: `, payload)
-  }
 
 const sub = nc.subscribe(NATS_SUB_STREAM)
 console.log('🚀 Connected to NATS server - listening on ...', sub.subject, "channel...");
 
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
-;(async () => {
- 
-    for await (const message of sub) {
-    // decode payload 
-        const gitHubEventPayload  = await jc.decode(message.data)
-        const { sourceCodeRepository, productName, repoName, cloneUrl } = gitHubEventPayload
+    ; (async () => {
 
-        console.log('\n**************************************************************')
-        console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(gitHubEventPayload)}`)
+        for await (const message of sub) {
+            // decode payload 
+            const gitHubEventPayload = await jc.decode(message.data)
 
-    // Clone repository
-        const repoPath = await cloneRepository(cloneUrl, repoName) 
+            console.log('\n**************************************************************')
+            console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(gitHubEventPayload)}`)
 
-    // Instantiate and do the check(s)
-        const checkName = 'allChecks' 
-        const check = await initializeChecker(checkName, repoName, repoPath)
-        const results = await check.doRepoCheck()
+            // GitHub urls always follow `github.com/orgName/repoName`, so from this
+            // structure we can construct the org name and repo name.
+            const prefix = (new URL(gitHubEventPayload.endpoint)).pathname.split("/")
+            const orgName = prefix[1];
+            const repoName = prefix[2];
 
-        console.log(JSON.stringify(results)) // to see inside arrays
-        console.log(results)
+            // Clone repository
+            const repoPath = await cloneRepository(gitHubEventPayload.endpoint, repoName)
 
-    // SAVE to ArangoDB through API
-        // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
-    
-    // Remove temp repository
-        await removeClonedRepository(repoPath) 
-    }
-})();
+            // Instantiate and do the check(s)
+            const checkName = 'allChecks'
+            const check = await initializeChecker(checkName, repoName, repoPath)
+            const results = await check.doRepoCheck()
+
+            console.log(JSON.stringify(results)) // to see inside arrays
+            console.log(results)
+
+            // SAVE to ArangoDB through API
+            // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
+            // Mutation to add a graph for the new endpoints
+            // TODO: refactor this into a testable query builder function
+            const mutation = gql`
+            mutation {
+                githubEndpoint(
+                    endpoint: {
+                        url: "${gitHubEventPayload.endpoint}"
+                        kind: "Github"
+                        owner: "${orgName}"
+                        repo: "${repoName}"
+                        hasSecurityMd: {
+                            checkPasses: ${payload.hasSecurityMd.checkPasses}
+                        },
+                        hasDependabotYaml: {
+                            checkPasses: ${payload.hasDependabotYaml.checkPasses}
+                        },
+                    }
+                )
+            }
+            `;
+            // New GraphQL client - TODO: remove hard-coded URL
+            const graphqlClient = new GraphQLClient(GRAPHQL_URL);
+            // Write mutation to GraphQL API
+            const mutationResponse = await graphqlClient.request(mutation);
+            // Remove temp repository
+            await removeClonedRepository(repoPath)
+        }
+    })();
 
 await nc.closed();
