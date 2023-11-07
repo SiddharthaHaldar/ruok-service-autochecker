@@ -8,8 +8,8 @@ from strawberry.fastapi import GraphQLRouter
 
 from constants import Settings
 
-from types.query import Query
-from types.mutation import Mutation
+from graphql_types.query import Query
+from graphql_types.mutation import Mutation
 
 schema = strawberry.Schema(Query, Mutation)
 

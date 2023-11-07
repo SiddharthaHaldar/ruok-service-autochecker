@@ -1,6 +1,10 @@
-from typing import NewType, Optional, List
+from typing import NewType, List, Optional
 
 import strawberry
+
+@strawberry.interface
+class Endpoint:
+    url: str
 
 JSON = strawberry.scalar(
     NewType("JSON", object),
@@ -9,14 +13,16 @@ JSON = strawberry.scalar(
     parse_value=lambda v: v,
 )
 
-@strawberry.interface
+@strawberry.type
 class CheckPasses:
     check_passes: Optional[bool]
     metadata: Optional[JSON]
 
-@strawberry.interface
-class Endpoint:
-    url: str
+@strawberry.input
+class CheckPassesInput:
+    check_passes: Optional[bool]
+    metadata: Optional[JSON]
+
 
 @strawberry.input
 @strawberry.type
@@ -42,8 +48,8 @@ class GithubEndpoint(Endpoint):
     license: str
     visibility: str
     programming_language: List[str]
-    automated_security_fixes: CheckPasses
-    vulnerability_alerts: CheckPasses
-    branch_protection: CheckPasses
+    automated_security_fixes: CheckPassesInput
+    vulnerability_alerts: CheckPassesInput
+    branch_protection: CheckPassesInput
 
 

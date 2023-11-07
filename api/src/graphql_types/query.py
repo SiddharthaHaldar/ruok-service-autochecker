@@ -2,9 +2,9 @@ import strawberry
 
 from model import GraphDB
 
-from typing import List,  Optional, NewType
+from typing import List
 
-from types.typedef import CheckPasses, Endpoint, GithubEndpoint
+from graphql_types.typedef import Endpoint
 
 @strawberry.type
 class Query:

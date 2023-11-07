@@ -2,6 +2,8 @@ from arango import ArangoClient
 
 from constants import Settings
 
+from graphql_types.typedef import GithubEndpoint
+
 
 class GraphDB:
     def __init__(self):
@@ -33,13 +35,7 @@ class GraphDB:
             self.nodes.insert({"url": url, "_key": self._key_safe_url(url)})
         return url
     
-    def insert_github_endpoint(
-            self,
-            url,
-            owner,
-            repo,
-
-            ):
+    def insert_github_endpoint(self, github_endpoint: GithubEndpoint):
         pass
 
     def insert_edge(self, endpoint1, endpoint2):
