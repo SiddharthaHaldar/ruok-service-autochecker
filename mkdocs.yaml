@@ -17,12 +17,18 @@ extra:
 plugins:
   - search:
       separator: '[\s\-\.]+'
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
 
 markdown_extensions:
   - pymdownx.snippets
   - pymdownx.highlight:
       linenums: true
-  - pymdownx.superfences 
+  - pymdownx.superfences
+  - mkdocstrings
+  - search
 
 nav:
   - Architecture: architecture.md
