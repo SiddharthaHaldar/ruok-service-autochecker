@@ -3,7 +3,7 @@ on:
   push:
     branches:
     - main
-    - graph-updater
+    - scanner-graphql
 jobs:
   build:
     runs-on: ubuntu-latest
