@@ -21,7 +21,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [src]
+          paths: [api/src]
 
 markdown_extensions:
   - pymdownx.snippets
