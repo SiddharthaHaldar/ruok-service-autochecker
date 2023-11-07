@@ -32,6 +32,15 @@ class GraphDB:
         if not self.nodes.get(self._key_safe_url(url)):
             self.nodes.insert({"url": url, "_key": self._key_safe_url(url)})
         return url
+    
+    def insert_github_endpoint(
+            self,
+            url,
+            owner,
+            repo,
+
+            ):
+        pass
 
     def insert_edge(self, endpoint1, endpoint2):
         edge_key = f"{self._key_safe_url(endpoint1)}-to-{self._key_safe_url(endpoint2)}"
