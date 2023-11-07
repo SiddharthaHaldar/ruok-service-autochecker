@@ -21,10 +21,47 @@ class Mutation:
     @strawberry.mutation
     def githubEndpoint(self, endpoint: GithubEndpoint) -> str:
         """
-        Insert a githubEndpoitn along with the appropriate metadata.
+        # Update/Insert Github Endpoint
+        
+        Insert a Github Endpoint with "upsert" semantics. If the endpoint doesn't already
+        exist, the endpoint document will be created. If the endpoint already exists, its
+        fields will be updated with the values provided in the mutation.
+
+        # Example of how to use this as an input type:
+
+        ```graphql
+        mutation {
+            githubEndpoint(
+                endpoint: {
+                url:"https://github.com/someOrg/someRepo"
+                owner: "someOrg"
+                repo:"someRepo"
+                license: "MIT"
+                visibility:"Public"
+                programmingLanguage:["Python", "JavaScript", "Bash", "Dockerfile"]
+                automatedSecurityFixes: {
+                    checkPasses: true
+                    metadata: {}
+                }
+                vulnerabilityAlerts: {
+                    checkPasses: false
+                    metadata: {
+                    key: "value"
+                    }
+                }
+                branchProtection:{
+                    checkPasses:true,
+                    metadata:{
+                    key:"value"
+                    }
+                }
+                }
+            )
+        }
+        ```
         """
         client = GraphDB()
-        client.insert_github_endpoint(endpoint)
+        client.upsert_github_endpoint(endpoint)
         client.close()
         return endpoint.url
     
