@@ -46,11 +46,14 @@ def image_vuln_pubsub_handler(event, context):
         "resource_uri": occurrence.resource_uri,
         # "note_name": occurrence.note_name,
         "kind": occurrence.kind,
-        "package_type": getattr(occurrence, 'package_type', None),
-        # "short_description": getattr(occurrence.vulnerability, 'short_description', None),
-        # "related_url": getattr((occurrence.vulnerability.related_url, 'url', None),
-        "create_time": occurrence.create_time,
-        "update_time": occurrence.update_time,
+        "short_description": getattr(occurrence.vulnerability, 'short_description', None),
+        "related_url": getattr(occurrence.vulnerability.related_url, 'url', None),
+        "package_type": getattr(occurrence.vulnerability, 'package_type', None),
+        "effective_severity": getattr(occurrence.vulnerability, 'effective_severity', None),
+        "fix_available": getattr(occurrence.vulnerability, 'fix_available', None),
+        "cvss_score": getattr(occurrence.vulnerability, 'cvss_score, None),
+        "create_time": str(occurrence.create_time),
+        "update_time": str(occurrence.update_time),
     }
 
     #     # Convert the extracted information to a string (JSON format)
@@ -59,7 +62,9 @@ def image_vuln_pubsub_handler(event, context):
     
         #write to storage
     # write_vuln_to_bucket(bucket_name, str(occurrence), str(occurrence.name))
-    write_vuln_to_bucket(bucket_name, occurrence_info_str, f"{occurrence.name}_{occurrence.short_description}.json")
+    short_description = occurrence.vulnerability.short_description if hasattr(occurrence.vulnerability, 'short_description') else None
+
+    write_vuln_to_bucket(bucket_name, occurrence_info_str, f"{occurrence.name}_{occurrence.vulnerability.short_description}.json")
     # f"{occurrence.name}_occurrence_info.json"
     # write_vuln_to_bucket(bucket_name, str(data), str(occurrence.name))
         # write_vuln_to_bucket(bucket_name, occurrence_info_str, str(occurrence.name))
