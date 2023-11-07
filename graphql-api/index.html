@@ -401,6 +401,26 @@
     githubEndpoint()
   </a>
   
+    <nav class="md-nav" aria-label="githubEndpoint()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.githubEndpoint--updateinsert-github-endpoint" class="md-nav__link">
+    Update/Insert Github Endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.githubEndpoint--example-of-how-to-use-this-as-an-input-type" class="md-nav__link">
+    Example of how to use this as an input type:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -540,6 +560,26 @@
   <a href="#graphql_types.mutation.Mutation.githubEndpoint" class="md-nav__link">
     githubEndpoint()
   </a>
+  
+    <nav class="md-nav" aria-label="githubEndpoint()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.githubEndpoint--updateinsert-github-endpoint" class="md-nav__link">
+    Update/Insert Github Endpoint
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graphql_types.mutation.Mutation.githubEndpoint--example-of-how-to-use-this-as-an-input-type" class="md-nav__link">
+    Example of how to use this as an input type:
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -784,7 +824,44 @@
 <span class="normal">47</span>
 <span class="normal">48</span>
 <span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
 <span class="k">class</span> <span class="nc">Mutation</span><span class="p">:</span>
     <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">def</span> <span class="nf">endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -800,10 +877,47 @@
     <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">def</span> <span class="nf">githubEndpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="n">GithubEndpoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Insert a githubEndpoitn along with the appropriate metadata.</span>
+<span class="sd">        # Update/Insert Github Endpoint</span>
+
+<span class="sd">        Insert a Github Endpoint with &quot;upsert&quot; semantics. If the endpoint doesn&#39;t already</span>
+<span class="sd">        exist, the endpoint document will be created. If the endpoint already exists, its</span>
+<span class="sd">        fields will be updated with the values provided in the mutation.</span>
+
+<span class="sd">        # Example of how to use this as an input type:</span>
+
+<span class="sd">        ```graphql</span>
+<span class="sd">        mutation {</span>
+<span class="sd">            githubEndpoint(</span>
+<span class="sd">                endpoint: {</span>
+<span class="sd">                url:&quot;https://github.com/someOrg/someRepo&quot;</span>
+<span class="sd">                owner: &quot;someOrg&quot;</span>
+<span class="sd">                repo:&quot;someRepo&quot;</span>
+<span class="sd">                license: &quot;MIT&quot;</span>
+<span class="sd">                visibility:&quot;Public&quot;</span>
+<span class="sd">                programmingLanguage:[&quot;Python&quot;, &quot;JavaScript&quot;, &quot;Bash&quot;, &quot;Dockerfile&quot;]</span>
+<span class="sd">                automatedSecurityFixes: {</span>
+<span class="sd">                    checkPasses: true</span>
+<span class="sd">                    metadata: {}</span>
+<span class="sd">                }</span>
+<span class="sd">                vulnerabilityAlerts: {</span>
+<span class="sd">                    checkPasses: false</span>
+<span class="sd">                    metadata: {</span>
+<span class="sd">                    key: &quot;value&quot;</span>
+<span class="sd">                    }</span>
+<span class="sd">                }</span>
+<span class="sd">                branchProtection:{</span>
+<span class="sd">                    checkPasses:true,</span>
+<span class="sd">                    metadata:{</span>
+<span class="sd">                    key:&quot;value&quot;</span>
+<span class="sd">                    }</span>
+<span class="sd">                }</span>
+<span class="sd">                }</span>
+<span class="sd">            )</span>
+<span class="sd">        }</span>
+<span class="sd">        ```</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">insert_github_endpoint</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">upsert_github_endpoint</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span>
         <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">url</span>
 
@@ -905,16 +1019,16 @@ every other URL in the list.</p>
 
           <details class="quote">
             <summary>Source code in <code>api/src/graphql_types/mutation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
 <span class="k">def</span> <span class="nf">endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes a list of URLs to the graph. Each URL will be associated with</span>
@@ -944,7 +1058,67 @@ every other URL in the list.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Insert a githubEndpoitn along with the appropriate metadata.</p>
+      <h3 id="graphql_types.mutation.Mutation.githubEndpoint--updateinsert-github-endpoint">Update/Insert Github Endpoint</h3>
+<p>Insert a Github Endpoint with "upsert" semantics. If the endpoint doesn't already
+exist, the endpoint document will be created. If the endpoint already exists, its
+fields will be updated with the values provided in the mutation.</p>
+<h3 id="graphql_types.mutation.Mutation.githubEndpoint--example-of-how-to-use-this-as-an-input-type">Example of how to use this as an input type:</h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">mutation</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">githubEndpoint</span><span class="p">(</span>
+<span class="w">        </span><span class="n">endpoint</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">url</span><span class="p">:</span><span class="s">&quot;https://github.com/someOrg/someRepo&quot;</span>
+<span class="w">        </span><span class="n">owner</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;someOrg&quot;</span>
+<span class="w">        </span><span class="n">repo</span><span class="p">:</span><span class="s">&quot;someRepo&quot;</span>
+<span class="w">        </span><span class="n">license</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;MIT&quot;</span>
+<span class="w">        </span><span class="n">visibility</span><span class="p">:</span><span class="s">&quot;Public&quot;</span>
+<span class="w">        </span><span class="n">programmingLanguage</span><span class="p">:[</span><span class="s">&quot;Python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;JavaScript&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bash&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Dockerfile&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="n">automatedSecurityFixes</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">checkPasses</span><span class="p">:</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">            </span><span class="n">metadata</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">vulnerabilityAlerts</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">checkPasses</span><span class="p">:</span><span class="w"> </span><span class="nb">false</span>
+<span class="w">            </span><span class="n">metadata</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;value&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">branchProtection</span><span class="p">:{</span>
+<span class="w">            </span><span class="n">checkPasses</span><span class="p">:</span><span class="nb">true</span><span class="p">,</span>
+<span class="w">            </span><span class="n">metadata</span><span class="p">:{</span>
+<span class="w">            </span><span class="n">key</span><span class="p">:</span><span class="s">&quot;value&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></td></tr></table></div>
 
           <details class="quote">
             <summary>Source code in <code>api/src/graphql_types/mutation.py</code></summary>
@@ -956,13 +1130,87 @@ every other URL in the list.</p>
 <span class="normal">26</span>
 <span class="normal">27</span>
 <span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
 <span class="k">def</span> <span class="nf">githubEndpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="n">GithubEndpoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Insert a githubEndpoitn along with the appropriate metadata.</span>
+<span class="sd">    # Update/Insert Github Endpoint</span>
+
+<span class="sd">    Insert a Github Endpoint with &quot;upsert&quot; semantics. If the endpoint doesn&#39;t already</span>
+<span class="sd">    exist, the endpoint document will be created. If the endpoint already exists, its</span>
+<span class="sd">    fields will be updated with the values provided in the mutation.</span>
+
+<span class="sd">    # Example of how to use this as an input type:</span>
+
+<span class="sd">    ```graphql</span>
+<span class="sd">    mutation {</span>
+<span class="sd">        githubEndpoint(</span>
+<span class="sd">            endpoint: {</span>
+<span class="sd">            url:&quot;https://github.com/someOrg/someRepo&quot;</span>
+<span class="sd">            owner: &quot;someOrg&quot;</span>
+<span class="sd">            repo:&quot;someRepo&quot;</span>
+<span class="sd">            license: &quot;MIT&quot;</span>
+<span class="sd">            visibility:&quot;Public&quot;</span>
+<span class="sd">            programmingLanguage:[&quot;Python&quot;, &quot;JavaScript&quot;, &quot;Bash&quot;, &quot;Dockerfile&quot;]</span>
+<span class="sd">            automatedSecurityFixes: {</span>
+<span class="sd">                checkPasses: true</span>
+<span class="sd">                metadata: {}</span>
+<span class="sd">            }</span>
+<span class="sd">            vulnerabilityAlerts: {</span>
+<span class="sd">                checkPasses: false</span>
+<span class="sd">                metadata: {</span>
+<span class="sd">                key: &quot;value&quot;</span>
+<span class="sd">                }</span>
+<span class="sd">            }</span>
+<span class="sd">            branchProtection:{</span>
+<span class="sd">                checkPasses:true,</span>
+<span class="sd">                metadata:{</span>
+<span class="sd">                key:&quot;value&quot;</span>
+<span class="sd">                }</span>
+<span class="sd">            }</span>
+<span class="sd">            }</span>
+<span class="sd">        )</span>
+<span class="sd">    }</span>
+<span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">GraphDB</span><span class="p">()</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">insert_github_endpoint</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">upsert_github_endpoint</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span>
     <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">url</span>
 </code></pre></div></td></tr></table></div>
@@ -989,15 +1237,15 @@ every other URL in the list.</p>
 
           <details class="quote">
             <summary>Source code in <code>api/src/graphql_types/mutation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
 <span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attaches a product label to a list of URLs.</span>
