@@ -1,8 +1,12 @@
+from typing import Union
+
 from arango import ArangoClient
+
+import strawberry
 
 from constants import Settings
 
-from graphql_types.typedef import GithubEndpoint
+from graphql_types.typedef import GithubEndpoint, WebEndpoint
 
 
 class GraphDB:
@@ -29,15 +33,24 @@ class GraphDB:
         return url.replace("://", "-").replace("/", "-")
 
     def insert_endpoint(self, url):
-        if url == '':
+        if url == "":
             return url
         if not self.nodes.get(self._key_safe_url(url)):
             self.nodes.insert({"url": url, "_key": self._key_safe_url(url)})
         return url
-    
-    def upsert_github_endpoint(self, github_endpoint: GithubEndpoint):
-        tmp=1
-        pass
+
+    def upsert_scanner_endpoint(
+        self, github_endpoint: Union[GithubEndpoint, WebEndpoint]
+    ):
+        update_dict = {
+            **strawberry.asdict(github_endpoint),
+            "_key": self._key_safe_url(github_endpoint.url),
+        }
+        if not self.nodes.get(self._key_safe_url(github_endpoint.url)):
+            self.nodes.insert(update_dict)
+        else:
+            self.nodes.update(update_dict)
+        return github_endpoint
 
     def insert_edge(self, endpoint1, endpoint2):
         edge_key = f"{self._key_safe_url(endpoint1)}-to-{self._key_safe_url(endpoint2)}"
@@ -93,7 +106,7 @@ class GraphDB:
     def get_endpoints(self, urls):
         unique_urls = set()
         for url in urls:
-            if url == '':
+            if url == "":
                 continue
             url_vertices = self.get_endpoint(url)["vertices"]
             if url_vertices:

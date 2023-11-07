@@ -2,9 +2,11 @@ from typing import NewType, List, Optional
 
 import strawberry
 
+
 @strawberry.interface
 class Endpoint:
     url: str
+
 
 JSON = strawberry.scalar(
     NewType("JSON", object),
@@ -13,10 +15,12 @@ JSON = strawberry.scalar(
     parse_value=lambda v: v,
 )
 
+
 @strawberry.type
 class CheckPasses:
     check_passes: Optional[bool]
     metadata: Optional[JSON]
+
 
 @strawberry.input
 class CheckPassesInput:
@@ -27,21 +31,6 @@ class CheckPassesInput:
 @strawberry.input
 @strawberry.type
 class GithubEndpoint(Endpoint):
-    """
-    ## Example of how to use this as an input type:
-
-    ```graphql
-        mutation {
-        githubEndpoint(
-            endpoint: {
-            url:"https://github.com/PHACDataHub/ruok-service-autochecker",
-            owner: "PHACDataHub"
-            repo:"ruok-service-autochecker"
-            }
-        )
-        }
-    ```
-    """
     url: str
     owner: str
     repo: str
@@ -53,3 +42,7 @@ class GithubEndpoint(Endpoint):
     branch_protection: CheckPassesInput
 
 
+@strawberry.input
+@strawberry.type
+class WebEndpoint(Endpoint):
+    url: str

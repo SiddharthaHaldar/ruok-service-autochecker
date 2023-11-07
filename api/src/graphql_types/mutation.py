@@ -5,6 +5,7 @@ from typing import List
 from graphql_types.typedef import GithubEndpoint
 from model import GraphDB
 
+
 @strawberry.type
 class Mutation:
     @strawberry.mutation
@@ -22,7 +23,7 @@ class Mutation:
     def githubEndpoint(self, endpoint: GithubEndpoint) -> str:
         """
         # Update/Insert Github Endpoint
-        
+
         Insert a Github Endpoint with "upsert" semantics. If the endpoint doesn't already
         exist, the endpoint document will be created. If the endpoint already exists, its
         fields will be updated with the values provided in the mutation.
@@ -61,10 +62,10 @@ class Mutation:
         ```
         """
         client = GraphDB()
-        client.upsert_github_endpoint(endpoint)
+        client.upsert_scanner_endpoint(endpoint)
         client.close()
         return endpoint.url
-    
+
     @strawberry.mutation
     def endpoints(self, urls: List[str]) -> List[str]:
         """

@@ -6,6 +6,7 @@ from typing import List
 
 from graphql_types.typedef import Endpoint
 
+
 @strawberry.type
 class Query:
     @strawberry.field
@@ -26,7 +27,7 @@ class Query:
         client = GraphDB()
         endpoints = client.get_endpoints(urls)
         client.close()
-        return [Endpoint(url=vertex) for vertex in endpoints] 
+        return [Endpoint(url=vertex) for vertex in endpoints]
 
     @strawberry.field
     def product(self, name: str) -> str:
