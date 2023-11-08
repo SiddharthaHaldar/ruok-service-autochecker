@@ -22,6 +22,11 @@ class CheckPasses:
     metadata: Optional[JSON]
 
 @strawberry.type
+class AccessibilityCheckPasses:
+    check_passes: Optional[str]  # true, false, incomplete, or null
+    metadata: Optional[JSON]
+
+@strawberry.type
 class GithubEndpoint(Endpoint):
     url: str
     kind: str
@@ -38,13 +43,13 @@ class GithubEndpoint(Endpoint):
     has_dependabot_yaml: CheckPasses
 
 @strawberry.type
-class AccessibilityInput:
+class Accessibility:
     url: str
     area_alt: Optional[CheckPasses]
     aria_braille_equivalent: Optional[CheckPasses]
     aria_command_name: Optional[CheckPasses]
     aria_hidden_focus: Optional[CheckPasses]
-    aria_input_field: Optional[CheckPasses]
+    aria_input_field_name: Optional[CheckPasses]
     aria_meter_name: Optional[CheckPasses]
     aria_progressbar_name: Optional[CheckPasses]
     aria_required_children: Optional[CheckPasses]
@@ -76,7 +81,7 @@ class AccessibilityInput:
     server_side_image_map: Optional[CheckPasses] 
     svg_img_alt: Optional[CheckPasses] 
     td_headers_attr: Optional[CheckPasses]
-    td_has_data_cells: Optional[CheckPasses]
+    th_has_data_cells: Optional[CheckPasses]
     valid_lang: Optional[CheckPasses] 
     video_caption: Optional[CheckPasses] 
     no_autoplay_audio: Optional[CheckPasses] 
@@ -105,4 +110,5 @@ class AccessibilityInput:
 class WebEndpoint(Endpoint):
     url: str
     kind: str
-    accessibility: Optional[List[AccessibilityInput]]
+    _key: str
+    accessibility: Optional[List[Accessibility]]

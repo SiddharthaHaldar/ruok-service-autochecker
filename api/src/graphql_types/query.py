@@ -4,7 +4,7 @@ from model import GraphDB
 
 from typing import List
 
-from graphql_types.typedef import Endpoint, GithubEndpoint, WebEndpoint
+from graphql_types.typedef import Endpoint, GithubEndpoint, WebEndpoint, Accessibility, AccessibilityCheckPasses
 
 
 @strawberry.type
@@ -12,7 +12,7 @@ class Query:
     @strawberry.field
     def github_endpoint(self, url: str) -> GithubEndpoint:
         """
-        # Get properties of a Single Github Endpoint
+        # Get Properties of a Single Github Endpoint
 
         Given a url, retrieves the properties of a single Github Endpoint.
 
@@ -70,6 +70,107 @@ class Query:
             endpoint.pop("_id", None)
             endpoint.pop("_rev", None)
         return [GithubEndpoint(**endpoint) for endpoint in endpoints]
+    
+    @strawberry.field
+    def web_endpoint(self, url: str) -> WebEndpoint:
+        """
+        # Get Properties of a Single Web Endpoint
+
+        Given a url, retrieves the properties of a single Web Endpoint.
+
+        # Example
+
+        ```graphql
+        query {
+            webEndpoint(url: "https://safeinputs.phac.alpha.canada.ca") {
+                url
+                accessibility {
+                url
+                areaAlt {
+                    checkPasses
+                    metadata
+                }
+                }
+            }
+        }
+        ```
+        """
+        client = GraphDB()
+        endpoint = client.get_scanner_endpoint(url)
+        client.close()
+        # Remove unecessary db fields from the endpoint dict
+        endpoint.pop("_id", None)
+        endpoint.pop("_rev", None)
+        # Strawberry doesn't recursively resolve fields. The code below
+        # is a workaround to recursively resolve the accessibility field
+        # and the "check passes" fields contained within.
+        return WebEndpoint(
+            url=endpoint['url'],
+            kind=endpoint['kind'],
+            _key=endpoint['_key'],
+            accessibility=[
+                Accessibility(**{
+                    k: AccessibilityCheckPasses(**v)
+                    for k, v in ep.items()
+                    if type(v) is not str
+                },
+                url=ep['url'])
+                for ep in endpoint['accessibility']
+            ]
+        )
+    
+    @strawberry.field
+    def web_endpoints(self, limit: int) -> List[WebEndpoint]:
+        """
+        # Get Multiple Web Endpoints
+
+        Retrieves a list of Web Endpoints. The number of endpoints returned is
+        determined by the `limit` parameter.
+
+        # Example
+
+        ```graphql
+        query {
+            webEndpoints(limit: 10) {
+                url
+                accessibility {
+                url
+                areaAlt {
+                    checkPasses
+                    metadata
+                }
+                }
+            }
+        }
+        ```
+        """
+        client = GraphDB()
+        endpoints = client.get_scanner_endpoints("Web", limit)
+        client.close()
+        # Remove unecessary db fields from the endpoint dict
+        for endpoint in endpoints:
+            endpoint.pop("_id", None)
+            endpoint.pop("_rev", None)
+        # Strawberry doesn't recursively resolve fields. The code below
+        # is a workaround to recursively resolve the accessibility field
+        # and the "check passes" fields contained within.
+        return [
+            WebEndpoint(
+                url=endpoint['url'],
+                kind=endpoint['kind'],
+                _key=endpoint['_key'],
+                accessibility=[
+                    Accessibility(**{
+                        k: AccessibilityCheckPasses(**v)
+                        for k, v in ep.items()
+                        if type(v) is not str
+                    },
+                    url=ep['url'])
+                    for ep in endpoint['accessibility']
+                ]
+            )
+            for endpoint in endpoints
+        ]
 
     @strawberry.field
     def endpoints(self, urls: List[str]) -> List[Endpoint]:
