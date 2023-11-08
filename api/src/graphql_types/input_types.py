@@ -25,7 +25,20 @@ class GithubEndpointInput:
     has_security_md: Optional[CheckPassesInput] = None
     has_dependabot_yaml: Optional[CheckPassesInput] = None
 
+
+@strawberry.input
+class AccessibilityScanInput:
+    url: str
+    area_alt: Optional[CheckPassesInput] = None
+    aria_braille_equivalent: Optional[CheckPassesInput] = None
+    aria_command_name: Optional[CheckPassesInput] = None
+    aria_input_field: Optional[CheckPassesInput] = None
+    aria_hidden_focus: Optional[CheckPassesInput] = None
+    aria_meter_name: Optional[CheckPassesInput] = None
+
 @strawberry.input
 class WebEndpointInput:
     url: str
     kind: str
+    accessibility: Optional[List[AccessibilityScanInput]] = None
+
