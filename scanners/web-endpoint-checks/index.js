@@ -65,13 +65,7 @@ process.on('SIGINT', () => process.exit(0))
         const accessibilityPages = Object.keys(webEndpointAxeResults).map(page => {
           return {
             url: page,
-            areaAlt: webEndpointAxeResults[page].areaAlt,
-            ariaBrailleEquivalent: webEndpointAxeResults[page].ariaBrailleEquivalent,
-            ariaCommandName: webEndpointAxeResults[page].ariaCommandName,
-            ariaHiddenFocus: webEndpointAxeResults[page].ariaHiddenFocus,
-            ariaInputField: webEndpointAxeResults[page].ariaInputField,
-            ariaMeterName: webEndpointAxeResults[page].ariaMeterName,
-            // ...webEndpointAxeResults[page],
+            ...webEndpointAxeResults[page],
           }
         })
         const mutation = gql`
