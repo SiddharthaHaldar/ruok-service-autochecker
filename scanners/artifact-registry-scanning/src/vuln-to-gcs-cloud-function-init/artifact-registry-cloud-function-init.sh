@@ -5,7 +5,8 @@
 
 # ENV variables - from command line 
 # PROJECT_ID_SOURCE is where artifact registry vulnerabilitys are fed from
-export PROJECT_ID_SOURCE=phx-01h41bw3b0xsf9rmpzmxbee2s9  
+export PROJECT_ID_SOURCE=phx-01h41bw3b0xsf9rmpzmxbee2s9 
+export PROJECT_ID=phx-01h41bw3b0xsf9rmpzmxbee2s9
 export PROJECT_ID_SOURCE_2=phx-01h41bw3b0xsf9rmpzmxbee2s9
 export PROJECT_ID_OBSERVATORY=phx-01he5zk45pe
 export SERVICE_ACCOUNT_SOURCE=containerVuln
@@ -77,20 +78,63 @@ gcloud artifacts repositories create $SOURCE_REPO_NAME \
 gcloud pubsub topics create container-analysis-occurrences-v1 \
     --project=$PROJECT_ID_SOURCE
 
+#NOTE - when Artifact Registry API enabled, automaically creates gcr topic
+# https://cloud.google.com/artifact-registry/docs/configure-notifications#topic
+# Create topic
+gcloud pubsub topics create gcr --project=phx-01h41bw3b0xsf9rmpzmxbee2s9
+# Create subscription
+gcloud pubsub subscriptions create artifact-registry-updates --topic=gcr
+
+...
+
+https://cloud.google.com/artifact-registry/docs/analysis # Container Analysis
+https://cloud.google.com/artifact-analysis/docs/metadata-management-overview # description of notes and occurances
+https://cloud.google.com/artifact-analysis/docs/investigate-vulnerabilities # veiw metadata
+  curl -G -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+    --data-urlencode "filter=(kind=\"VULNERABILITY\" AND resourceUrl=\"https://northamerica-northeast1-docker.pkg.dev/phx-01h41bw3b0xsf9rmpzmxbee2s9/test-repo/nginx-test@sha256:4b957b445f052ed4dcd9632f525941ba5c90011fb956803fb0b5541e96b56a69\")" \
+    https://containeranalysis.googleapis.com/v1/projects/$PROJECT_ID/occurrences
+
+
 # Create the cloud function (that's triggered by pub/sub topic to write to bucket) (main.py)
 # https://cloud.google.com/functions/docs/create-deploy-gcloud#functions-clone-sample-repository-python
 # https://cloud.google.com/functions/docs/deploy
 # https://cloud.google.com/functions/docs/configuring/env-var
 
+https://cloud.google.com/artifact-analysis/docs/os-scanning-automatically#viewing_vulnerability_occurrences # This might be good to use! 
+
+# https://cloud.google.com/artifact-analysis/docs/pub-sub-notifications#artifact-analysis-pubsub-gcloud
+# create topic
+gcloud pubsub topics create projects/$PROJECT_ID/topics/artifact-analysis-notes-v1
+gcloud pubsub topics create projects/$PROJECT_ID/topics/artifact-analysis-occurrences-v1
+
+# Create subscription
+gcloud pubsub subscriptions create \
+    --topic artifact-analysis-occurrences-v1 occurrences
+
+gcloud pubsub subscriptions pull \
+    --auto-ack occurrences
 # TODO = replace cloud function with path to cloud function
+# gcloud functions deploy image-vuln-cf-trigger \
+#     --gen2 \
+#     --runtime=python38 \
+#     --region=$REGION \
+#     --source=cloud-function \
+#     --entry-point=image_vuln_pubsub_handler \
+#     --trigger-topic=container-analysis-occurrences-v1 \
+#     --set-env-vars BUCKET_NAME=$BUCKET_NAME \
+#     --allow-unauthenticated 
+
 gcloud functions deploy image-vuln-cf-trigger \
     --gen2 \
     --runtime=python38 \
     --region=$REGION \
     --source=cloud-function \
     --entry-point=image_vuln_pubsub_handler \
-    --trigger-topic=container-analysis-occurrences-v1 \
-    --set-env-vars BUCKET_NAME=$BUCKET_NAME \
+    --trigger-topic=gcr \
+    --update-env-vars BUCKET_NAME=$BUCKET_NAME \
+    --update-env-vars PROJECT_ID=$PROJECT_ID \
+    --update-env-vars RESOURCE_URL=https://northamerica-northeast1-docker.pkg.dev/phx-01h41bw3b0xsf9rmpzmxbee2s9/test-repo/nginx-test \
     --allow-unauthenticated 
 
     
@@ -99,8 +143,8 @@ gcloud functions deploy image-vuln-cf-trigger \
 # REDEPLOY (TODO - need docker - doing this in local terminal )
 gcloud auth configure-docker $REGION-docker.pkg.dev
 docker build --tag nginx .
-docker tag nginx $REGION-docker.pkg.dev/$PROJECT_ID_SOURCE/$SOURCE_REPO_NAME/nginx-test:staging28
-docker push $REGION-docker.pkg.dev/$PROJECT_ID_SOURCE/$SOURCE_REPO_NAME/nginx-test:staging28
+docker tag nginx $REGION-docker.pkg.dev/$PROJECT_ID_SOURCE/$SOURCE_REPO_NAME/nginx-test:stage19
+docker push $REGION-docker.pkg.dev/$PROJECT_ID_SOURCE/$SOURCE_REPO_NAME/nginx-test:stage19
 
 
 # Part 2 https://medium.com/google-cloud/centrally-managing-artifact-registry-container-image-vulnerabilities-on-google-cloud-part-two-ad730e7cf649

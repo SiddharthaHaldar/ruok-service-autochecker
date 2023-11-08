@@ -1,11 +1,43 @@
 # # From https://medium.com/google-cloud/centrally-managing-artifact-registry-container-image-vulnerabilities-on-google-cloud-part-one-d86fb4791601
 # From https://medium.com/google-cloud/centrally-managing-artifact-registry-container-image-vulnerabilities-on-google-cloud-part-one-d86fb4791601
 # https://googleapis.dev/python/grafeas/0.4.1/gapic/v1/api.html
+
+# https://cloud.google.com/artifact-analysis/docs/reference/libraries#client-libraries-usage-python
+
+# https://cloud.google.com/artifact-registry/docs/configure-notifications
+
 import base64
 import os
 import json
+import re
 from google.cloud.devtools import containeranalysis_v1
 from google.cloud import storage
+from datetime import datetime
+
+# Get the current timestamp
+current_timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+bucket_name = os.environ.get("BUCKET_NAME", "")
+RESOURCE_URL = os.environ.get("RESOURCE_URL", "")
+PROJECT_ID = os.environ.get("PROJECT_ID", "")
+
+def get_occurrences_for_image(RESOURCE_URL: str, PROJECT_ID: str) -> int:
+    """Retrieves all the occurrences associated with a specified image.
+    Here, all occurrences are simply printed and counted."""
+    # resource_url = 'https://gcr.io/my-project/my-image@sha256:123'
+    # project_id = 'my-gcp-project'
+
+    filter_str = f'resourceUrl="{RESOURCE_URL}"'
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    project_name = f"projects/{PROJECT_ID}"
+
+    response = grafeas_client.list_occurrences(parent=project_name, filter=filter_str)
+    count = 0
+    for o in response:
+        # do something with the retrieved occurrence
+        # in this sample, we will simply count each one
+        count += 1
+    return count
 
 def write_vuln_to_bucket(bucket_name, vuln_text, destination_object_name):
     storage_client = storage.Client()
@@ -25,50 +57,36 @@ def image_vuln_pubsub_handler(event, context):
         return
 
     print('Bucket name:', bucket_name)
-    #get the occurrence via the grafeas client
-    occurrence_name = (data['name'])
+     # Convert the data to a string
+    try:
+        data_str = json.dumps(data)
+    except Exception as e:
+        print(f"Error converting data to JSON: {e}")
+        return
 
-    # initialize client
-    client = containeranalysis_v1.ContainerAnalysisClient()
-    grafeas_client = client.get_grafeas_client()
-
-    occurrence = grafeas_client.get_occurrence(name=occurrence_name)
-    # occurrence = grafeas_client.get_occurrence_note(name=occurrence_name)
-    # occurrence = grafeas_client.list_occurrences(name=occurrence_name)
-    # occurrence = grafeas_client.get_note(name=occurrence_name)
-    # list_notes
-    # list_occurrences (for project)
-
-    # if occurrence.kind == 'VULNERABILITY':
-    #     # Extract subset of info from the occurrence
-    occurrence_info = {
-        "name": occurrence.name,
-        "resource_uri": occurrence.resource_uri,
-        # "note_name": occurrence.note_name,
-        "kind": occurrence.kind,
-        "short_description": getattr(occurrence.vulnerability, 'short_description', None),
-        "related_url": getattr(occurrence.vulnerability.related_url, 'url', None),
-        "package_type": getattr(occurrence.vulnerability, 'package_type', None),
-        "effective_severity": getattr(occurrence.vulnerability, 'effective_severity', None),
-        "fix_available": getattr(occurrence.vulnerability, 'fix_available', None),
-        "cvss_score": getattr(occurrence.vulnerability, 'cvss_score, None),
-        "create_time": str(occurrence.create_time),
-        "update_time": str(occurrence.update_time),
-    }
-
-    #     # Convert the extracted information to a string (JSON format)
-    occurrence_info_str = json.dumps(occurrence_info)
-
+    # Upload the string to Cloud Storage
+    try:
+        write_vuln_to_bucket(bucket_name, data_str, f"{current_timestamp}.json")
+    except Exception as e:
+        print(f"Error uploading data to GCS: {e}")
+    data_str = json.dumps(data)
     
-        #write to storage
-    # write_vuln_to_bucket(bucket_name, str(occurrence), str(occurrence.name))
-    short_description = occurrence.vulnerability.short_description if hasattr(occurrence.vulnerability, 'short_description') else None
+    print(data_str)
 
-    write_vuln_to_bucket(bucket_name, occurrence_info_str, f"{occurrence.name}_{occurrence.vulnerability.short_description}.json")
+    # Upload the string to Cloud Storage
+    write_vuln_to_bucket(bucket_name, data_str, f"{current_timestamp}.json")
+
+
+    # write_vuln_to_bucket(bucket_name, occurrence_info_str, f"{image_name}_{occurrence.vulnerability.short_description}.json")
+    # write_vuln_to_bucket(bucket_name, occurrence_info_str, f"{occurrence.name}.json")
+    # write_vuln_to_bucket(bucket_name, str(occurrence), f"{occurrence.name}.json")
+
+
+
+
     # f"{occurrence.name}_occurrence_info.json"
     # write_vuln_to_bucket(bucket_name, str(data), str(occurrence.name))
         # write_vuln_to_bucket(bucket_name, occurrence_info_str, str(occurrence.name))
 
-# image_vuln_pubsub_handler(event, context)
 
 # # From https://medium.com/google-cloud/centrally-managing-artifact-registry-container-image-vulnerabilities-on-google-cloud-part-one-d86fb4791601
