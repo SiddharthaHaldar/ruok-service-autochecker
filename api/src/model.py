@@ -40,17 +40,23 @@ class GraphDB:
         return url
 
     def upsert_scanner_endpoint(
-        self, github_endpoint: Union[GithubEndpointInput, WebEndpointInput]
+        self, scanner_endpoint: Union[GithubEndpointInput, WebEndpointInput]
     ):
-        update_dict = {
-            **strawberry.asdict(github_endpoint),
-            "_key": self._key_safe_url(github_endpoint.url),
+        # We only want to update non-null keys in the scanner endpoint.
+        non_null_endpoints = {
+            k: v
+            for k, v in strawberry.asdict(scanner_endpoint).items()
+            if v is not None
         }
-        if not self.nodes.get(self._key_safe_url(github_endpoint.url)):
+        update_dict = {
+            **non_null_endpoints,
+            "_key": self._key_safe_url(scanner_endpoint.url),
+        }
+        if not self.nodes.get(self._key_safe_url(scanner_endpoint.url)):
             self.nodes.insert(update_dict)
         else:
             self.nodes.update(update_dict)
-        return github_endpoint
+        return scanner_endpoint
 
     def insert_edge(self, endpoint1, endpoint2):
         edge_key = f"{self._key_safe_url(endpoint1)}-to-{self._key_safe_url(endpoint2)}"

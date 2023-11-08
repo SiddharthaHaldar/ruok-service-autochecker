@@ -35,6 +35,7 @@ class Mutation:
             githubEndpoint(
                 endpoint: {
                 url:"https://github.com/someOrg/someRepo"
+                kind: "Github"
                 owner: "someOrg"
                 repo:"someRepo"
                 license: "MIT"
