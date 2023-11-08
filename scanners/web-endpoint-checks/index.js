@@ -56,6 +56,9 @@ process.on('SIGINT', () => process.exit(0))
             if (!webEndpointAxeResults[pageToEvaluate]) {
               webEndpointAxeResults[pageToEvaluate] = {}
             }
+            if (typeof violationValue.checkPasses === 'boolean') {
+              violationValue.checkPasses = violationValue.checkPasses.toString()
+            }
             webEndpointAxeResults[pageToEvaluate][violationKeyCamelCase] = {
               checkPasses: violationValue.checkPasses,
               metadata: violationValue.metadata,
