@@ -34,6 +34,8 @@ class GithubEndpoint(Endpoint):
     automated_security_fixes: CheckPasses
     vulnerability_alerts: CheckPasses
     branch_protection: CheckPasses
+    has_security_md: CheckPasses
+    has_dependabot_yaml: CheckPasses
 
 @strawberry.type
 class WebEndpoint(Endpoint):

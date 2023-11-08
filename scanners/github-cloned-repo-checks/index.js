@@ -4,8 +4,7 @@ import { connect, JSONCodec } from 'nats'
 
 import { initializeChecker } from './src/initialize-checker.js'
 import { cloneRepository, removeClonedRepository } from './src/clone-repo-functions.js'
-import { Database } from "arangojs";
-import { GraphQLClient } from 'graphql-request'
+import { GraphQLClient, gql } from 'graphql-request'
 import 'dotenv-safe/config.js'
 
 const {
@@ -50,7 +49,6 @@ process.on('SIGINT', () => process.exit(0))
             const check = await initializeChecker(checkName, repoName, repoPath)
             const results = await check.doRepoCheck()
 
-            console.log(JSON.stringify(results)) // to see inside arrays
             console.log(results)
 
             // SAVE to ArangoDB through API
@@ -66,10 +64,10 @@ process.on('SIGINT', () => process.exit(0))
                         owner: "${orgName}"
                         repo: "${repoName}"
                         hasSecurityMd: {
-                            checkPasses: ${payload.hasSecurityMd.checkPasses}
+                            checkPasses: ${results.hasSecurityMd.checkPasses}
                         },
                         hasDependabotYaml: {
-                            checkPasses: ${payload.hasDependabotYaml.checkPasses}
+                            checkPasses: ${results.hasDependabotYaml.checkPasses}
                         },
                     }
                 )
