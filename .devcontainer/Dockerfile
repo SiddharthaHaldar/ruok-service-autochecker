@@ -42,8 +42,8 @@ RUN apt-get install -y curl
 RUN curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh --output miniconda.sh && \
     bash miniconda.sh -bfp /home/node/.local/bin/condabin && \
     rm miniconda.sh && \
-    sudo chown -R /home/node && \
-    sudo echo "export PATH=$PATH:/home/node/.local/bin/condabin/bin" >> /home/node/.zshrc
+    sudo chown node -R /home/node && \
+    sudo echo "export PATH=$PATH:/home/node/.local/bin/condabin/bin" >> /home/node/.bashrc
 
 # Start container as non-root user
 USER node
