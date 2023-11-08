@@ -5,6 +5,7 @@ ENV NODE_ENV production
 WORKDIR /app
 
 RUN apk --no-cache add curl
+RUN apk add --no-cache git
 
 COPY package*.json ./
 

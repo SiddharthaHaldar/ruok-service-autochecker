@@ -65,9 +65,11 @@ process.on('SIGINT', () => process.exit(0))
                         repo: "${repoName}"
                         hasSecurityMd: {
                             checkPasses: ${results.hasSecurityMd.checkPasses}
+                            metadata: {}
                         },
                         hasDependabotYaml: {
                             checkPasses: ${results.hasDependabotYaml.checkPasses}
+                            metadata: {}
                         },
                     }
                 )
