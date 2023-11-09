@@ -12,6 +12,7 @@ resources:
 - ./deployment-cloned-repo-scanner.yaml
 - ./svc-nats.yaml
 - ./svc-ruok-api.yaml
+- ./svc-ui.yaml
 - ./svc-webhook-server.yaml
 patches:
 - target:

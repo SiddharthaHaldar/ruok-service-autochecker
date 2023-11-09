@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: graphql-api
+  name: ui-server
 spec:
   selector:
-    app: graphql-api
+    app: ui-server
   ports:
-    - port: 4000
+    - port: 8080

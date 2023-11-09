@@ -75,5 +75,5 @@ port-forward:
 	kubectl port-forward svc/example-simple-single-ea 8529:8529 &
 	kubectl port-forward svc/nats 4222:4222 &
 	kubectl port-forward svc/webhook-server 3000:3000 &
-	kubectl port-forward svc/api 4000:4000 &
-	kubectl port-forward svc/ui 8080:8080
+	kubectl port-forward svc/graphql-api 4000:4000 &
+	kubectl port-forward svc/ui-server 8080:8080
