@@ -1,6 +1,12 @@
+from typing import Union
+
 from arango import ArangoClient
 
+import strawberry
+
 from constants import Settings
+
+from graphql_types.input_types import GithubEndpointInput, WebEndpointInput
 
 
 class GraphDB:
@@ -27,11 +33,30 @@ class GraphDB:
         return url.replace("://", "-").replace("/", "-")
 
     def insert_endpoint(self, url):
-        if url == '':
+        if url == "":
             return url
         if not self.nodes.get(self._key_safe_url(url)):
             self.nodes.insert({"url": url, "_key": self._key_safe_url(url)})
         return url
+
+    def upsert_scanner_endpoint(
+        self, scanner_endpoint: Union[GithubEndpointInput, WebEndpointInput]
+    ):
+        # We only want to update non-null keys in the scanner endpoint.
+        non_null_endpoints = {
+            k: v
+            for k, v in strawberry.asdict(scanner_endpoint).items()
+            if v is not None
+        }
+        update_dict = {
+            **non_null_endpoints,
+            "_key": self._key_safe_url(scanner_endpoint.url),
+        }
+        if not self.nodes.get(self._key_safe_url(scanner_endpoint.url)):
+            self.nodes.insert(update_dict)
+        else:
+            self.nodes.update(update_dict)
+        return scanner_endpoint
 
     def insert_edge(self, endpoint1, endpoint2):
         edge_key = f"{self._key_safe_url(endpoint1)}-to-{self._key_safe_url(endpoint2)}"
@@ -70,6 +95,13 @@ class GraphDB:
             self.insert_edge(product, url)
             self.insert_edge(url, product)
 
+    def get_scanner_endpoint(self, url):
+        return self.nodes.get(self._key_safe_url(url))
+    
+    def get_scanner_endpoints(self, kind, limit):
+        cursor = self.nodes.find({"kind": kind}, skip=0, limit=limit)
+        return [document for document in cursor]
+
     def get_endpoint(self, url):
         if not self.nodes.get(self._key_safe_url(url)):
             return {
@@ -87,7 +119,7 @@ class GraphDB:
     def get_endpoints(self, urls):
         unique_urls = set()
         for url in urls:
-            if url == '':
+            if url == "":
                 continue
             url_vertices = self.get_endpoint(url)["vertices"]
             if url_vertices:

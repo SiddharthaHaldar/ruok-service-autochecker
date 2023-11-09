@@ -2,35 +2,18 @@
 
 import { connect, JSONCodec } from 'nats'
 import { Octokit } from "octokit"
+import { GraphQLClient, gql } from 'graphql-request';
 import { AllChecksStrategy } from './src/all-checks.js';
-
-import { Database, aql } from "arangojs";
 
 import 'dotenv-safe/config.js'
 
 const {
   NATS_URL,
   GITHUB_TOKEN,
-  DB_NAME,
-  DB_URL,
-  DB_USER,
-  DB_PASS,
+  NATS_SUB_STREAM,
+  GRAPHQL_URL,
 } = process.env;
 
-// Connect to ArangoDB
-const dbConfig = {
-  url: DB_URL,
-  databaseName: DB_NAME,
-  auth: { username: DB_USER, password: DB_PASS },
-  createCollection: true,
-};
-
-const db = new Database(dbConfig);
-
-const OWNER = 'PHACDataHub'
-
-const NATS_SUB_STREAM = "EventsScanner" // Note - for checks that need branch, the substream will be different (right now blanketing with 'main')
-const NATS_PUB_STREAM = "gitHub.saveToDatabase.octokit" // Note - for checks that need branch - the pubstream will be different 
 // Also note - this will be appended with repo name when published. 
 // Authenicate with GitHub 
 const octokit = new Octokit({ auth: GITHUB_TOKEN, });
@@ -51,28 +34,56 @@ process.on('SIGINT', () => process.exit(0))
 
       console.log('\n**************************************************************')
       console.log(`Recieved from ... ${message.subject}:\n ${JSON.stringify(gitHubEventPayload)}`)
+      // GitHub urls always follow `github.com/orgName/repoName`, so from this
+      // structure we can construct the org name and repo name.
+      const prefix = (new URL(gitHubEventPayload.endpoint)).pathname.split("/")
+      const orgName = prefix[1];
+      const repoName = prefix[2];
 
-      const { sourceCodeRepository } = gitHubEventPayload
-      const repoName = sourceCodeRepository.split('/').pop()
-
-      const checkName = 'allChecks' // have this passed in in future - default to all-checks
-      // const checkName = 'allLanguages' 
-      // const checkName = 'getRepoDetails' 
       const branchName = 'main' // TODO - come back for this after initial pass - when picked up by repodetails
-      const check = new AllChecksStrategy(repoName, OWNER, octokit, branchName);
+      const check = new AllChecksStrategy(repoName, orgName, octokit, branchName);
 
-      const payload = await check.formatResponse(check)
-      const subject = `${NATS_PUB_STREAM}.${checkName}.${repoName}`
-
-      const upsertQuery = aql`
-        INSERT {
-          _key: ${repoName},
-          githubOctokitChecks: ${payload}
+      const payload = await check.formatResponse(check);
+      // Mutation to add a graph for the new endpoints
+      // TODO: refactor this into a testable query builder function
+      const mutation = gql`
+        mutation {
+          githubEndpoint(
+            endpoint: {
+              url: "${gitHubEventPayload.endpoint}"
+              kind: "Github"
+              owner: "${orgName}"
+              repo: "${repoName}"
+              license: "${payload.GetRepoDetailsStrategy.metadata.license}"
+              visibility: "${payload.GetRepoDetailsStrategy.metadata.visibility}"
+              programmingLanguage: ["${Array.from(Object.keys(payload.ProgrammingLanguagesStrategy.metadata)).join('", "')}"]
+              automatedSecurityFixes: {
+                checkPasses: ${payload.AutomatedSecurityFixesStrategy.checkPasses}
+                metadata: {
+                  enabled: ${payload.AutomatedSecurityFixesStrategy.metadata.enabled}
+                  paused: ${payload.AutomatedSecurityFixesStrategy.metadata.paused}
+                }
+              },
+              vulnerabilityAlerts: {
+                checkPasses: ${payload.VunerabilityAlertsEnabledStrategy.checkPasses}
+                metadata: ${JSON.stringify(payload.VunerabilityAlertsEnabledStrategy.metadata)}
+              },
+              branchProtection: {
+                checkPasses: ${payload.BranchProtectionStrategy.checkPasses}
+                metadata: {
+                  branches: ["${Array.from(payload.BranchProtectionStrategy.metadata.branches).join('", "')}"]
+                  rules: ["${Array.from(payload.BranchProtectionStrategy.metadata.rules).join('", "')}"]
+                }
+              }
+            }
+          )
         }
-        IN dataServices
-        OPTIONS { overwriteMode: "update"}
-      `
-      const results = await db.query(upsertQuery)
+        `;
+      // New GraphQL client - TODO: remove hard-coded URL
+      const graphqlClient = new GraphQLClient(GRAPHQL_URL);
+      // Write mutation to GraphQL API
+      const mutationResponse = await graphqlClient.request(mutation);
+      console.log("GraphQL mutation submitted", mutationResponse);
     }
   })();
 
