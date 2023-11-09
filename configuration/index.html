@@ -42,8 +42,6 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
-    
     <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -403,85 +401,10 @@
   
   
   
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_7">
-          GraphQL API
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="GraphQL API" data-md-level="1">
-        <label class="md-nav__title" for="__nav_7">
-          <span class="md-nav__icon md-icon"></span>
-          GraphQL API
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
     <li class="md-nav__item">
-      <a href="../graphql/graphql-api/" class="md-nav__link">
-        Overview
+      <a href="../graphql-api/" class="md-nav__link">
+        GraphQL API
       </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../graphql/query/" class="md-nav__link">
-        Queries
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../graphql/mutation/" class="md-nav__link">
-        Mutations
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../graphql/type-definitions.md" class="md-nav__link">
-        Type Definitions
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
     </li>
   
 
@@ -636,26 +559,12 @@
 </code></pre></div></td></tr></table></div>
 <h2 id="graph-updater">Graph Updater</h2>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>changeme
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>changeme
 <span class="nv">NATS_URL</span><span class="o">=</span>localhost:4222
-
-<span class="c1"># GRAPHQL_URL=http://localhost:4000/graphql</span>
-<span class="nv">GRAPHQL_URL</span><span class="o">=</span>http://api:4000/graphql
 </code></pre></div></td></tr></table></div>
 <h2 id="endpoint-scanners">Endpoint Scanners</h2>
 <h3 id="github-cloned-repo-checks">Github Cloned Repo Checks</h3>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">NATS_URL</span><span class="o">=</span>localhost:4222
-<span class="nv">GRAPHQL_URL</span><span class="o">=</span>http://localhost:4000
-
-<span class="c1"># NATS sub stream</span>
-<span class="nv">NATS_SUB_STREAM</span><span class="o">=</span><span class="s2">&quot;EventsScanner.githubEndpoints&quot;</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">NATS_URL</span><span class="o">=</span>localhost:4222
 </code></pre></div></td></tr></table></div>
 <h3 id="github-octokit-checks">Github Octokit Checks</h3>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
@@ -663,23 +572,17 @@
 <span class="normal">3</span>
 <span class="normal">4</span>
 <span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>changeme
-<span class="c1"># NATS_URL=localhost:4222</span>
-<span class="nv">NATS_URL</span><span class="o">=</span>nats:4222
-
-<span class="c1"># NATS sub stream</span>
-<span class="nv">NATS_SUB_STREAM</span><span class="o">=</span><span class="s2">&quot;EventsScanner.githubEndpoints&quot;</span>
-
-<span class="c1"># GRAPHQL_URL=http://localhost:4000/graphql</span>
-<span class="nv">GRAPHQL_URL</span><span class="o">=</span>http://api:4000/graphql
+<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">GITHUB_TOKEN</span><span class="o">=</span>changeme
+<span class="nv">NATS_URL</span><span class="o">=</span>localhost:4222
+<span class="nv">DB_NAME</span><span class="o">=</span>ruok
+<span class="nv">DB_URL</span><span class="o">=</span>http://localhost:8529
+<span class="nv">DB_USER</span><span class="o">=</span>changeme
+<span class="nv">DB_PASS</span><span class="o">=</span>changeme
 </code></pre></div></td></tr></table></div>
 <h3 id="web-endpoint-checks">Web Endpoint Checks</h3>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nv">NATS_URL</span><span class="o">=</span>localhost:4222
-<span class="nv">GRAPHQL_URL</span><span class="o">=</span>http://127.0.0.1:4000/graphql
+<span class="nv">API_URL</span><span class="o">=</span>localhost:4000
 </code></pre></div></td></tr></table></div>
 <h3 id="container-checks">Container Checks</h3>
 <blockquote>
