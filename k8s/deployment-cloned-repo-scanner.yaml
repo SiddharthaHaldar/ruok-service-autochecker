@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloned-repo-scanner
+spec:
+  replicas: 1
+  strategy: {}
+  selector:
+    matchLabels:
+      app: cloned-repo-scanner
+  template:
+    metadata:
+      labels:
+        app: cloned-repo-scanner
+    spec:
+      containers:
+        - name: cloned-repo-scanner
+          image: localhost/ruok-cloned-repo-scanner:0.0.1

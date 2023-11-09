@@ -17,12 +17,16 @@ extra:
 plugins:
   - search:
       separator: '[\s\-\.]+'
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [api/src]
 
 markdown_extensions:
   - pymdownx.snippets
   - pymdownx.highlight:
       linenums: true
-  - pymdownx.superfences 
+  - pymdownx.superfences
 
 nav:
   - Architecture: architecture.md
@@ -31,6 +35,10 @@ nav:
   - Deployment: deployment.md
   - Development Environment: development-environment.md
   - GitHub Webhooks: github-webhooks.md
-  - GraphQL API: graphql-api.md
+  - GraphQL API:
+    - Overview: graphql/graphql-api.md
+    - Queries: graphql/query.md
+    - Mutations: graphql/mutation.md
+    - Type Definitions: graphql/type-definitions.md
   - Scanners: scanners.md
   - Register a Repository: register-repository.md

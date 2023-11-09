@@ -2,8 +2,9 @@ from pydantic import Field
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env')
+    model_config = SettingsConfigDict(env_file=".env")
 
     GRAPHQL_HOST: str = Field("127.0.0.1")
     GRAPHQL_PORT: int = Field(4000)
