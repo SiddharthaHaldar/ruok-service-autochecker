@@ -32,7 +32,9 @@
 			"extensions": [
 				"dbaeumer.vscode-eslint",
 				"terrastruct.d2",
-				"markdownlint"
+				"markdownlint",
+				"ms-python.vscode-pylance",
+				"ms-python.python"
 			]
 		}
 	}
