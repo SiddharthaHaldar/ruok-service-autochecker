@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - ./arangodeployment-single-server.yaml
 - ./deployment-nats.yaml
+- ./deployment-ui-server.yaml
 - ./deployment-ruok-api.yaml
 - ./deployment-webhook-server.yaml
 - ./deployment-graph-updater.yaml
