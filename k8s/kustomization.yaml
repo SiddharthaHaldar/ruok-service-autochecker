@@ -16,6 +16,16 @@ patches:
 - target:
     version: v1
     kind: Deployment
+    name: graphql-api
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/env
+      value:
+        - name: DB_HOST
+          value: http://example-simple-single-ea:8529
+- target:
+    version: v1
+    kind: Deployment
     name: webhook-server
   patch: |-
     - op: add
@@ -25,3 +35,51 @@ patches:
           value: nats:4222
         - name: NATS_PUB_STREAM
           value: EventsUpdate
+- target:
+    version: v1
+    kind: Deployment
+    name: graph-updater
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/env
+      value:
+        - name: NATS_URL
+          value: nats:4222
+        - name: GRAPHQL_URL
+          value: http://graphql-api:4000/graphql
+- target:
+    version: v1
+    kind: Deployment
+    name: cloned-repo-scanner
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/env
+      value:
+        - name: NATS_URL
+          value: nats:4222
+        - name: GRAPHQL_URL
+          value: http://graphql-api:4000/graphql
+- target:
+    version: v1
+    kind: Deployment
+    name: octokit-scanner
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/env
+      value:
+        - name: NATS_URL
+          value: nats:4222
+        - name: GRAPHQL_URL
+          value: http://graphql-api:4000/graphql
+- target:
+    version: v1
+    kind: Deployment
+    name: web-endpoint-scanner
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/env
+      value:
+        - name: NATS_URL
+          value: nats:4222
+        - name: GRAPHQL_URL
+          value: http://graphql-api:4000/graphql
