@@ -2,22 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: api
-  name: api
+    app: graphql-api
+  name: graphql-api
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api
+      app: graphql-api
   strategy: {}
   template:
     metadata:
       labels:
-        app: api
+        app: graphql-api
     spec:
       containers:
-      - name: api
+      - name: graphql-api
         imagePullPolicy: Never
         image: localhost/ruok-api:0.0.1
         securityContext:
