@@ -33,7 +33,7 @@ export class GithubEndpoint {
     }
     )
     var extraEndpoints = new Set([]);
-    if (response.status === 200) {
+    if (response && response.status === 200) {
       // base64 decode to ascii, then parse ascii string to yaml object
       const productDotYaml = load(
         Buffer
@@ -47,7 +47,7 @@ export class GithubEndpoint {
       ...extraEndpoints,
       payload.endpoint
     ]);
-
+    console.log("New endpoints: ", newEndpoints);
     return newEndpoints;
   }
 
