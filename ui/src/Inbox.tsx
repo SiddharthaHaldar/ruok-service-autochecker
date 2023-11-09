@@ -2,15 +2,29 @@ import React from "react";
 
 import { useLingui } from "@lingui/react";
 
+
 import { Trans, Plural } from "@lingui/macro";
 
 import LocaleSwitcher from './LocaleSwitcher';
+
+
+
+import { useQuery, gql } from '@apollo/client';
+const GET_LOCATIONS = gql`
+query {
+	endpoints(urls: ["https://github.com/PHACDataHub/ruok-service-autochecker"]) {
+    url
+  }
+}
+`;
 
 export default function Inbox() {
     const messages = [{}, {}];
     const messagesCount = messages.length;
     const lastLogin = new Date();
+    const endpoints = useQuery(GET_LOCATIONS);
     const markAsRead = () => {
+        console.log(endpoints);
         alert("Marked as read.");
     };
     const { i18n } = useLingui();
