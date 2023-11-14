@@ -4,7 +4,7 @@ metadata:
   labels:
     app: ui-server
   name: ui-server
-  namespace: default
+  namespace: ui
 spec:
   replicas: 1
   selector:
