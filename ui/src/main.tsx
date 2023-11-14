@@ -11,7 +11,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { messages as enMessages } from "./locales/en/messages";
 import { messages as frMessages } from "./locales/fr/messages";
 
-import Inbox from "./Inbox";
+import Home from "./pages/Home";
 
 i18n.load({
   "en": enMessages,
@@ -32,7 +32,7 @@ const App = () => (
       <Router>
         <Routes>
           <Route
-            element={<Inbox />}
+            element={<Home />}
             path="/"
           >
           </Route>
