@@ -12,6 +12,9 @@ resources:
 - ./svc-nats.yaml
 - ./svc-ruok-api.yaml
 - ./svc-webhook-server.yaml
+- ./ui/deployment-ui-server.yaml
+- ./ui/svc-ui-server.yaml
+- ./ui/ns-ui.yaml
 patches:
 - target:
     version: v1
