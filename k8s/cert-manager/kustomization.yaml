@@ -25,7 +25,7 @@ patches:
       path: /spec/acme/solvers/-
       value:
         dns01:
-          clouddns:
+          cloudDNS:
             project: phx-01h4rr1468rj3v5k60b1vserd3
 - target:
     group: cert-manager.io
