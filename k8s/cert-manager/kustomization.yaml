@@ -24,6 +24,7 @@ patches:
     - op: add
       path: /spec/acme/solvers/-
       value:
+        selector: {}
         dns01:
           cloudDNS:
             project: phx-01h4rr1468rj3v5k60b1vserd3
