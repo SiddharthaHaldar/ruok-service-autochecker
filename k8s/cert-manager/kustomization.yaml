@@ -4,12 +4,14 @@ resources:
 - cert-manager.yaml
 patches:
 - target:
-    version: v1
-    kind: ServiceAccount
+    group: helm.toolkit.fluxcd.io
+    version: v2beta1
+    kind: HelmRelease
     name: cert-manager
     namespace: cert-manager
   patch: |-
     - op: add
-      path: "/metadata/annotations"
+      path: /spec/values/serviceAccount
       value:
-        iam.gke.io/gcp-service-account: dns01-solver@phx-01h8eq9sbx7d19zsvqk7t9zymr.iam.gserviceaccount.com
+        annotations:
+          iam.gke.io/gcp-service-account: dns01-solver@phx-01h8eq9sbx7d19zsvqk7t9zymr.iam.gserviceaccount.com

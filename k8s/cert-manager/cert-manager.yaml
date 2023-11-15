@@ -34,7 +34,4 @@ spec:
     global:
       leaderElection:
         namespace: cert-manager
-      serviceAccount:
-        # Specifies whether a service account should be created
-        create: true
     
