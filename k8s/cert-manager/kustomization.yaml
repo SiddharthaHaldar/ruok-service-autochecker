@@ -1,17 +1,39 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- cert-manager.yaml
+- issuers.yaml
+- certificate.yaml
 patches:
 - target:
-    group: helm.toolkit.fluxcd.io
-    version: v2beta1
-    kind: HelmRelease
-    name: cert-manager
+    group: cert-manager.io
+    version: v1
+    kind: Certificate
+    name: ingress-cert
     namespace: cert-manager
   patch: |-
     - op: add
-      path: /spec/values/serviceAccount
+      path: /spec/dnsNames/-
+      value: observatory.phac.alpha.canada.ca
+- target:
+    group: cert-manager.io
+    version: v1
+    kind: Issuer
+    name: letsencrypt
+    namespace: cert-manager
+  patch: |-
+    - op: add
+      path: /spec/acme/solvers/-
       value:
-        annotations:
-          iam.gke.io/gcp-service-account: dns01-solver@phx-01h8eq9sbx7d19zsvqk7t9zymr.iam.gserviceaccount.com
+        dns01:
+          clouddns:
+            project: phx-01h4rr1468rj3v5k60b1vserd3
+- target:
+    group: cert-manager.io
+    version: v1
+    kind: Issuer
+    name: letsencrypt
+    namespace: cert-manager
+  patch: |-
+    - op: add
+      path: /spec/acme/email
+      value: collin.brown@phac-aspc.gc.ca
