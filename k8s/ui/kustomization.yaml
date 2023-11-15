@@ -16,3 +16,6 @@ patches:
       path: /spec/template/spec/containers/0/image
       value:
         northamerica-northeast1-docker.pkg.dev/phx-01h8eq9sbx7d19zsvqk7t9zymr/observatory/ui:main-42091d5-1699996481
+    - op: add
+      path: /spec/template/spec/containers/0/imagePullPolicy
+      value: Always
