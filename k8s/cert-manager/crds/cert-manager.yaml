@@ -34,4 +34,6 @@ spec:
     global:
       leaderElection:
         namespace: cert-manager
+    extraArgs:
+    - "--issuer-ambient-credentials=true"
     
