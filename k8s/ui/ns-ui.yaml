@@ -4,3 +4,4 @@ metadata:
   name: ui
   labels:
     name: ui
+    istio-injection: enabled
