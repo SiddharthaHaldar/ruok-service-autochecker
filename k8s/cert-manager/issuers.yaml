@@ -5,7 +5,7 @@ metadata:
   name: letsencrypt
   # (Optional) Metadata
   # namespace: your-namespace
-  namespace: cert-manager
+  namespace: istio-system
 spec:
   acme:
     solvers: []
