@@ -44,7 +44,3 @@ docker compose down -v
 ```
 ## To kick off the scanners
 Refer to [scanners/README.md](./scanners/README.md).
-
-
-
-
