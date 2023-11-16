@@ -9,7 +9,7 @@ patches:
     version: v1
     kind: Certificate
     name: ingress-cert
-    namespace: cert-manager
+    namespace: istio-system
   patch: |-
     - op: add
       path: /spec/dnsNames/-
@@ -19,7 +19,7 @@ patches:
     version: v1
     kind: Issuer
     name: letsencrypt
-    namespace: cert-manager
+    namespace: istio-system
   patch: |-
     - op: add
       path: /spec/acme/solvers/-
@@ -34,7 +34,7 @@ patches:
     version: v1
     kind: Issuer
     name: letsencrypt
-    namespace: cert-manager
+    namespace: istio-system
   patch: |-
     - op: add
       path: /spec/acme/email
