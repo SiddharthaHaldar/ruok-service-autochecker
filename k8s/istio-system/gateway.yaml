@@ -15,7 +15,7 @@ spec:
         - "*"
       tls:
         mode: SIMPLE
-        credentialName: tlskeys
+        credentialName: cert-manager/tlskeys
         privateKey: sds
         serverCertificate: sds
         minProtocolVersion: TLSV1_3
