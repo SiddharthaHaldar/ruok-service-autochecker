@@ -41,18 +41,23 @@ process.on('SIGINT', () => process.exit(0))
             const orgName = prefix[1];
             const repoName = prefix[2];
 
+            console.log('orgName', orgName)
+            console.log('repoName', repoName)
+
             // Clone repository
             const repoPath = await cloneRepository(gitHubEventPayload.endpoint, repoName)
+            console.log ('repoPath', repoPath)
 
             // Instantiate and do the check(s)
             const checkName = 'allChecks'
+            // const checkName = 'gitleaks'
             const check = await initializeChecker(checkName, repoName, repoPath)
             const results = await check.doRepoCheck()
 
-            console.log(results)
+            console.log('Scan Results:',results)
+            console.log('gitleaks metadata',results.gitleaks.metadata)
+            console.log('gitleaks stingified metadata',JSON.stringify(results.gitleaks.metadata))
 
-            // SAVE to ArangoDB through API
-            // const upsertService = await upsertClonedGitHubScanIntoDatabase(productName, sourceCodeRepository, results, graphQLClient)
             // Mutation to add a graph for the new endpoints
             // TODO: refactor this into a testable query builder function
             const mutation = gql`
@@ -71,17 +76,29 @@ process.on('SIGINT', () => process.exit(0))
                             checkPasses: ${results.hasDependabotYaml.checkPasses}
                             metadata: {}
                         },
+                        gitleaks: {
+                            checkPasses: ${JSON.stringify(results.gitleaks.checkPasses, null, 4).replace(/"([^"]+)":/g, '$1:')}
+                            metadata: ${JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+                        }
                     }
                 )
             }
             `;
+            console.log('*************************\n',mutation,'\n*************************\n')
             // New GraphQL client - TODO: remove hard-coded URL
             const graphqlClient = new GraphQLClient(GRAPHQL_URL);
             // Write mutation to GraphQL API
             const mutationResponse = await graphqlClient.request(mutation);
+            console.log('*************************\n',mutationResponse,'\n*************************\n')
+
+            console.log('saved to database!')
+            
             // Remove temp repository
             await removeClonedRepository(repoPath)
+    
         }
     })();
 
 await nc.closed();
+
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}"

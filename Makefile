@@ -16,11 +16,11 @@ CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
 #  |_.__/ \__,_|_|_|\__,_|
 
 # Build all images in the repo
-build: build-api-image build-webhook-server-image build-graph-updater build-octokit-scanner build-cloned-repo-scanner build-web-endpoint-scanner
+build: build-graphql-api-image build-webhook-server-image build-graph-updater build-octokit-scanner build-cloned-repo-scanner build-web-endpoint-scanner
 
 # GraphQL API
-build-api-image:
-	$(CONTAINER_RUNTIME) build ./api/ -t localhost/$(APP_NAME)-api:$(APP_VERSION)
+build-graphql-api-image:
+	$(CONTAINER_RUNTIME) build ./api/ -t localhost/$(APP_NAME)-graphql-api:$(APP_VERSION)
 
 # Scanners
 build-octokit-scanner:
@@ -40,13 +40,20 @@ build-webhook-server-image:
 build-graph-updater:
 	$(CONTAINER_RUNTIME) build ./graph-updater/ -t localhost/$(APP_NAME)-graph-updater:$(APP_VERSION)
 
-kind-push-api:
-	kind load docker-image localhost/$(APP_NAME)-api:$(APP_VERSION)
+
+kind-push-cloned-repo-scanner:
+	kind load docker-image localhost/$(APP_NAME)-cloned-repo-scanner:$(APP_VERSION)
+
+kind-push-graphql-api:
+	kind load docker-image localhost/$(APP_NAME)-graphql-api:$(APP_VERSION)
+
+kind-push-graph-updater:
+	kind load docker-image localhost/$(APP_NAME)-graph-updater:$(APP_VERSION)
 
 kind-push-webhook-server:
 	kind load docker-image localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
 
-kind-push-all: kind-push-webhook-server kind-push-api
+kind-push-all: kind-push-webhook-server kind-push-graphql-api kind-push-graph-updater kind-push-cloned-repo-scanner
 	
 
 #       _            _             
@@ -71,4 +78,9 @@ port-forward:
 	kubectl port-forward svc/example-simple-single-ea 8529:8529 &
 	kubectl port-forward svc/nats 4222:4222 &
 	kubectl port-forward svc/webhook-server 3000:3000 &
-	kubectl port-forward svc/api 4000:4000
+	kubectl port-forward svc/graphql-api 4000:4000
+
+sleep:
+	sleep 20
+
+all: build kind-push-all k8s-deploy sleep port-forward
