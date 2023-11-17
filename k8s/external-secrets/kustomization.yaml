@@ -18,3 +18,19 @@ resources:
 # Deploy default Custom Resources from 'crs' directory
 # INFO: This depends on the CRDs deployment. Will happen after it
 - deployment-crs.yaml
+
+# Kubernetes service account for external secrets
+- service-account.yaml
+
+patches:
+- target:
+    group: ""
+    version: v1
+    kind: ServiceAccount
+    name: external-secrets
+    namespace: external-secrets
+  patch: |-
+    - op: add
+      path: /metadata/annotations
+      value:
+        iam.gke.io/gcp-service-account: external-secrets@phx-01h8eq9sbx7d19zsvqk7t9zymr.iam.gserviceaccount.com
