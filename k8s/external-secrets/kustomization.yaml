@@ -8,6 +8,8 @@ resources:
 # Kubernetes service account for external secrets
 - service-account.yaml
 
+- external-secrets.yaml
+
 patches:
 - target:
     group: ""
