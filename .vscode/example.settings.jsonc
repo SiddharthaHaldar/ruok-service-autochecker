@@ -1,0 +1,9 @@
+{
+  // Automatically disable GitHub Copilot for files
+  // with potentially sensitive values (e.g. .env, .envrc, etc.)
+  "github.copilot.enable": {
+    "*": true,
+    "properties": false,
+    "plaintext": false
+  }
+}
