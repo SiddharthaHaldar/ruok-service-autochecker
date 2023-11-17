@@ -748,9 +748,64 @@
 }
 </code></pre></div></td></tr></table></div>
 <h3 id="gitleaks-report">Gitleaks Report</h3>
-<blockquote>
-<p>TODO</p>
-</blockquote>
+<p><a href="https://github.com/gitleaks/gitleaks">Gitleaks</a> detects secrets that have been commited at any point in the repository's history.  </p>
+<p><strong>Remediation</strong></p>
+<p>Remove the leak from the <a href="https://blog.gitguardian.com/rewriting-git-history-cheatsheet/">commit history</a>.</p>
+<p>If the leak is not a secret, but a false positive, include a <a href="https://github.com/gitleaks/gitleaks/tree/master#gitleaksignore">.gitleaksignore</a> file at the root of your repository containing that item.</p>
+<p>For preventative protection, consider using 'gitleaks protect' <a href="(https://github.com/gitleaks/gitleaks/tree/master#pre-commit)">pre-commit</a> or using the <a href="https://github.com/gitleaks/gitleaks-action">gitleaks GitHub Action</a>.</p>
+<p><strong>Data Example</strong>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+    // ...
+  gitleaks: {
+    checkPasses: false,
+    metadata: {
+      leaksFound: true,
+      numberOfLeaks: 2,
+      commitsScanned: 466,
+      details: [
+        {
+            Description: &#39;Private Key&#39;,
+            File: &#39;scanners/github-cloned-repo-checks/src/fake-secret&#39;,
+            StartLine: 28,
+            EndLine: 28,
+            StartColumn: 14,
+            EndColumn: 53
+            Commit: &#39;29c1850108f543f5eaab26ed052508fa0b45bb74&#39;,
+            Author: &#39;=&#39;,
+            Email: &#39;my.email@gmail.com&#39;,
+        },
+     // ...
+      ]
+    }
+  }
+      // ...
+}
+</code></pre></div></td></tr></table></div></p>
 <h3 id="file-size-check">File Size Check</h3>
 <blockquote>
 <p>TODO</p>
