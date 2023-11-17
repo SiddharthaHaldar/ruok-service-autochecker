@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
 # Deploy the Vault access secret
 - namespace.yaml
-- secret-token.yaml
 
 # Deploy the repositories
 - repositories.yaml
