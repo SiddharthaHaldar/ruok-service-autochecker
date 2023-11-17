@@ -20,27 +20,6 @@ See the [Development Environment](docs/development-environment.md) page for reco
 
 See the [Deployment](docs/deployment.md) page for instructions on how to deploy the `ruok-service-autochecker` application.
 
-#### *Please note - this is work in progress* 
 
-This uses [Safe Inputs](https://github.com/PHACDataHub/safe-inputs) and [Tracker](https://github.com/canada-ca/tracker) as a starting point.
 
-## To build and run 
-(Only the API, ArangoDB and the NATs server, but *not* the scanners - for the moment.) 
-1. Set up api .env file 
-```
-./scripts/create-api-dotenv.sh
-```
-2. Run database, NATs server and API
-```
-docker compose up --build -d && ./database/db-init.sh
-```
-(db-init.sh populates the database with 'projects' and 'services' collections, as well as some fabricated data in order to enable UI development concurrently.
 
-If there's an error in the creation of this fabricated data, run it a second time and then it should work. TODO - add longer timeout or healthcheck on dockercompose file.) 
-
-## To tear down 
-```
-docker compose down -v
-```
-## To kick off the scanners
-Refer to [scanners/README.md](./scanners/README.md).
