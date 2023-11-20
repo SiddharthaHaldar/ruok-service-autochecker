@@ -43,6 +43,7 @@ spec:
             - --client-secret=$(OAUTH_CLIENT_SECRET)
             - --cookie-secret=$(OAUTH_COOKIE_SECRET)
             - --email-domain=$(OAUTH_EMAIL_DOMAINS)
+            - --custom-sign-in-logo=https://raw.githubusercontent.com/PHACDataHub/ruok-service-autochecker/main/docs/assets/observatory.png
           env:
             - name: OAUTH_CLIENT_ID
               valueFrom:
