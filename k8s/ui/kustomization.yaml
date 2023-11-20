@@ -6,6 +6,7 @@ resources:
 - ./svc-ui-server.yaml
 - ./virtual-service.yaml
 - ./external-secret.yaml
+- ./oauth2-proxy.yaml
 patches:
 - target:
     version: v1
