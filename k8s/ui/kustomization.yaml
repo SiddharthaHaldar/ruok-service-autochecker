@@ -5,6 +5,7 @@ resources:
 - ./deployment-ui-server.yaml
 - ./svc-ui-server.yaml
 - ./virtual-service.yaml
+- ./external-secret.yaml
 patches:
 - target:
     version: v1
