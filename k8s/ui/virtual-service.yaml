@@ -15,4 +15,4 @@ spec:
         prefix: /
     route:
     - destination:
-        host: ui-server.ui.svc.cluster.local
+        host: oauth-proxy.ui.svc.cluster.local
