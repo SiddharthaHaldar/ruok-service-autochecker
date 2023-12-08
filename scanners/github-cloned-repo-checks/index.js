@@ -81,6 +81,10 @@ process.on('SIGINT', () => process.exit(0))
                             checkPasses: ${results.hadolint.checkPasses}
                             metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
                         }
+                        vulnerabilityTrivyRepoScan: {
+                            checkPasses: ${results.vulnerabilityTrivyRepoScan.checkPasses}
+                            metadata: ${JSON.stringify(results.vulnerabilityTrivyRepoScan.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+                        }                       
                     }
                 )
             }
