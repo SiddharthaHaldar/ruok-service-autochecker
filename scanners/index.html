@@ -811,7 +811,72 @@
 <p>TODO</p>
 </blockquote>
 <h3 id="hadolint-dockerfile">Hadolint <code>Dockerfile</code></h3>
-<p><a href="https://github.com/hadolint/hadolint"><code>hadolint</code></a> performs a series of lint checks on each <code>Dockerfile</code> found in the repository.</p>
+<p><a href="https://github.com/hadolint/hadolint"><code>Hadolint</code></a> is a linter for Dockerfiles. This scanner analyzes the Dockerfiles in the source code repository, and flags any best practices rules that have been broken. </p>
+<p><strong>Remediation</strong></p>
+<p>Follow the guidelines outlined in results message to update the Dockerfiles.  If your team has decided to not follow a particular rule in certain cases, you can clear the warning in this scanner by including an <a href="https://github.com/hadolint/hadolint#inline-ignores">inline ignore tag</a> at the Dockerfile location where you would like to by-passed the rule check.  </p>
+<p><strong>Data Example</strong>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+    // ...
+   hadolint: {
+      checkPasses: false
+      metadata: [
+        {
+          Dockerfile: &quot;ui/Dockerfile&quot;,
+          RulesViolated: [
+            {
+                code: &quot;DL1000&quot;,
+                level: &quot;error&quot;,
+                line: 41,
+                message: &quot;unexpected &#39;#&#39;\nexpecting a new line followed by the next instruction&quot;
+            }
+          ]
+        },
+        {
+          Dockerfile: &quot;scanners/web-endpoint-checks/Dockerfile&quot;,
+          RulesViolated: [
+            {
+                code: &quot;DL3008&quot;,
+                level: &quot;warning&quot;,
+                line: 11,
+                message: &quot;Pin versions in apt get install. Instead of `apt-get install &lt;package&gt;` use `apt-get install &lt;package&gt;=&lt;version&gt;`&quot;
+            },
+        // ...
+          ]
+        }
+      ]
+      // ...
+    }
+</code></pre></div></td></tr></table></div></p>
 <blockquote>
 <p>TODO</p>
 </blockquote>
