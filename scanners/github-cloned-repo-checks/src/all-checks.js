@@ -6,6 +6,7 @@ import { DotDockerIgnoreDetails, DotGitIgnoreDetails }  from "./get-dotignore-de
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 import { Gitleaks } from './gitleaks.js'
 import { Hadolint } from './hadolint.js'
+import { TrivyRepo } from './trivy-repo.js'
 
 
 export class AllChecks extends CheckOnClonedRepoInterface {
@@ -21,7 +22,8 @@ export class AllChecks extends CheckOnClonedRepoInterface {
         new DotDockerIgnoreDetails(repoName, clonedRepoPath),
         new DotGitIgnoreDetails(repoName, clonedRepoPath),
         new Gitleaks(repoName, clonedRepoPath),
-        new Hadolint(repoName, clonedRepoPath)
+        new Hadolint(repoName, clonedRepoPath),
+        new TrivyRepo(repoName, clonedRepoPath)
       ];
     }
   
@@ -41,7 +43,8 @@ export class AllChecks extends CheckOnClonedRepoInterface {
         dotDockerIgnoreDetails: checkResults[4],
         dotGitIgnoreDetails: checkResults[5],
         gitleaks: checkResults[6],
-        hadolint: checkResults[7]
+        hadolint: checkResults[7],
+        vulnerabilityTrivyRepoScan: checkResults[8]
       }
   
       return allResults;
