@@ -46,18 +46,15 @@ process.on('SIGINT', () => process.exit(0))
 
             // Clone repository
             const repoPath = await cloneRepository(gitHubEventPayload.endpoint, repoName)
-            console.log ('repoPath', repoPath)
+            console.log ('repoPath', repoPath, '\n')
 
             // Instantiate and do the check(s)
             const checkName = 'allChecks'
-            // const checkName = 'gitleaks'
             const check = await initializeChecker(checkName, repoName, repoPath)
             const results = await check.doRepoCheck()
 
-            console.log('Scan Results:',results)
-            console.log('gitleaks metadata',results.gitleaks.metadata)
-            console.log('gitleaks stingified metadata',JSON.stringify(results.gitleaks.metadata))
-
+            // console.log('Scan Results:',results)
+ 
             // Mutation to add a graph for the new endpoints
             // TODO: refactor this into a testable query builder function
             const mutation = gql`
@@ -79,6 +76,10 @@ process.on('SIGINT', () => process.exit(0))
                         gitleaks: {
                             checkPasses: ${JSON.stringify(results.gitleaks.checkPasses, null, 4).replace(/"([^"]+)":/g, '$1:')}
                             metadata: ${JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+                        },
+                        hadolint: {
+                            checkPasses: ${results.hadolint.checkPasses}
+                            metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
                         }
                     }
                 )
@@ -86,16 +87,20 @@ process.on('SIGINT', () => process.exit(0))
             `;
             console.log('*************************\n',mutation,'\n*************************\n')
             // New GraphQL client - TODO: remove hard-coded URL
-            const graphqlClient = new GraphQLClient(GRAPHQL_URL);
-            // Write mutation to GraphQL API
-            const mutationResponse = await graphqlClient.request(mutation);
-            console.log('*************************\n',mutationResponse,'\n*************************\n')
+            try {
+                const graphqlClient = new GraphQLClient(GRAPHQL_URL);
 
-            console.log('saved to database!')
+                // Write mutation to GraphQL API
+                const mutationResponse = await graphqlClient.request(mutation);
+
+                console.log('Scan results saved to database.')
+
+            } catch (error) {
+                console.error("An error occurred - unable to save to the database.", error);
+            }
             
             // Remove temp repository
             await removeClonedRepository(repoPath)
-    
         }
     })();
 
