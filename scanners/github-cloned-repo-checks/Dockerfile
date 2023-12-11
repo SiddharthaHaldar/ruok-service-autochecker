@@ -19,6 +19,9 @@ RUN wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint
     mv hadolint-Linux-x86_64 /usr/local/bin/hadolint && \
     chmod +x /usr/local/bin/hadolint
 
+# Install trivy for repo scan
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin 
+
 COPY package*.json ./
 
 RUN npm ci

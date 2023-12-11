@@ -44,7 +44,7 @@ export class AllChecks extends CheckOnClonedRepoInterface {
         dotGitIgnoreDetails: checkResults[5],
         gitleaks: checkResults[6],
         hadolint: checkResults[7],
-        vulnerabilityTrivyRepoScan: checkResults[8]
+        trivy_repo_vulnerability: checkResults[8]
       }
   
       return allResults;

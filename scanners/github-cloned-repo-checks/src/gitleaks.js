@@ -89,7 +89,7 @@ async function runGitleaks(clonedRepoPath) {
     // Remove temp dir
     try {
       await rm(tempDir, { recursive: true });
-      console.log(`Temporary directory ${tempDir} removed.`);
+      // console.log(`Temporary directory ${tempDir} removed.`);
     } catch (removeError) {
       console.error(`Error removing temporary directory ${tempDir}: ${removeError.message}`);
     }
