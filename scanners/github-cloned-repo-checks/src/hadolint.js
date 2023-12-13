@@ -57,7 +57,7 @@ async function hadolintRepo(clonedRepoPath) {
       results.push({
         Dockerfile: relativePath,
         RulesViolated: hadolintResult,
-    });
+      });
     }
 
     return results;

@@ -33,7 +33,8 @@ class GithubEndpointInput:
     has_security_md: Optional[CheckPassesInput] = None
     has_dependabot_yaml: Optional[CheckPassesInput] = None
     gitleaks: Optional[CheckPassesInput] = None  
-    hadolint: Optional[CheckPassesInput] = None                                        
+    hadolint: Optional[CheckPassesInput] = None 
+    trivy_repo_vulnerability: Optional[CheckPassesInput] = None                                       
 
 
 @strawberry.input

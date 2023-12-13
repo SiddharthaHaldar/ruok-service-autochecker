@@ -60,7 +60,6 @@ Include a file called `Security.md` at the root of your repository explaining ho
     "hasSecurityMd":{
         "checkPasses": true,
         "metadata": null,
-        "lastUpdated": 1698174245826
     }
     // ...
 }
@@ -113,13 +112,13 @@ For preventative protection, consider using 'gitleaks protect' [pre-commit]((htt
 
 > TODO
 
-### Hadolint `Dockerfile`
+### Hadolint Dockerfile Linting
 
 [`Hadolint`](https://github.com/hadolint/hadolint) is a linter for Dockerfiles. This scanner analyzes the Dockerfiles in the source code repository, and flags any best practices rules that have been broken. 
 
 **Remediation**
 
-Follow the guidelines outlined in results message to update the Dockerfiles.  If your team has decided to not follow a particular rule in certain cases, you can clear the warning in this scanner by including an [inline ignore tag](https://github.com/hadolint/hadolint#inline-ignores) at the Dockerfile location where you would like to by-passed the rule check.  
+Follow the guidelines outlined in the results message to update the Dockerfiles.  If your team has decided to not follow a particular rule in certain instances, you can clear the warning in this scanner by including an [inline ignore tag](https://github.com/hadolint/hadolint#inline-ignores) at the Dockerfile location where you would like to have the rule check by-passed.
 
 
 **Data Example**
@@ -157,6 +156,47 @@ Follow the guidelines outlined in results message to update the Dockerfiles.  If
     }
 
 ```
+### Trivy Repository Vunerability Scanning
+
+[`Trivy`](https://github.com/aquasecurity/trivy) is a security scanner we're using in this case to scan software dependencies against known vunerabilities.  It offers a remote Git repository scanner, that works for public repositories. Since we have some private repositories, we're using the filesystem scan on the cloned repository instead. 
+
+**Remediation**
+
+Update the dependencies as indicated if there is a fixed version. Follow the URL for more information on the found vunerability. 
+
+**Data Example**
+```jsonc
+{
+    // ...
+    vulnerabilityTrivyRepoScan: {
+      checkPasses: false
+      metadata: [
+        {
+          library: "cryptography",
+          vulnerabilityID: "CVE-2023-49083",
+          severity: "MEDIUM",
+          installedVersion: "41.0.3",
+          fixedVersion: "41.0.6",
+          title: "cryptography is a package designed to expose cryptographic primitives  ...",
+          url: "https://avd.aquasec.com/nvd/cve-2023-49083"
+        },
+        {
+          library: "cryptography",
+          vulnerabilityID: "GHSA-v8gr-m533-ghj9",
+          severity: "LOW",
+          installedVersion: "41.0.3",
+          fixedVersion: "41.0.4",
+          title: "Vulnerable OpenSSL included in cryptography wheels",
+          url: "https://github.com/advisories/GHSA-v8gr-m533-ghj9"
+        },
+        // ...
+      ]
+    }
+  // ...
+}
+
+```
+
 
 > TODO
 
@@ -168,3 +208,5 @@ Some products have one or more services exposed through URLs. URL compliance che
 ## Container Image Checks
 
 Any products that build and deploy OCI images perform a series of checks on the built image artifact(s).
+
+
