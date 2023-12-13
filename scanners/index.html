@@ -488,8 +488,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#hadolint-dockerfile" class="md-nav__link">
-    Hadolint Dockerfile
+  <a href="#hadolint-dockerfile-linting" class="md-nav__link">
+    Hadolint Dockerfile Linting
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trivy-repository-vunerability-scanning" class="md-nav__link">
+    Trivy Repository Vunerability Scanning
   </a>
   
 </li>
@@ -626,8 +633,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#hadolint-dockerfile" class="md-nav__link">
-    Hadolint Dockerfile
+  <a href="#hadolint-dockerfile-linting" class="md-nav__link">
+    Hadolint Dockerfile Linting
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trivy-repository-vunerability-scanning" class="md-nav__link">
+    Trivy Repository Vunerability Scanning
   </a>
   
 </li>
@@ -736,13 +750,11 @@
 <span class="normal">5</span>
 <span class="normal">6</span>
 <span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code>{
     // ...
     &quot;hasSecurityMd&quot;:{
         &quot;checkPasses&quot;: true,
         &quot;metadata&quot;: null,
-        &quot;lastUpdated&quot;: 1698174245826
     }
     // ...
 }
@@ -810,10 +822,10 @@
 <blockquote>
 <p>TODO</p>
 </blockquote>
-<h3 id="hadolint-dockerfile">Hadolint <code>Dockerfile</code></h3>
+<h3 id="hadolint-dockerfile-linting">Hadolint Dockerfile Linting</h3>
 <p><a href="https://github.com/hadolint/hadolint"><code>Hadolint</code></a> is a linter for Dockerfiles. This scanner analyzes the Dockerfiles in the source code repository, and flags any best practices rules that have been broken. </p>
 <p><strong>Remediation</strong></p>
-<p>Follow the guidelines outlined in results message to update the Dockerfiles.  If your team has decided to not follow a particular rule in certain cases, you can clear the warning in this scanner by including an <a href="https://github.com/hadolint/hadolint#inline-ignores">inline ignore tag</a> at the Dockerfile location where you would like to by-passed the rule check.  </p>
+<p>Follow the guidelines outlined in the results message to update the Dockerfiles.  If your team has decided to not follow a particular rule in certain instances, you can clear the warning in this scanner by including an <a href="https://github.com/hadolint/hadolint#inline-ignores">inline ignore tag</a> at the Dockerfile location where you would like to have the rule check by-passed.</p>
 <p><strong>Data Example</strong>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -876,6 +888,67 @@
       ]
       // ...
     }
+</code></pre></div></td></tr></table></div></p>
+<h3 id="trivy-repository-vunerability-scanning">Trivy Repository Vunerability Scanning</h3>
+<p><a href="https://github.com/aquasecurity/trivy"><code>Trivy</code></a> is a security scanner we're using in this case to scan software dependencies against known vunerabilities.  It offers a remote Git repository scanner, that works for public repositories. Since we have some private repositories, we're using the filesystem scan on the cloned repository instead. </p>
+<p><strong>Remediation</strong></p>
+<p>Update the dependencies as indicated if there is a fixed version. Follow the URL for more information on the found vunerability. </p>
+<p><strong>Data Example</strong>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+    // ...
+    vulnerabilityTrivyRepoScan: {
+      checkPasses: false
+      metadata: [
+        {
+          library: &quot;cryptography&quot;,
+          vulnerabilityID: &quot;CVE-2023-49083&quot;,
+          severity: &quot;MEDIUM&quot;,
+          installedVersion: &quot;41.0.3&quot;,
+          fixedVersion: &quot;41.0.6&quot;,
+          title: &quot;cryptography is a package designed to expose cryptographic primitives  ...&quot;,
+          url: &quot;https://avd.aquasec.com/nvd/cve-2023-49083&quot;
+        },
+        {
+          library: &quot;cryptography&quot;,
+          vulnerabilityID: &quot;GHSA-v8gr-m533-ghj9&quot;,
+          severity: &quot;LOW&quot;,
+          installedVersion: &quot;41.0.3&quot;,
+          fixedVersion: &quot;41.0.4&quot;,
+          title: &quot;Vulnerable OpenSSL included in cryptography wheels&quot;,
+          url: &quot;https://github.com/advisories/GHSA-v8gr-m533-ghj9&quot;
+        },
+        // ...
+      ]
+    }
+  // ...
+}
 </code></pre></div></td></tr></table></div></p>
 <blockquote>
 <p>TODO</p>
