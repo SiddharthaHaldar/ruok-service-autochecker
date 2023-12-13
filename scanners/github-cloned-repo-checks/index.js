@@ -57,6 +57,9 @@ process.on('SIGINT', () => process.exit(0))
  
             // Mutation to add a graph for the new endpoints
             // TODO: refactor this into a testable query builder function
+
+            // TODO: figure out why this only works with 'trivyRepoVulnerability', where it's coded as 'trivy_repo_vulnerability'
+            //      in api, etc
             const mutation = gql`
             mutation {
                 githubEndpoint(
@@ -87,17 +90,15 @@ process.on('SIGINT', () => process.exit(0))
                         }                       
                     }
                 )
-            }
-            `;
+            }`;
             console.log('*************************\n',mutation,'\n*************************\n')
-            // trivyRepoVulnerability: {
+    
             // New GraphQL client - TODO: remove hard-coded URL
             try {
                 const graphqlClient = new GraphQLClient(GRAPHQL_URL);
 
                 // Write mutation to GraphQL API
                 const mutationResponse = await graphqlClient.request(mutation);
-                console.log(mutation)
                 console.log('Scan results saved to database.')
 
             } catch (error) {

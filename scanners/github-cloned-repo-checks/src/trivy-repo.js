@@ -12,72 +12,67 @@ import os from 'os';
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
 import fs from 'fs'
 
-// const clonedRepoPath = '../../test-cloned-repos/ruok-service-autochecker'
-
 
 async function runTrivyScan(clonedRepoPath) {
-    return new Promise(async (resolve, reject) => {
-
-        console.log ('******************** clonedRepoPath')
-        console.log(clonedRepoPath)
-        console.log ('/n')
-
-        // define temp output file path 
+    try {
+        // create temp output file path 
         const tempDir = await mkdtemp(path.join(os.tmpdir(), 'trivy-'));
-        const scanResultsFilePath  = path.join(tempDir, 'trivy-report.json');
+        const scanResultsFilePath = path.join(tempDir, 'trivy-report.json');
 
-        const trivyProcess = spawn('trivy',
-            [ 
-                'fs',
-                '-f',  'json',
-                '-o', scanResultsFilePath,
-                // '--scanners', 'vuln',
-                // '--scanners', 'misconfig',
-                // '--scanners', 'license', // need to npm install for this to work 
-                clonedRepoPath
-            ])
-        
+        // run trivy
+        const trivyProcess = spawn('trivy', [
+            'fs',
+            '-f', 'json',
+            '-o', scanResultsFilePath,
+            // '--scanners', 'vuln',
+            // '--scanners', 'misconfig',
+            // '--scanners', 'license', // need to npm install for this to work 
+            clonedRepoPath
+        ]);
+
         trivyProcess.stderr.on('data', (data) => {
             console.error(`Trivy stderr: ${data}`);
         });
 
-        trivyProcess.on('close', async (code) => {
-            console.log(`Trivy process exited with code ${code}`);
-            
-            if (code === 0) { // i.e., exited without errors
-                console.log(`Trivy scan completed successfully. Results saved to ${scanResultsFilePath}`);
-                const results = await parseScanResults(scanResultsFilePath)
-
-                // remove temp dir with results
-                try {
-                    await rm(tempDir, { recursive: true });
-                    console.log(`Temporary directory ${tempDir} removed.`);
-                } catch (removeError) {
-                    console.error(`Error removing temporary directory ${tempDir}: ${removeError.message}`);
-                }
-
-                resolve (results)
-            } else {
-                console.error('Trivy scan failed.');
-                reject('trivy failed')
-            }
+        const code = await new Promise((resolve) => {
+            trivyProcess.on('close', resolve);
         });
-    });
+
+        console.log(`Trivy process exited with code ${code}`);
+
+        if (code === 0) {
+            console.log(`Trivy scan completed successfully. Results saved to ${scanResultsFilePath}`);
+            const results = await parseScanResults(scanResultsFilePath);
+
+            // remove temp dir with results
+            await rm(tempDir, { recursive: true });
+            // console.log(`Temporary directory ${tempDir} removed.`);
+
+            return results;
+        } else {
+            console.error('Trivy scan failed.');
+            throw new Error('trivy failed');
+        }
+    } catch (error) {
+        console.error(`Error in runTrivyScan: ${error.message}`);
+        throw error;
+    }
 }
 
+
 async function parseScanResults(scanResultsFilePath){
-    // Read the JSON data from the file
+    // Reads trivy results from the json file, and pulls out relevant vunerability summary
     let results = []
     try {
         const jsonData = fs.readFileSync(scanResultsFilePath, 'utf8');
         const json = JSON.parse(jsonData);
 
-        // Check if the "Results" array exists in the JSON
+        // check for "Results"  in data
         if (json && json.Results && Array.isArray(json.Results)) {
             json.Results.forEach(result => {
-                // Check if the "Vulnerabilities" array exists in each result
+                // Check if the "Vulnerabilities" in each result
                 if (result.Vulnerabilities && Array.isArray(result.Vulnerabilities)) {
-                    // Iterate over each vulnerability in the "Vulnerabilities" array
+
                     result.Vulnerabilities.forEach(vulnerability => {
                         results.push({
                             library: vulnerability.PkgName,
@@ -92,8 +87,8 @@ async function parseScanResults(scanResultsFilePath){
                     });
                 }
             });
-            console.log('*****************')
-            console.log(results)
+            // console.log('*****************')
+            // console.log(results)
             return results
         }
 
