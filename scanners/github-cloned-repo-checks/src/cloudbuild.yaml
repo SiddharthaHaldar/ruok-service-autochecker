@@ -1,0 +1,24 @@
+# For trivy scan 
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['version']
+
+# Iterate through Dockerfile paths and build/scane images
+{% for dockerfilePath in dockerfilePaths %}
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '{{imageName}}:{{dockerfilePath | replace(clonedRepoPath + '/', '')}}'
+      - '{{dockerfilePath | replace(clonedRepoPath + '/', '')}}'
+
+  # Optionally, perform vulnerability scanning here
+  # ...
+
+{% endfor %}
+
+# Additional steps or configurations can be added as needed
+# ...
+
+images:
+  - '{{imageName}}'
