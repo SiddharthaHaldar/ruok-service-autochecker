@@ -7,6 +7,9 @@ import { HasTestsDirectory } from './has-tests-directory.js'
 import { HasSecurityMd } from "./has-security-md.js"
 import { DotDockerIgnoreDetails, DotGitIgnoreDetails } from "./get-dotignore-details.js"
 import { Gitleaks } from "./gitleaks.js"
+import { Hadolint } from './hadolint.js'
+import { TrivyRepo } from './trivy-repo.js'
+
 import { AllChecks } from './all-checks.js'
 
 export async function initializeChecker(checkName, repoName, repoPath) {
@@ -25,6 +28,10 @@ export async function initializeChecker(checkName, repoName, repoPath) {
             return new DotGitIgnoreDetails(repoName, repoPath)
         case 'gitleaks':
             return new Gitleaks(repoName, repoPath)
+        case 'hadolint':
+            return new Hadolint(repoName, repoPath)
+        case 'trivyRepo':
+            return new TrivyRepo(repoName, repoPath)
         case 'allChecks':
             return new AllChecks(repoName, repoPath)
         default:

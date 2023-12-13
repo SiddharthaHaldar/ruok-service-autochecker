@@ -8,7 +8,8 @@
 4) Saves to Database (API)
 5) Removes Cloned Repository
 
-## Checks
+## Checks 
+(The following are yet not included in the database, as they need to first be more throughly flushed out first. The checks that are included in the database can be found on the [docs site](https://phacdatahub.github.io/ruok-service-autochecker/scanners/))
 
 ### hasApiDirectory
 
