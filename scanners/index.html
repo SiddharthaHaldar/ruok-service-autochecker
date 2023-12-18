@@ -743,7 +743,7 @@
 <p><strong>Remediation</strong></p>
 <p>Include a file called <code>Security.md</code> at the root of your repository explaining how security vulnerabilities should be reported to the repository owner. For example, there may be an email address where vulnerability reports should be sent, and explicit instructions to <em>not</em> document security vulnerabilities in the repository issues.</p>
 <p><strong>Data Example</strong></p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<p><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
 <span class="normal">3</span>
 <span class="normal">4</span>
@@ -752,18 +752,21 @@
 <span class="normal">7</span>
 <span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code>{
     // ...
-    &quot;hasSecurityMd&quot;:{
-        &quot;checkPasses&quot;: true,
+    &quot;has_security_md&quot;:{
+        &quot;check_passes&quot;: true,
         &quot;metadata&quot;: null,
     }
     // ...
 }
 </code></pre></div></td></tr></table></div>
+<strong>Pass Criteria</strong> 
+A SECURITY or SECURITY.md file is at the root of the GitHub repository. 
+<strong>metadata</strong> for this will always be null.</p>
 <h3 id="gitleaks-report">Gitleaks Report</h3>
-<p><a href="https://github.com/gitleaks/gitleaks">Gitleaks</a> detects secrets that have been commited at any point in the repository's history.  </p>
+<p><a href="https://github.com/gitleaks/gitleaks">Gitleaks</a> detects if secrets that have been commited at any point in the repository's history.  </p>
 <p><strong>Remediation</strong></p>
 <p>Remove the leak from the <a href="https://blog.gitguardian.com/rewriting-git-history-cheatsheet/">commit history</a>.</p>
-<p>If the leak is not a secret, but a false positive, include a <a href="https://github.com/gitleaks/gitleaks/tree/master#gitleaksignore">.gitleaksignore</a> file at the root of your repository containing that item.</p>
+<p>If the 'leak' detected is not a secret, only a false positive, include a <a href="https://github.com/gitleaks/gitleaks/tree/master#gitleaksignore">.gitleaksignore</a> file at the root of your repository containing that item.</p>
 <p>For preventative protection, consider using 'gitleaks protect' <a href="(https://github.com/gitleaks/gitleaks/tree/master#pre-commit)">pre-commit</a> or using the <a href="https://github.com/gitleaks/gitleaks-action">gitleaks GitHub Action</a>.</p>
 <p><strong>Data Example</strong>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
@@ -794,22 +797,22 @@
 <span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code>{
     // ...
   gitleaks: {
-    checkPasses: false,
+    check_passes: false,
     metadata: {
-      leaksFound: true,
-      numberOfLeaks: 2,
-      commitsScanned: 466,
+      leaks_found: true,
+      number_of_leaks: 2,
+      commits_scanned: 466,
       details: [
         {
-            Description: &#39;Private Key&#39;,
-            File: &#39;scanners/github-cloned-repo-checks/src/fake-secret&#39;,
-            StartLine: 28,
-            EndLine: 28,
-            StartColumn: 14,
-            EndColumn: 53
-            Commit: &#39;29c1850108f543f5eaab26ed052508fa0b45bb74&#39;,
-            Author: &#39;=&#39;,
-            Email: &#39;my.email@gmail.com&#39;,
+            description: &#39;Private Key&#39;,
+            file: &#39;scanners/github-cloned-repo-checks/src/fake-secret&#39;,
+            start_line: 28,
+            end_line: 28,
+            start_column: 14,
+            end_column: 53
+            commit: &#39;29c1850108f543f5eaab26ed052508fa0b45bb74&#39;,
+            author: &#39;=&#39;,
+            email: &#39;my.email@gmail.com&#39;,
         },
      // ...
       ]
@@ -822,7 +825,7 @@
 <blockquote>
 <p>TODO</p>
 </blockquote>
-<h3 id="hadolint-dockerfile-linting">Hadolint Dockerfile Linting</h3>
+<h3 id="hadolint-dockerfile-linting"><code>Hadolint</code> Dockerfile Linting</h3>
 <p><a href="https://github.com/hadolint/hadolint"><code>Hadolint</code></a> is a linter for Dockerfiles. This scanner analyzes the Dockerfiles in the source code repository, and flags any best practices rules that have been broken. </p>
 <p><strong>Remediation</strong></p>
 <p>Follow the guidelines outlined in the results message to update the Dockerfiles.  If your team has decided to not follow a particular rule in certain instances, you can clear the warning in this scanner by including an <a href="https://github.com/hadolint/hadolint#inline-ignores">inline ignore tag</a> at the Dockerfile location where you would like to have the rule check by-passed.</p>
@@ -860,11 +863,11 @@
 <span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code>{
     // ...
    hadolint: {
-      checkPasses: false
+      check_passes: false
       metadata: [
         {
-          Dockerfile: &quot;ui/Dockerfile&quot;,
-          RulesViolated: [
+          dockerfile: &quot;ui/Dockerfile&quot;,
+          rules_violated: [
             {
                 code: &quot;DL1000&quot;,
                 level: &quot;error&quot;,
@@ -874,8 +877,8 @@
           ]
         },
         {
-          Dockerfile: &quot;scanners/web-endpoint-checks/Dockerfile&quot;,
-          RulesViolated: [
+          dockerfile: &quot;scanners/web-endpoint-checks/Dockerfile&quot;,
+          rules_violated: [
             {
                 code: &quot;DL3008&quot;,
                 level: &quot;warning&quot;,
@@ -889,7 +892,7 @@
       // ...
     }
 </code></pre></div></td></tr></table></div></p>
-<h3 id="trivy-repository-vunerability-scanning">Trivy Repository Vunerability Scanning</h3>
+<h3 id="trivy-repository-vunerability-scanning"><code>Trivy</code> Repository Vunerability Scanning</h3>
 <p><a href="https://github.com/aquasecurity/trivy"><code>Trivy</code></a> is a security scanner we're using in this case to scan software dependencies against known vunerabilities.  It offers a remote Git repository scanner, that works for public repositories. Since we have some private repositories, we're using the filesystem scan on the cloned repository instead. </p>
 <p><strong>Remediation</strong></p>
 <p>Update the dependencies as indicated if there is a fixed version. Follow the URL for more information on the found vunerability. </p>
@@ -923,26 +926,26 @@
 <span class="normal">27</span>
 <span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code>{
     // ...
-    vulnerabilityTrivyRepoScan: {
-      checkPasses: false
+    trivy_repo_vulnerability: {
+      check_passes: false
       metadata: [
         {
-          library: &quot;cryptography&quot;,
-          vulnerabilityID: &quot;CVE-2023-49083&quot;,
+          library: &quot;librarya&quot;,
+          vulnerability_ID: &quot;CVE-2023-xxxx&quot;,
           severity: &quot;MEDIUM&quot;,
-          installedVersion: &quot;41.0.3&quot;,
-          fixedVersion: &quot;41.0.6&quot;,
-          title: &quot;cryptography is a package designed to expose cryptographic primitives  ...&quot;,
-          url: &quot;https://avd.aquasec.com/nvd/cve-2023-49083&quot;
+          installed_version: &quot;41.0.x&quot;,
+          fixed_version: &quot;41.0.y&quot;,
+          title: &quot;librarya is a package designed to expose  ...&quot;,
+          url: &quot;https://avd.aquasec.com/nvd/cve-2023-xxxx&quot;
         },
         {
-          library: &quot;cryptography&quot;,
-          vulnerabilityID: &quot;GHSA-v8gr-m533-ghj9&quot;,
+          library: &quot;librayb&quot;,
+          vulnerability_ID: &quot;GHSA-v8gr-xxxx-xxxx&quot;,
           severity: &quot;LOW&quot;,
-          installedVersion: &quot;41.0.3&quot;,
-          fixedVersion: &quot;41.0.4&quot;,
-          title: &quot;Vulnerable OpenSSL included in cryptography wheels&quot;,
-          url: &quot;https://github.com/advisories/GHSA-v8gr-m533-ghj9&quot;
+          installed_version: &quot;41.0.x&quot;,
+          fixed_version: &quot;41.0.y&quot;,
+          title: &quot;Vulnerable OpenSSL included in libraryb&quot;,
+          url: &quot;https://github.com/advisories/GHSA-v8gr-xxxx-xxxx&quot;
         },
         // ...
       ]
