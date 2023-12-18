@@ -57,23 +57,26 @@ Include a file called `Security.md` at the root of your repository explaining ho
 ```jsonc
 {
     // ...
-    "hasSecurityMd":{
-        "checkPasses": true,
+    "has_security_md":{
+        "check_passes": true,
         "metadata": null,
     }
     // ...
 }
 ```
+**Pass Criteria** 
+A SECURITY or SECURITY.md file is at the root of the GitHub repository. 
+**metadata** for this will always be null.
 
 ### Gitleaks Report
 
-[Gitleaks](https://github.com/gitleaks/gitleaks) detects secrets that have been commited at any point in the repository's history.  
+[Gitleaks](https://github.com/gitleaks/gitleaks) detects if secrets that have been commited at any point in the repository's history.  
 
 **Remediation**
 
 Remove the leak from the [commit history](https://blog.gitguardian.com/rewriting-git-history-cheatsheet/).
 
-If the leak is not a secret, but a false positive, include a [.gitleaksignore](https://github.com/gitleaks/gitleaks/tree/master#gitleaksignore) file at the root of your repository containing that item.
+If the 'leak' detected is not a secret, only a false positive, include a [.gitleaksignore](https://github.com/gitleaks/gitleaks/tree/master#gitleaksignore) file at the root of your repository containing that item.
 
 For preventative protection, consider using 'gitleaks protect' [pre-commit]((https://github.com/gitleaks/gitleaks/tree/master#pre-commit)) or using the [gitleaks GitHub Action](https://github.com/gitleaks/gitleaks-action).
 
@@ -82,22 +85,22 @@ For preventative protection, consider using 'gitleaks protect' [pre-commit]((htt
 {
     // ...
   gitleaks: {
-    checkPasses: false,
+    check_passes: false,
     metadata: {
-      leaksFound: true,
-      numberOfLeaks: 2,
-      commitsScanned: 466,
+      leaks_found: true,
+      number_of_leaks: 2,
+      commits_scanned: 466,
       details: [
         {
-            Description: 'Private Key',
-            File: 'scanners/github-cloned-repo-checks/src/fake-secret',
-            StartLine: 28,
-            EndLine: 28,
-            StartColumn: 14,
-            EndColumn: 53
-            Commit: '29c1850108f543f5eaab26ed052508fa0b45bb74',
-            Author: '=',
-            Email: 'my.email@gmail.com',
+            description: 'Private Key',
+            file: 'scanners/github-cloned-repo-checks/src/fake-secret',
+            start_line: 28,
+            end_line: 28,
+            start_column: 14,
+            end_column: 53
+            commit: '29c1850108f543f5eaab26ed052508fa0b45bb74',
+            author: '=',
+            email: 'my.email@gmail.com',
         },
      // ...
       ]
@@ -112,7 +115,7 @@ For preventative protection, consider using 'gitleaks protect' [pre-commit]((htt
 
 > TODO
 
-### Hadolint Dockerfile Linting
+### `Hadolint` Dockerfile Linting
 
 [`Hadolint`](https://github.com/hadolint/hadolint) is a linter for Dockerfiles. This scanner analyzes the Dockerfiles in the source code repository, and flags any best practices rules that have been broken. 
 
@@ -126,11 +129,11 @@ Follow the guidelines outlined in the results message to update the Dockerfiles.
 {
     // ...
    hadolint: {
-      checkPasses: false
+      check_passes: false
       metadata: [
         {
-          Dockerfile: "ui/Dockerfile",
-          RulesViolated: [
+          dockerfile: "ui/Dockerfile",
+          rules_violated: [
             {
                 code: "DL1000",
                 level: "error",
@@ -140,8 +143,8 @@ Follow the guidelines outlined in the results message to update the Dockerfiles.
           ]
         },
         {
-          Dockerfile: "scanners/web-endpoint-checks/Dockerfile",
-          RulesViolated: [
+          dockerfile: "scanners/web-endpoint-checks/Dockerfile",
+          rules_violated: [
             {
                 code: "DL3008",
                 level: "warning",
@@ -156,7 +159,7 @@ Follow the guidelines outlined in the results message to update the Dockerfiles.
     }
 
 ```
-### Trivy Repository Vunerability Scanning
+### `Trivy` Repository Vunerability Scanning
 
 [`Trivy`](https://github.com/aquasecurity/trivy) is a security scanner we're using in this case to scan software dependencies against known vunerabilities.  It offers a remote Git repository scanner, that works for public repositories. Since we have some private repositories, we're using the filesystem scan on the cloned repository instead. 
 
@@ -168,26 +171,26 @@ Update the dependencies as indicated if there is a fixed version. Follow the URL
 ```jsonc
 {
     // ...
-    vulnerabilityTrivyRepoScan: {
-      checkPasses: false
+    trivy_repo_vulnerability: {
+      check_passes: false
       metadata: [
         {
-          library: "cryptography",
-          vulnerabilityID: "CVE-2023-49083",
+          library: "librarya",
+          vulnerability_ID: "CVE-2023-xxxx",
           severity: "MEDIUM",
-          installedVersion: "41.0.3",
-          fixedVersion: "41.0.6",
-          title: "cryptography is a package designed to expose cryptographic primitives  ...",
-          url: "https://avd.aquasec.com/nvd/cve-2023-49083"
+          installed_version: "41.0.x",
+          fixed_version: "41.0.y",
+          title: "librarya is a package designed to expose  ...",
+          url: "https://avd.aquasec.com/nvd/cve-2023-xxxx"
         },
         {
-          library: "cryptography",
-          vulnerabilityID: "GHSA-v8gr-m533-ghj9",
+          library: "librayb",
+          vulnerability_ID: "GHSA-v8gr-xxxx-xxxx",
           severity: "LOW",
-          installedVersion: "41.0.3",
-          fixedVersion: "41.0.4",
-          title: "Vulnerable OpenSSL included in cryptography wheels",
-          url: "https://github.com/advisories/GHSA-v8gr-m533-ghj9"
+          installed_version: "41.0.x",
+          fixed_version: "41.0.y",
+          title: "Vulnerable OpenSSL included in libraryb",
+          url: "https://github.com/advisories/GHSA-v8gr-xxxx-xxxx"
         },
         // ...
       ]
