@@ -286,6 +286,21 @@
   
   
     <li class="md-nav__item">
+      <a href="../quickstart-for-development/" class="md-nav__link">
+        Quick Start for Development
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../github-webhooks/" class="md-nav__link">
         GitHub Webhooks
       </a>
@@ -304,18 +319,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_7">
+        <label class="md-nav__link" for="__nav_8">
           GraphQL API
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="GraphQL API" data-md-level="1">
-        <label class="md-nav__title" for="__nav_7">
+        <label class="md-nav__title" for="__nav_8">
           <span class="md-nav__icon md-icon"></span>
           GraphQL API
         </label>
@@ -433,15 +448,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#vulnerability-alerts-enabled" class="md-nav__link">
-    Vulnerability Alerts Enabled
+  <a href="#repository-metadata" class="md-nav__link">
+    Repository Metadata
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#automated-security-fixes-enabled" class="md-nav__link">
-    Automated Security Fixes Enabled
+  <a href="#vulnerability-dependabot-alerts-enabled" class="md-nav__link">
+    Vulnerability (Dependabot) Alerts Enabled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-security-fixes-enabled-dependabot" class="md-nav__link">
+    Automated Security Fixes Enabled (Dependabot)
   </a>
   
 </li>
@@ -474,15 +496,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#gitleaks-report" class="md-nav__link">
-    Gitleaks Report
+  <a href="#has-dependabotyaml" class="md-nav__link">
+    Has dependabot.yaml
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#file-size-check" class="md-nav__link">
-    File Size Check
+  <a href="#gitleaks-report-secret-scanning" class="md-nav__link">
+    Gitleaks Report - secret scanning
   </a>
   
 </li>
@@ -501,6 +523,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#file-size-check" class="md-nav__link">
+    File Size Check
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -510,6 +539,19 @@
   <a href="#url-service-scanning-checks" class="md-nav__link">
     URL (Service) Scanning Checks
   </a>
+  
+    <nav class="md-nav" aria-label="URL (Service) Scanning Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#web-endpoint" class="md-nav__link">
+    web-endpoint
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -578,15 +620,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#vulnerability-alerts-enabled" class="md-nav__link">
-    Vulnerability Alerts Enabled
+  <a href="#repository-metadata" class="md-nav__link">
+    Repository Metadata
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#automated-security-fixes-enabled" class="md-nav__link">
-    Automated Security Fixes Enabled
+  <a href="#vulnerability-dependabot-alerts-enabled" class="md-nav__link">
+    Vulnerability (Dependabot) Alerts Enabled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-security-fixes-enabled-dependabot" class="md-nav__link">
+    Automated Security Fixes Enabled (Dependabot)
   </a>
   
 </li>
@@ -619,15 +668,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#gitleaks-report" class="md-nav__link">
-    Gitleaks Report
+  <a href="#has-dependabotyaml" class="md-nav__link">
+    Has dependabot.yaml
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#file-size-check" class="md-nav__link">
-    File Size Check
+  <a href="#gitleaks-report-secret-scanning" class="md-nav__link">
+    Gitleaks Report - secret scanning
   </a>
   
 </li>
@@ -646,6 +695,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#file-size-check" class="md-nav__link">
+    File Size Check
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -655,6 +711,19 @@
   <a href="#url-service-scanning-checks" class="md-nav__link">
     URL (Service) Scanning Checks
   </a>
+  
+    <nav class="md-nav" aria-label="URL (Service) Scanning Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#web-endpoint" class="md-nav__link">
+    web-endpoint
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -724,22 +793,120 @@
 <p>The sections below expand on each Check Type in greater detail, and also show the parts of our GraphQL schema that expose these Check Types.</p>
 <h2 id="remote-repository-checks">Remote Repository Checks</h2>
 <p>There are many idioms, best practices, and security requirements for remote source code repositories. Observatory automatically performs a number of these checks using information retrievable from the <a href="https://github.com/octokit/octokit.js">GitHub Octokit API</a>.</p>
-<h3 id="vulnerability-alerts-enabled">Vulnerability Alerts Enabled</h3>
-<blockquote>
-<p>TODO</p>
-</blockquote>
-<h3 id="automated-security-fixes-enabled">Automated Security Fixes Enabled</h3>
-<blockquote>
-<p>TODO</p>
-</blockquote>
+<h3 id="repository-metadata">Repository Metadata</h3>
+<p>The following items are extracted with the GitHub Octokit API during each scan:</p>
+<p><strong>Data Example</strong>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+    // ...
+  endpoint: {
+    url: &quot;https://github.com/PHACDataHub/ruok-service-autochecker&quot;
+    kind: &quot;Github&quot;
+    owner: &quot;PHACDataHub&quot;
+    repo: &quot;ruok-service-autochecker&quot;
+    license: &quot;MIT&quot;
+    visibility: &quot;public&quot;
+    programmingLanguage: [&quot;JavaScript&quot;, &quot;Dockerfile&quot;, &quot;Makefile&quot;, &quot;HTML&quot;, &quot;TypeScript&quot;, &quot;CSS&quot;, &quot;Python&quot;]
+  }
+  // ...
+}
+</code></pre></div></td></tr></table></div></p>
+<p>Note - the programming languages are ordered most to least frequently occuring, and the plan is to use this for future language specific checks. </p>
+<h3 id="vulnerability-dependabot-alerts-enabled">Vulnerability (Dependabot) Alerts Enabled</h3>
+<p>This checks whether GitHub (Dependabot) vunerability alerts have been enabled.  The repository can be configured to have Dependabot alerts sent when your repository uses an insecure dependency. There's no metadata for this check.</p>
+<p><strong>Remediation</strong></p>
+<p>Follow <a href="https://docs.github.com/en/code-security/dependabot/dependabot-alerts/configuring-dependabot-alerts">these directions</a> to configure the alerts for your project repository.  </p>
+<p><strong>Data Example</strong>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+  // ...
+  vunerability_alerts: {
+    check_passes: false,
+    metadata: (empty object)
+    }
+  }
+  // ...
+}
+</code></pre></div></td></tr></table></div></p>
+<p><strong>Pass Criteria</strong> </p>
+<p>Dependabot alerts are enabled.</p>
+<h3 id="automated-security-fixes-enabled-dependabot">Automated Security Fixes Enabled (Dependabot)</h3>
+<p>Dependabot can be configured to automatically pull request to resolve dependabot alerts if there's a patch. </p>
+<p><strong>Data Example</strong>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+  // ...
+  automatedSecurityFixes: {
+    checkPasses: false
+    metadata: {
+      enabled: false
+      paused: false
+    }
+  },
+  // ...
+}
+</code></pre></div></td></tr></table></div></p>
+<p><a href="https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates">Configure Dependabot</a> to automaticallly create pull requests. </p>
 <h3 id="branch-protection-enabled">Branch Protection Enabled</h3>
-<blockquote>
-<p>TODO</p>
-</blockquote>
+<p>Particular branches (generally master or main) can have <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches">protection</a> through rules defined to restrict how code can be pushed to that branch. For example, this could require pull request reviews before merging.</p>
+<p><strong>Remediation</strong></p>
+<p><a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule#creating-a-branch-protection-rule">Create a branch protection rule</a> to prevent anyone from pushing to the main branch that is used for deployment. </p>
+<p><strong>Data Example</strong></p>
+<p><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+  // ...
+  branchProtection: {
+    checkPasses: false
+    metadata: {
+      branches: [&quot;clean-octokit-webendpoint&quot;, &quot;container-trivy-scan&quot;, &quot;feat-trivy&quot;, &quot;gh-pages&quot;, &quot;main&quot;, &quot;moving-services&quot;, &quot;ui&quot;, &quot;ui-server&quot;]
+      rules: [&quot;&quot;]
+    }
+    // ...
+  }
+}
+</code></pre></div></td></tr></table></div>
+<strong>Pass Criteria</strong> </p>
+<p>A branch protection rule has been found.</p>
 <h2 id="repository-content-checks">Repository Content Checks</h2>
 <p>A number of checks are performed by scanning a deep clone of the repository's contents. The purpose of these checks is to perform scanning on all of the source code, configuration, etc. contained in the repository.</p>
 <h3 id="has-securitymd">Has <code>Security.md</code></h3>
-<p>A best practice with any open source code repository is to provide instructions via a <code>Security.md</code> file at the project root for how security vulnerabilities should be reported (see <a href="https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository">GitHub's code security documentation</a> for more information). This check verifies whether a repository contains a <code>Security.md</code> file.</p>
+<p>A best practice with any open source code repository is to provide instructions via a <code>Security.md</code> file at the project root for how security vulnerabilities should be reported (see <a href="https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository">GitHub's code security documentation</a> for more information). This check verifies whether a repository contains a <code>Security</code> file.</p>
 <p><strong>Remediation</strong></p>
 <p>Include a file called <code>Security.md</code> at the root of your repository explaining how security vulnerabilities should be reported to the repository owner. For example, there may be an email address where vulnerability reports should be sent, and explicit instructions to <em>not</em> document security vulnerabilities in the repository issues.</p>
 <p><strong>Data Example</strong></p>
@@ -751,18 +918,41 @@
 <span class="normal">6</span>
 <span class="normal">7</span>
 <span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code>{
-    // ...
-    &quot;has_security_md&quot;:{
-        &quot;check_passes&quot;: true,
-        &quot;metadata&quot;: null,
-    }
-    // ...
+  // ...
+  &quot;has_security_md&quot;:{
+      &quot;check_passes&quot;: true,
+      &quot;metadata&quot;: (empty object)
+  }
+  // ...
 }
 </code></pre></div></td></tr></table></div>
-<strong>Pass Criteria</strong> 
-A SECURITY.md, txt or rtf (not-case-sensitive) file is at the root of the GitHub repository. 
+<strong>Pass Criteria</strong> </p>
+<p>A SECURITY.md, txt or rtf (non-case-sensitive) file is at the root of the GitHub repository. 
 <strong>metadata</strong> for this will always be null.</p>
-<h3 id="gitleaks-report">Gitleaks Report</h3>
+<h3 id="has-dependabotyaml">Has <code>dependabot.yaml</code></h3>
+<p>Dependabot is GitHub's dependency vunerability scanner. It uses the configuration outlined in the dependabot.yml file and usually resides in the <code>.github</code> folder.  </p>
+<p><strong>Remediation</strong></p>
+<p>Add the dependabot.yml. <a href="https://docs.github.com/en/code-security/getting-started/dependabot-quickstart-guide">Here's</a> some documentation.  </p>
+<p><strong>Data Example</strong></p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+  // ...
+  &quot;has_dependabot.yaml&quot;:{
+      &quot;check_passes&quot;: true,
+      &quot;metadata&quot;: (empty object)
+  }
+  // ...
+}
+</code></pre></div></td></tr></table></div>
+<p><strong>Pass Criteria</strong> </p>
+<p>A dependabot.yml or yaml resides in your GitHub repository.  <strong>metadata</strong> will always be null. (Note - it is possible to turn dependabot on through the GitHub GUI - settings, security, but it's best practices to include the yml for full transparency.)</p>
+<h3 id="gitleaks-report-secret-scanning">Gitleaks Report - secret scanning</h3>
 <p><a href="https://github.com/gitleaks/gitleaks">Gitleaks</a> detects if secrets that have been commited at any point in the repository's history.  </p>
 <p><strong>Remediation</strong></p>
 <p>Remove the leak from the <a href="https://blog.gitguardian.com/rewriting-git-history-cheatsheet/">commit history</a>.</p>
@@ -810,7 +1000,7 @@ A SECURITY.md, txt or rtf (not-case-sensitive) file is at the root of the GitHub
             end_line: 28,
             start_column: 14,
             end_column: 53
-            commit: &#39;29c1850108f543f5eaab26ed052508fa0b45bb74&#39;,
+            commit: &#39;29c1850108f543f5eaab26ed052508fa0b45bb7&#39;,
             author: &#39;=&#39;,
             email: &#39;my.email@gmail.com&#39;,
         },
@@ -821,10 +1011,8 @@ A SECURITY.md, txt or rtf (not-case-sensitive) file is at the root of the GitHub
       // ...
 }
 </code></pre></div></td></tr></table></div></p>
-<h3 id="file-size-check">File Size Check</h3>
-<blockquote>
-<p>TODO</p>
-</blockquote>
+<p><strong>Pass Criteria</strong> </p>
+<p>No secrets have been found in history of repository. </p>
 <h3 id="hadolint-dockerfile-linting"><code>Hadolint</code> Dockerfile Linting</h3>
 <p><a href="https://github.com/hadolint/hadolint"><code>Hadolint</code></a> is a linter for Dockerfiles. This scanner analyzes the Dockerfiles in the source code repository, and flags any best practices rules that have been broken. </p>
 <p><strong>Remediation</strong></p>
@@ -892,6 +1080,8 @@ A SECURITY.md, txt or rtf (not-case-sensitive) file is at the root of the GitHub
       // ...
     }
 </code></pre></div></td></tr></table></div></p>
+<p><strong>Pass Criteria</strong> </p>
+<p>No linting rules broken for all Dockerfiles within the repository. </p>
 <h3 id="trivy-repository-vunerability-scanning"><code>Trivy</code> Repository Vunerability Scanning</h3>
 <p><a href="https://github.com/aquasecurity/trivy"><code>Trivy</code></a> is a security scanner we're using in this case to scan software dependencies against known vunerabilities.  It offers a remote Git repository scanner, that works for public repositories. Since we have some private repositories, we're using the filesystem scan on the cloned repository instead. </p>
 <p><strong>Remediation</strong></p>
@@ -953,11 +1143,98 @@ A SECURITY.md, txt or rtf (not-case-sensitive) file is at the root of the GitHub
   // ...
 }
 </code></pre></div></td></tr></table></div></p>
+<p><strong>Pass Criteria</strong> </p>
+<p>No vunerabilities captured by trivy have been found in the repository. </p>
+<h3 id="file-size-check">File Size Check</h3>
 <blockquote>
 <p>TODO</p>
 </blockquote>
 <h2 id="url-service-scanning-checks">URL (Service) Scanning Checks</h2>
 <p>Some products have one or more services exposed through URLs. URL compliance checks perform a series of automated accessibility and security compliance checks using information that can be retrieved via these public URLs.</p>
+<h3 id="web-endpoint">web-endpoint</h3>
+<p><a href="https://pptr.dev/">Puppeteer</a> is used for an accessibility scan. For the Observatory use case, if the accessibility check is non-applicable, check_passes is set to null, </p>
+<p><strong>Data Example</strong>
+(Though this is not complete, it runs through many, many checks.)</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code>  accessibility: [
+    {
+      url: &quot;https://some-webapp.canada.ca/about&quot;,
+      areaAlt: {
+          check_passes: null,
+          metadata: {
+              description: &quot;Ensures &lt;area&gt; elements of image maps have alternate text&quot;,
+              helpUrl: &quot;https://dequeuniversity.com/rules/axe/4.8/area-alt?application=axe-puppeteer&quot;
+          }
+      },
+      ariaBrailleEquivalent: {
+          check_passes: &quot;false&quot;,
+          metadata: {
+              description: &quot;Ensure aria-braillelabel and aria-brailleroledescription have a non-braille equivalent&quot;,
+              helpUrl: &quot;https://dequeuniversity.com/rules/axe/4.8/aria-braille-equivalent?application=axe-puppeteer&quot;
+          }
+      },
+      ariaCommandName: {
+          check_passes: null,
+          metadata: {
+              description: &quot;Ensures every ARIA button, link and menuitem has an accessible name&quot;,
+              helpUrl: &quot;https://dequeuniversity.com/rules/axe/4.8/aria-command-name?application=axe-puppeteer&quot;
+          }
+      },
+      ariaHiddenFocus: {
+          check_passes: &quot;true&quot;,
+          metadata: {
+              description: &quot;Ensures aria-hidden elements are not focusable nor contain focusable elements&quot;,
+              helpUrl: &quot;https://dequeuniversity.com/rules/axe/4.8/aria-hidden-focus?application=axe-puppeteer&quot;
+          }
+      },
+      ariaMeterName: {
+          check_passes: &quot;incomplete&quot;,
+          metadata: {
+              description: &quot;Ensures every ARIA meter node has an accessible name&quot;,
+              helpUrl: &quot;https://dequeuniversity.com/rules/axe/4.8/aria-meter-name?application=axe-puppeteer&quot;
+          }
+      }
+    }
+  ]
+</code></pre></div></td></tr></table></div>
 <h2 id="container-image-checks">Container Image Checks</h2>
 <p>Any products that build and deploy OCI images perform a series of checks on the built image artifact(s).</p>
 
