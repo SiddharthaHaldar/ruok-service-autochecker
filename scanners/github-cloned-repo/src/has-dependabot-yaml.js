@@ -1,14 +1,13 @@
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
-import { searchForFile } from './searching-functions.js'
+import { glob } from 'glob'
+import path from 'path';
 
 export async function hasDependabotYaml(clonedRepoPath) {
-    // searchForFile returns array of found file paths
-    const dependabotFile = searchForFile(clonedRepoPath, "dependabot.y") // accounting for both .yaml and .yml
-    if (dependabotFile.length > 0) {
-        return true
-    } else {
-        return false
-    }
+    // search dependabot.yaml or dependabot.yml anywhere in path
+    const dependabotFile = glob.sync(path.join(clonedRepoPath, '**', 'dependabot.y*')); 
+    // console.log('******************************', dependabotFile)
+    // console.log(dependabotFile.length > 0)
+    return dependabotFile.length > 0;
 } 
 
 export class HasDependabotYaml extends CheckOnClonedRepoInterface {
@@ -22,7 +21,7 @@ export class HasDependabotYaml extends CheckOnClonedRepoInterface {
         return {
             checkPasses: hasDependabotYamlResult,
             metadata: null,
-            lastUpdated: Date.now()
+            // lastUpdated: Date.now()
         }
     }
 }

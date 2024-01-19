@@ -1,14 +1,19 @@
-// github-cloned-has-tests-directory/src/has-tests-directory.js
+// github-cloned-repo/src/has-tests-directory.js
 import { CheckOnClonedRepoInterface } from './check-on-cloned-repo-interface.js'
-import { searchForDirectory } from './searching-functions.js';
+import * as glob from 'glob';
 
 export async function findTestsPaths(repoPath) {
-  // Returns paths of folders containing 'tests' in the name
-  const fullTestDirectoryPaths = searchForDirectory(repoPath, "tests");
+  // all directories with 'test' in the name
+  const pattern = `${repoPath}/**/*test*`;
+  const fullTestDirectoryPaths = glob.sync(pattern, { onlyDirectories: true });
+
+  // Map the paths to repo-scoped paths
   const scopedTestDirectoryPaths = fullTestDirectoryPaths.map(dir => {
-    const repoScopedPath = dir.split('/').slice(3).join('/'); // removing ./temp-cloned-repo/${repo}
+    const repoScopedPath = dir.split('/').slice(2).join('/');  //TODO - revisit (have changed from 3-2, need to confirm this is correct?)
+    // console.log('**************************************',repoScopedPath)
     return repoScopedPath;
   });
+
   return scopedTestDirectoryPaths;
 }
 
@@ -22,8 +27,8 @@ export class HasTestsDirectory extends CheckOnClonedRepoInterface {
       const testDirectories = await findTestsPaths(this.clonedRepoPath)
       return {
         checkPasses:  (testDirectories?.length ?? 0) > 0,
-        metadata: testDirectories === undefined ? null : {testDirectoryPaths: testDirectories},
-        lastUpdated: Date.now()
+        metadata: (testDirectories === undefined || testDirectories.length === 0) ? null : { testDirectoryPaths: testDirectories }, // returns null unless test-dir found 
+        // lastUpdated: Date.now()
     }
   }
 }

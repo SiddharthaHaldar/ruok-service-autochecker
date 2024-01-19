@@ -1,67 +1,91 @@
+import { HasSecurityMd  } from '../has-security-md.js';
+import { tmpdir } from 'os';
+import { join } from 'path';
+// import { promises as fsPromises} from 'fs';
+import * as fse from 'fs-extra';
+import * as fs from 'fs'
 
-import * as fs from 'fs';
-import { searchForFile, hasSecurityMd  } from '../wipe-later/old-separated-scanners/github-cloned-has-security-md-check/src/has-security-md.js';
 
-describe('searchForFile function', () => {
-    let testDirectory;
+describe('HasSecurityMd', () => {
+    let testRepoPath;
 
-    beforeAll(() => {
-        // create a temporary test directory and test files
-        testDirectory = './src/__tests__/temp-test-directory';
-        fs.mkdirSync(testDirectory, { recursive: true });
-        fs.writeFileSync(`${testDirectory}/file1.txt`, '');
-        fs.writeFileSync(`${testDirectory}/file2.txt`, '');
-        fs.mkdirSync(`${testDirectory}/subdir`);
-        fs.writeFileSync(`${testDirectory}/subdir/file3.txt`, '');
+    // beforeEach(async () => {
+    //     // Set up temp dir
+    //     testRepoPath = join(tmpdir(), `test-repo-${Date.now()}`); 
+    //     await fsPromises.mkdir(testRepoPath, { recursive: true });
+    //     await fsPromises.mkdir(`${testRepoPath}/docs`, { recursive: true });
+    //   });
+    
+    // afterEach(async () => {
+    //   await fsPromises.rm(testRepoPath, { recursive: true, force: true });
+    // });
+
+    beforeEach(() => {
+        testRepoPath = join(tmpdir(), `test-repo-${Date.now()}`); 
+        fse.ensureDirSync(testRepoPath);
+      });
+    
+      afterEach(() => {
+          if (fs.existsSync(testRepoPath)) {
+            // fs.rmSync(testRepoPath, { recursive: true, force: true });
+            fs.rmSync(testRepoPath, { recursive: true});
+          }
+      });
+
+
+    it('should pass if a security.md file is found (anywhere in repo)', async () => {
+        const repoName = 'test-repo';
+        // await fsPromises.writeFile(`${testRepoPath}/docs/security.md`, 'Test content'); // create secrurity.md file
+        fse.ensureDirSync(`${testRepoPath}/docs`);
+        fs.writeFileSync(`${testRepoPath}/docs/security.md`, 'Test content'); // create security.md file
+
+        const checker = new HasSecurityMd(repoName, testRepoPath); // initialize has security md checker
+        const result = await checker.doRepoCheck();
+
+        expect(result.checkPasses).toBeTruthy();
     });
 
-    afterAll(() => {
-        // clean up
-        fs.rmdirSync(testDirectory, { recursive: true });
+    it('should pass if an uppercase SECURITY.md file is found', async () => {
+        const repoName = 'test-repo';
+        // await fsPromises.writeFile(`${testRepoPath}/security.md`, 'Test content');
+        fs.writeFileSync(`${testRepoPath}/security.md`, 'Test content');
+
+        const checker = new HasSecurityMd(repoName, testRepoPath);
+        const result = await checker.doRepoCheck();
+
+        expect(result.checkPasses).toBeTruthy();
     });
 
-    it('should find files with a given name', () => {
-        const foundFiles = searchForFile(testDirectory, 'file1.txt');
+    it('should pass if a non-markdown SECURITY (txt or rtf)file is found', async () => {
+        const repoName = 'test-repo';
+        // await fsPromises.writeFile(`${testRepoPath}/SECURITY.txt`, 'Test content');
+        fs.writeFileSync(`${testRepoPath}/SECURITY.txt`, 'Test content');
 
-        expect(foundFiles).toHaveLength(1);
-        expect(foundFiles).toContain(`${testDirectory}/file1.txt`);
+        const checker = new HasSecurityMd(repoName, testRepoPath);
+        const result = await checker.doRepoCheck();
+
+        expect(result.checkPasses).toBeTruthy();
     });
 
-    it('should return an empty array if no files match', () => {
-        const foundFiles = searchForFile(testDirectory, 'nonexistent.txt');
+    it('should pass if a (non-extentioned) security file is found', async () => {
+        const repoName = 'test-repo';
+        // await fsPromises.writeFile(`${testRepoPath}/security`, 'Test content');
+        fs.writeFileSync(`${testRepoPath}/security`, 'Test content');
 
-        expect(foundFiles).toHaveLength(0);
+        const checker = new HasSecurityMd(repoName, testRepoPath);
+        const result = await checker.doRepoCheck();
+
+        expect(result.checkPasses).toBeFalsy();
     });
+    
+
+    it('should fail if no security.md file is found', async () => { 
+        // Have not added security.md file
+        const repoName = 'test-repo';
+        const checker = new HasSecurityMd(repoName, testRepoPath);
+        const result = await checker.doRepoCheck();
+        
+        expect(result.checkPasses).toBeFalsy();
+    });
+
 });
-
-describe('hasSecurityMd function', () => {
-    let testDirectory;
-
-    beforeAll(() => {
-        // Create a temporary test directory and SECURITY.md file
-        testDirectory = './temp-test-directory';
-        fs.mkdirSync(testDirectory, { recursive: true });
-        fs.writeFileSync(`${testDirectory}/SECURITY.md`, '');
-    });
-
-    afterAll(() => {
-        // Clean up the temporary test directory
-        fs.rmdirSync(testDirectory, { recursive: true });
-    });
-
-    it('should return true if a SECURITY.md file exists', async () => {
-        const securityMdFound = await hasSecurityMd(testDirectory);
-
-        expect(securityMdFound).toBe(true);
-    });
-
-    it('should return false if no SECURITY.md file exists', async () => {
-        // Delete the SECURITY.md file to simulate absence
-        fs.unlinkSync(`${testDirectory}/SECURITY.md`);
-        const securityMdFound = await hasSecurityMd(testDirectory);
-
-        expect(securityMdFound).toBe(false);
-    });
-});
-
-
