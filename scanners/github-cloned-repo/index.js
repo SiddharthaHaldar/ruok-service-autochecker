@@ -68,7 +68,8 @@ process.on('SIGINT', () => process.exit(0))
                         kind: "Github"
                         owner: "${orgName}"
                         repo: "${repoName}"
-                        api: ${results.hasApiDirectory.checkPasses? results.hasApiDirectory.checkPasses : null}
+                        api: ${results.hasApiDirectory.checkPasses}
+                        
                         hasSecurityMd: {
                             checkPasses: ${results.hasSecurityMd.checkPasses}
                             metadata: ${results.hasSecurityMd.metadata}
@@ -87,6 +88,7 @@ process.on('SIGINT', () => process.exit(0))
                         }
                         trivyRepoVulnerability: {
                             checkPasses: ${results.trivy_repo_vulnerability ? results.trivy_repo_vulnerability.checkPasses : null}
+
                             metadata: ${results.trivy_repo_vulnerability && results.trivy_repo_vulnerability.metadata !== undefined ?
                                 JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:') :
                                 null
@@ -129,3 +131,4 @@ await nc.closed();
 // metadata: ${JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
 
 // checkPasses: ${JSON.stringify(results.gitleaks.checkPasses, null, 4).replace(/"([^"]+)":/g, '$1:')}
+//                        api: ${results.hasApiDirectory.checkPasses? results.hasApiDirectory.checkPasses : null}
