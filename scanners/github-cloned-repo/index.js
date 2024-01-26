@@ -53,7 +53,7 @@ process.on('SIGINT', () => process.exit(0))
             const check = await initializeChecker(checkName, repoName, repoPath)
             const results = await check.doRepoCheck()
 
-            // console.log('Scan Results:',results)
+            console.log('Scan Results:',results)
  
             // Mutation to add a graph for the new endpoints
             // TODO: refactor this into a testable query builder function
@@ -68,25 +68,29 @@ process.on('SIGINT', () => process.exit(0))
                         kind: "Github"
                         owner: "${orgName}"
                         repo: "${repoName}"
+                        api: ${results.hasApiDirectory.checkPasses? results.hasApiDirectory.checkPasses : null}
                         hasSecurityMd: {
                             checkPasses: ${results.hasSecurityMd.checkPasses}
-                            metadata: {}
+                            metadata: ${results.hasSecurityMd.metadata}
                         },
                         hasDependabotYaml: {
                             checkPasses: ${results.hasDependabotYaml.checkPasses}
-                            metadata: {}
+                            metadata: ${results.hasDependabotYaml.metadata}
                         },
                         gitleaks: {
-                            checkPasses: ${JSON.stringify(results.gitleaks.checkPasses, null, 4).replace(/"([^"]+)":/g, '$1:')}
-                            metadata: ${JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+                            checkPasses: ${results.gitleaks ? results.gitleaks.checkPasses : null}
+                            metadata: ${results.gitleaks ? JSON.stringify(results.gitleaks.metadata, null, 4).replace(/"([^"]+)":/g, '$1:') : {}}
                         },
                         hadolint: {
-                            checkPasses: ${results.hadolint.checkPasses}
+                            checkPasses: ${results.hadolint ? results.hadolint.checkPasses : null}
                             metadata: ${JSON.stringify(results.hadolint.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
                         }
                         trivyRepoVulnerability: {
-                            checkPasses: ${results.trivy_repo_vulnerability.checkPasses}
-                            metadata: ${JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+                            checkPasses: ${results.trivy_repo_vulnerability ? results.trivy_repo_vulnerability.checkPasses : null}
+                            metadata: ${results.trivy_repo_vulnerability && results.trivy_repo_vulnerability.metadata !== undefined ?
+                                JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:') :
+                                null
+                            }
                         }                       
                     }
                 )
@@ -113,3 +117,15 @@ process.on('SIGINT', () => process.exit(0))
 await nc.closed();
 
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/ruok-service-autochecker\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/acm-core\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/it33-filtering\"}"
+
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-bots\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/pelias-canada\"}"
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/safe-inputs\"}"
+
+
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/csi-projects\"}"
+// metadata: ${JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+
+// checkPasses: ${JSON.stringify(results.gitleaks.checkPasses, null, 4).replace(/"([^"]+)":/g, '$1:')}

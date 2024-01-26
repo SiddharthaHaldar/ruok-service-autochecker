@@ -3,8 +3,8 @@
 import { OctokitCheckStrategy } from './octokit-check-strategy.js'
 
 export class VunerabilityAlertsEnabledStrategy extends OctokitCheckStrategy {
-    constructor(repoName, owner, octokit, branchName = 'main') {
-        super(repoName, owner, octokit, branchName);
+    constructor(repoName, owner, octokit) {
+        super(repoName, owner, octokit);
 
         this.endpoint = '/repos/{owner}/{repo}/vulnerability-alerts'
         this.options = {
@@ -21,13 +21,15 @@ export class VunerabilityAlertsEnabledStrategy extends OctokitCheckStrategy {
             const response = await this.makeOctokitRequest();
             if (response.status == 204) {
                 return {
-                    checkPasses: true 
+                    checkPasses: true, 
+                    metadata: null
                 }   
             }
         } catch (error) {
             if (error.message == 'Vulnerability alerts are disabled.'){
                 return {
                     checkPasses: false,
+                    metadata: null
                 }  
             } else {
                 throw {
