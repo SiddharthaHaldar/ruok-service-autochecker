@@ -455,6 +455,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    API
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#vulnerability-dependabot-alerts-enabled" class="md-nav__link">
     Vulnerability (Dependabot) Alerts Enabled
   </a>
@@ -622,6 +629,13 @@
           <li class="md-nav__item">
   <a href="#repository-metadata" class="md-nav__link">
     Repository Metadata
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    API
   </a>
   
 </li>
@@ -808,13 +822,15 @@
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code>{
     // ...
   endpoint: {
     url: &quot;https://github.com/PHACDataHub/ruok-service-autochecker&quot;
     kind: &quot;Github&quot;
     owner: &quot;PHACDataHub&quot;
     repo: &quot;ruok-service-autochecker&quot;
+    description: &quot;Automatically scans existing PHAC (GCP) services to provide visibility on endpoints and standards.&quot; 
     license: &quot;MIT&quot;
     visibility: &quot;public&quot;
     programmingLanguage: [&quot;JavaScript&quot;, &quot;Dockerfile&quot;, &quot;Makefile&quot;, &quot;HTML&quot;, &quot;TypeScript&quot;, &quot;CSS&quot;, &quot;Python&quot;]
@@ -823,6 +839,20 @@
 }
 </code></pre></div></td></tr></table></div></p>
 <p>Note - the programming languages are ordered most to least frequently occuring, and the plan is to use this for future language specific checks. </p>
+<h3 id="api">API</h3>
+<p>Note, this 'check' will need to be further developed in the future. At the moment, it searches a cloned GitHub repository for the presence of a directory containing case-insensitive 'api' anywhere in the string. Though this check collects the check_passes or metadata feilds at the moment it returns only a boolean, as some of these services aren't intended to have APIs.</p>
+<p>This field can be used in the future to evaluate a segment of interoperability.</p>
+<p><strong>Data Example</strong>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+  // ...
+  api: true
+  // ...
+}
+</code></pre></div></td></tr></table></div></p>
 <h3 id="vulnerability-dependabot-alerts-enabled">Vulnerability (Dependabot) Alerts Enabled</h3>
 <p>This checks whether GitHub (Dependabot) vunerability alerts have been enabled.  The repository can be configured to have Dependabot alerts sent when your repository uses an insecure dependency. There's no metadata for this check.</p>
 <p><strong>Remediation</strong></p>
@@ -840,7 +870,7 @@
   // ...
   vunerability_alerts: {
     check_passes: false,
-    metadata: (empty object)
+    metadata: null
     }
   }
   // ...
@@ -874,8 +904,11 @@
 }
 </code></pre></div></td></tr></table></div></p>
 <p><a href="https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates">Configure Dependabot</a> to automaticallly create pull requests. </p>
+<p><strong>Pass Criteria</strong> </p>
+<p>Automated security fixes alerts are enabled.</p>
 <h3 id="branch-protection-enabled">Branch Protection Enabled</h3>
 <p>Particular branches (generally master or main) can have <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches">protection</a> through rules defined to restrict how code can be pushed to that branch. For example, this could require pull request reviews before merging.</p>
+<p>This pulls out all the rules set to true, rrequiredDeploymentEnvironments if non-empty, requiredApprovingReviewCount if greater than 0, and pattern - which is the branch to which the rules are applied. </p>
 <p><strong>Remediation</strong></p>
 <p><a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule#creating-a-branch-protection-rule">Create a branch protection rule</a> to prevent anyone from pushing to the main branch that is used for deployment. </p>
 <p><strong>Data Example</strong></p>
@@ -889,24 +922,48 @@
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code>{
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><code>{
   // ...
-  branchProtection: {
-    checkPasses: false
-    metadata: {
-      branches: [&quot;clean-octokit-webendpoint&quot;, &quot;container-trivy-scan&quot;, &quot;feat-trivy&quot;, &quot;gh-pages&quot;, &quot;main&quot;, &quot;moving-services&quot;, &quot;ui&quot;, &quot;ui-server&quot;]
-      rules: [&quot;&quot;]
+    branchProtection: {
+      checkPasses: true
+      metadata:  {
+        rules: [
+          {
+            branch: &quot;main&quot;,
+            dismissesStaleReviews: true,
+            requiresApprovingReviews: true,
+            requiresCommitSignatures: true,
+            requiresConversationResolution: true,
+            requiresLinearHistory: true,
+            requiresStatusChecks: true,
+            requiresStrictStatusChecks: true,
+            restrictsPushes: true,
+            requiredApprovingReviewCount: 1
+          }
+        ]
+      }
     }
-    // ...
-  }
+    // ... 
 }
 </code></pre></div></td></tr></table></div>
 <strong>Pass Criteria</strong> </p>
-<p>A branch protection rule has been found.</p>
+<p>At least one branch protection rule has been found.</p>
 <h2 id="repository-content-checks">Repository Content Checks</h2>
 <p>A number of checks are performed by scanning a deep clone of the repository's contents. The purpose of these checks is to perform scanning on all of the source code, configuration, etc. contained in the repository.</p>
 <h3 id="has-securitymd">Has <code>Security.md</code></h3>
-<p>A best practice with any open source code repository is to provide instructions via a <code>Security.md</code> file at the project root for how security vulnerabilities should be reported (see <a href="https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository">GitHub's code security documentation</a> for more information). This check verifies whether a repository contains a <code>Security</code> file.</p>
+<p>A best practice with any open source code repository is to provide instructions via a <code>Security</code> file at the project root for how security vulnerabilities should be reported (see <a href="https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository">GitHub's code security documentation</a> for more information). This check verifies whether a repository contains a <code>Security</code> file.</p>
 <p><strong>Remediation</strong></p>
 <p>Include a file called <code>Security.md</code> at the root of your repository explaining how security vulnerabilities should be reported to the repository owner. For example, there may be an email address where vulnerability reports should be sent, and explicit instructions to <em>not</em> document security vulnerabilities in the repository issues.</p>
 <p><strong>Data Example</strong></p>
@@ -945,7 +1002,7 @@
   // ...
   &quot;has_dependabot.yaml&quot;:{
       &quot;check_passes&quot;: true,
-      &quot;metadata&quot;: (empty object)
+      &quot;metadata&quot;: null
   }
   // ...
 }
@@ -1081,7 +1138,7 @@
     }
 </code></pre></div></td></tr></table></div></p>
 <p><strong>Pass Criteria</strong> </p>
-<p>No linting rules broken for all Dockerfiles within the repository. </p>
+<p>No linting rules broken for any of the Dockerfiles within the repository. </p>
 <h3 id="trivy-repository-vunerability-scanning"><code>Trivy</code> Repository Vunerability Scanning</h3>
 <p><a href="https://github.com/aquasecurity/trivy"><code>Trivy</code></a> is a security scanner we're using in this case to scan software dependencies against known vunerabilities.  It offers a remote Git repository scanner, that works for public repositories. Since we have some private repositories, we're using the filesystem scan on the cloned repository instead. </p>
 <p><strong>Remediation</strong></p>
