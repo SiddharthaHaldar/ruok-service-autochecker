@@ -127,8 +127,11 @@ await nc.closed();
 // nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/data-catalog\"}"
 
 
-// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/csi-projects\"}"
-// metadata: ${JSON.stringify(results.trivy_repo_vulnerability.metadata, null, 4).replace(/"([^"]+)":/g, '$1:')}
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/cpho-phase2\"}"
 
-// checkPasses: ${JSON.stringify(results.gitleaks.checkPasses, null, 4).replace(/"([^"]+)":/g, '$1:')}
-//                        api: ${results.hasApiDirectory.checkPasses? results.hasApiDirectory.checkPasses : null}
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-bots\"}"
+
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/phac-dns\"}" 
+
+// nats pub "EventsScanner.githubEndpoints" "{\"endpoint\":\"https://github.com/PHACDataHub/django-phac_aspc-helpers\"}" 
+
