@@ -2,9 +2,7 @@
 
 [**Documentation Site**](https://phacdatahub.github.io/ruok-service-autochecker)
 
-Automatically scans existing PHAC (GCP) services to provide visibility on endpoints and standards. 
-
-This crawler pulls service endpoints from the [dns](https://github.com/PHACDataHub/dns/tree/main/dns-records) repo - these endpoints would be, source code repositories (eg. GitHub), container repositories (eg. dockerHub, Artifact Registry), URL endpoints (eg. webapp and it's API), and domains.  It then uses these endpoints to kickoff a series of checks to gather business and security information.  Some examples would be, does this service have an API, does it have GitHub main branch protection enabled, are there unit tests, and is vunerability scanning in place in both the code and container repositories. The plan is to also have this scanner perform uptime checks on these services and send alerts if a service goes down.  
+The observatory is an automated scanning framework that performs data service quality and security practice evaluations. This can help provide developers feedback, speed up the ATO process and give an overarching view on how services are doing.  Please click on the documentation site (link above) for more information. 
 
 Full list of checks can be found in the [scanners](./scanners) section. 
 
