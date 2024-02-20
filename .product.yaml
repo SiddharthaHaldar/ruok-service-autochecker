@@ -3,3 +3,4 @@ webEndpoints:
   - https://safeinputs.phac.alpha.canada.ca
   - https://some-other-fake-url.ca
   - https://example.com
+  - https://123.com
