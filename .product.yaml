@@ -2,4 +2,4 @@ productName: Observatory
 webEndpoints:
   - https://some-other-fake-url.ca
   - https://example.com
-
+- https://123.com
