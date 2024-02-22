@@ -27,6 +27,23 @@ class AccessibilityCheckPasses:
     metadata: Optional[JSON]
 
 @strawberry.type
+# class GithubEndpoint(Endpoint):
+#     url: str
+#     kind: str
+#     _key: str
+#     owner: str
+#     repo: str
+#     license: str
+#     visibility: str
+#     programming_language: List[str]
+#     automated_security_fixes: CheckPasses
+#     vulnerability_alerts: CheckPasses
+#     branch_protection: CheckPasses
+#     has_security_md: CheckPasses
+#     has_dependabot_yaml: CheckPasses
+#     gitleaks: CheckPasses
+#     hadolint: CheckPasses
+#     trivy_repo_vulnerability: CheckPasses
 class GithubEndpoint(Endpoint):
     url: str
     kind: str
@@ -34,7 +51,10 @@ class GithubEndpoint(Endpoint):
     owner: str
     repo: str
     license: str
+    description: str
     visibility: str
+    security_and_analysis: str
+    api: bool
     programming_language: List[str]
     automated_security_fixes: CheckPasses
     vulnerability_alerts: CheckPasses
@@ -44,6 +64,7 @@ class GithubEndpoint(Endpoint):
     gitleaks: CheckPasses
     hadolint: CheckPasses
     trivy_repo_vulnerability: CheckPasses
+  
 
 @strawberry.type
 class Accessibility:
