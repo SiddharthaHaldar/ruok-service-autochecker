@@ -18,24 +18,63 @@ class Query:
 
         # Example
 
-        ```graphql
-        query {
-            githubEndpoint(url: "https://github.com/someOrg/someRepo") {
-                url
-                kind
-                license
-                visibility
-                automatedSecurityFixes {
-                    checkPasses
-                    metadata
-                }
+    ```graphql
+    query {
+        githubEndpoint(url: "https://github.com/someOrg/someRepo") {
+            url
+            kind
+            owner
+            repo
+            description
+            visibility
+            license
+            api
+            securityAndAnalysis
+            programmingLanguage
+            automatedSecurityFixes {
+                checkPasses
+                metadata
+            }
+            vulnerabilityAlerts {
+                checkPasses
+                metadata
+            }
+            branchProtection {
+                checkPasses
+                metadata
+            }
+            hasSecurityMd {
+                checkPasses
+                metadata
+            }
+            hasDependabotYaml {
+                checkPasses
+                metadata
+            }
+            gitleaks {
+                checkPasses
+                metadata
+            }
+            hadolint {
+                checkPasses
+                metadata
+            }
+            trivyRepoVulnerability {
+                checkPasses
+                metadata
             }
         }
-        ```
-        """
+    }
+    ```
+    """
         client = GraphDB()
         endpoint = client.get_scanner_endpoint(url)
         client.close()
+
+        # if endpoint is None:
+        #     # Handle the case when endpoint is None
+        #     raise ValueError(f"No endpoint found for URL: {url}")
+
         # Remove unecessary db fields from the endpoint dict
         endpoint.pop("_id", None)
         endpoint.pop("_rev", None)
