@@ -27,6 +27,25 @@ class AccessibilityCheckPasses:
     metadata: Optional[JSON]
 
 @strawberry.type
+class GithubEndpoint(Endpoint):
+    url: str
+    kind: str
+    _key: str
+    owner: str
+    repo: str
+    license: Optional[str] = None
+    description: Optional[str] = None
+    visibility: Optional[str] = None
+    api: Optional[bool]= None
+    programming_language: Optional[List[str]] = None
+    automated_security_fixes: CheckPasses
+    vulnerability_alerts: Optional[CheckPasses] = None
+    branch_protection: Optional[CheckPasses] = None
+    has_security_md: Optional[CheckPasses] = None
+    has_dependabot_yaml: Optional[CheckPasses] = None
+    gitleaks: Optional[CheckPasses] = None  
+    hadolint: Optional[CheckPasses] = None 
+    trivy_repo_vulnerability: Optional[CheckPasses] = None
 # class GithubEndpoint(Endpoint):
 #     url: str
 #     kind: str
@@ -44,36 +63,6 @@ class AccessibilityCheckPasses:
 #     gitleaks: CheckPasses
 #     hadolint: CheckPasses
 #     trivy_repo_vulnerability: CheckPasses
-
-class GithubEndpoint(Endpoint):
-    url: str
-    kind: str
-    _key: str
-    owner: str
-    repo: str
-    license: Optional[str] = None
-    description: Optional[str] = None
-    visibility: Optional[str] = None
-    api: Optional[bool]= None
-    programming_language: Optional[List[str]] = None
-    automated_security_fixes: Optional[CheckPasses] = None
-    vulnerability_alerts: Optional[CheckPasses] = None
-    branch_protection: Optional[CheckPasses] = None
-    has_security_md: Optional[CheckPasses] = None
-    has_dependabot_yaml: Optional[CheckPasses] = None
-    gitleaks: Optional[CheckPasses] = None  
-    hadolint: Optional[CheckPasses] = None 
-    trivy_repo_vulnerability: Optional[CheckPasses] = None
-
-    # programming_language: List[str]
-    # automated_security_fixes: CheckPasses
-    # vulnerability_alerts: CheckPasses
-    # branch_protection: CheckPasses
-    # has_security_md: CheckPasses
-    # has_dependabot_yaml: CheckPasses
-    # gitleaks: CheckPasses
-    # hadolint: CheckPasses
-    # trivy_repo_vulnerability: CheckPasses
   
 
 @strawberry.type
