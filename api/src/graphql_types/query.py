@@ -71,14 +71,12 @@ class Query:
         endpoint = client.get_scanner_endpoint(url)
         client.close()
 
-        # if endpoint is None:
-        #     # Handle the case when endpoint is None
-        #     raise ValueError(f"No endpoint found for URL: {url}")
 
-        # Remove unecessary db fields from the endpoint dict
+        # Remove unnecessary db fields from the endpoint dict
         endpoint.pop("_id", None)
         endpoint.pop("_rev", None)
         return GithubEndpoint(**endpoint)
+
 
     @strawberry.field
     def github_endpoints(self, limit: int) -> List[GithubEndpoint]:
