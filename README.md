@@ -2,9 +2,19 @@
 
 [**Documentation Site**](https://phacdatahub.github.io/ruok-service-autochecker)
 
-The observatory is an automated scanning framework that performs data service quality and security practice evaluations. This can help provide developers feedback, speed up the ATO process and give an overarching view on how services are doing.  Please click on the documentation site (link above) for more information. 
+The Observatory is an automated, event-driven scanning framework for IT product/service endpoints (eg. GitHub repositories, URL, container registries). This is a currently proof-of-concept, and we’re hoping to align the relevant ITSG-33 controls with Observatory’s scanners’ checks, along with GCP metrics - to deliver on-going automated compliance and an ‘Auto-ATO’.
 
-The full list of checks can be found in the [scanners](./scanners) section. 
+## Scanners
+
+The full list of checks can be found in the [scanners](./scanners) section of the docs. Some of these are web accessibility checks, secret scanning, Dockerfile linting, and vulnerability scanning. 
+
+## Benefits
+
+-	Reduced risk of compromise, breaches, system downtime due to cyber issues
+-	Working towards automated compliance and an ‘Auto-ATO’  
+-	Better insights into libraries in use - for ease of maintenance and support
+-	Provide developer feedback to practice good security practices.
+-	Reduced cost and time to prod because of automated security assessment and authorization (ATO) 
 
 ## Application Architecture
 
