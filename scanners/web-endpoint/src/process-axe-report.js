@@ -18,6 +18,7 @@ export async function processAxeReport(pageInstance, pages, browser) {
       if (!webEndpointAxeResults[pageToEvaluate]) {
         webEndpointAxeResults[pageToEvaluate] = {}
       }
+      console.log(criterionValue.checkPasses);
       if (typeof criterionValue.checkPasses === 'boolean') {
         criterionValue.checkPasses = criterionValue.checkPasses.toString()
       }

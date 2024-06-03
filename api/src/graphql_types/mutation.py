@@ -3,6 +3,7 @@ import strawberry
 from typing import List
 
 from graphql_types.input_types import GithubEndpointInput, WebEndpointInput
+from graphql_types.typedef import GithubEndpoint
 from model import GraphDB
 
 
@@ -65,6 +66,7 @@ class Mutation:
         client = GraphDB()
         client.upsert_scanner_endpoint(endpoint)
         client.close()
+        print(endpoint)
         return endpoint.url
     
     @strawberry.mutation

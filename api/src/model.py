@@ -127,3 +127,10 @@ class GraphDB:
                     [v["url"] if "url" in v.keys() else v["_key"] for v in url_vertices]
                 )
         return list(unique_urls)
+
+    def get_all_edges(self):
+        return [edge for edge in self.edges.all()]
+
+    def get_all_endpoints(self):
+        # return [node['_key'] for node in self.nodes.all()]
+        return [node for node in self.nodes.all()]

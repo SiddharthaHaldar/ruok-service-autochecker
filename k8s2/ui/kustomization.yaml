@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ./ns-ui.yaml
+- ./deployment-ui-server.yaml
+- ./svc-ui-server.yaml
+- ./virtual-service.yaml
+- ./external-secret.yaml
+- ./oauth2-proxy.yaml
+patches:
+- target:
+    version: v1
+    kind: Deployment
+    name: ui-server
+    namespace: ui
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/image
+      value:
+        northamerica-northeast1-docker.pkg.dev/phx-01h8eq9sbx7d19zsvqk7t9zymr/observatory/ui:main-1886b8b-1700143480
+    - op: add
+      path: /spec/template/spec/containers/0/imagePullPolicy
+      value: Always

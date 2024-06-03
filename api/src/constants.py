@@ -12,8 +12,8 @@ class Settings(BaseSettings):
     DB_HOST: str = Field("http://127.0.0.1:8529")
 
     DB_NAME: str = Field("ruok")
-    USERNAME: str = Field("changeme")
-    PASSWORD: str = Field("changeme")
+    USERNAME: str = Field("root")
+    PASSWORD: str = Field("")
     GRAPH_NAME: str = Field("endpoints")
     VERTEX_COLLECTION: str = Field("endpointNodes")
     EDGE_COLLECTION: str = Field("endpointEdges")
