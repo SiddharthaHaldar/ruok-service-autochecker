@@ -14,7 +14,7 @@ import {
 import LocaleSwitcher from './LocaleSwitcher.js'
 import { Plural, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import EndpointsList from './components/EnpointsList.jsx'
+import EndpointsList from './components/EndpointsList.jsx'
 
 export default function App() {
   console.log(process.env.GRAPHQL_PORT)
@@ -33,41 +33,8 @@ export default function App() {
 
       <Container>
         <br></br>
-        {/* <Tabs.Root defaultValue="account">
-          <Tabs.List>
-            <Tabs.Trigger value="account">
-              <Trans>Account</Trans>
-            </Tabs.Trigger>
-            <Tabs.Trigger value="documents">
-              <Trans>Documents</Trans>
-            </Tabs.Trigger>
-            <Tabs.Trigger value="settings">
-              <Trans>Settings</Trans>
-            </Tabs.Trigger>
-          </Tabs.List>
-
-          <Box pt="3">
-            <Tabs.Content value="account">
-              <Text size="2">
-                <Trans>Make changes to your account.</Trans>
-              </Text>
-            </Tabs.Content>
-
-            <Tabs.Content value="documents">
-              <Text size="2">
-                <Trans>Access and update your documents.</Trans>
-              </Text>
-            </Tabs.Content>
-
-            <Tabs.Content value="settings">
-              <Text size="2">
-                <Trans>Edit your profile or update contact information.</Trans>
-              </Text>
-            </Tabs.Content>
-          </Box>
-        </Tabs.Root> */}
-        <Heading size="15" mb="2" trim="start">
-          RUOK Dashboard
+        <Heading size="8" mb="2" trim="start">
+          RUOK <Trans>Dashboard</Trans>
         </Heading>
         <EndpointsList/>
       </Container>

@@ -14,41 +14,57 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/Inbox.js:30
-msgid "{messagesCount, plural, one {There's # message in your inbox.} other {There are # messages in your inbox.}}"
-msgstr "{messagesCount, plural, one {Il y a # message dans boîte de réception.} other {Il y a # messages dans votre boîte de réception.}}"
+#~ msgid "{messagesCount, plural, one {There's # message in your inbox.} other {There are # messages in your inbox.}}"
+#~ msgstr "{messagesCount, plural, one {Il y a # message dans boîte de réception.} other {Il y a # messages dans votre boîte de réception.}}"
 
 #: src/App.js:52
-msgid "Access and update your documents."
-msgstr "Accédez à vos documents et mettez-les à jour."
+#~ msgid "Access and update your documents."
+#~ msgstr "Accédez à vos documents et mettez-les à jour."
 
 #: src/App.js:33
-msgid "Account"
-msgstr "Compte"
+#~ msgid "Account"
+#~ msgstr "Compte"
+
+#: src/App.js:37
+msgid "Dashboard"
+msgstr "Tableau de bord"
 
 #: src/App.js:36
-msgid "Documents"
-msgstr "Documents"
+#~ msgid "Documents"
+#~ msgstr "Documents"
 
 #: src/App.js:58
-msgid "Edit your profile or update contact information."
-msgstr "Modifiez votre profil ou mettez à jour vos coordonnées."
+#~ msgid "Edit your profile or update contact information."
+#~ msgstr "Modifiez votre profil ou mettez à jour vos coordonnées."
 
 #: src/Inbox.js:38
-msgid "Last login on {0}."
-msgstr "Dernière connexion le {0}."
+#~ msgid "Last login on {0}."
+#~ msgstr "Dernière connexion le {0}."
 
 #: src/App.js:46
-msgid "Make changes to your account."
-msgstr "Apportez des modifications à votre compte."
+#~ msgid "Make changes to your account."
+#~ msgstr "Apportez des modifications à votre compte."
 
 #: src/Inbox.js:20
-msgid "Message Inbox"
-msgstr "Boîte de réception de messages."
+#~ msgid "Message Inbox"
+#~ msgstr "Boîte de réception de messages."
+
+#: src/components/EndpointsList.jsx:104
+msgid "Refresh"
+msgstr "Rafraîchir"
+
+#: src/components/Endpoint.jsx:83
+msgid "Related Endpoints"
+msgstr "Points de terminaison associés"
+
+#: src/components/EndpointsList.jsx:99
+msgid "Scanned Endpoints"
+msgstr "Points de terminaison analysés"
 
 #: src/Inbox.js:23
-msgid "See all <0>unread messages </0>or <1>mark them</1> as read."
-msgstr "Voir tous <0>les messages non lus </0>ou <1>les marquer</1> comme lus."
+#~ msgid "See all <0>unread messages </0>or <1>mark them</1> as read."
+#~ msgstr "Voir tous <0>les messages non lus </0>ou <1>les marquer</1> comme lus."
 
 #: src/App.js:39
-msgid "Settings"
-msgstr "Paramètres"
+#~ msgid "Settings"
+#~ msgstr "Paramètres"
