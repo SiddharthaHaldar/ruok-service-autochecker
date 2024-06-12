@@ -2,14 +2,19 @@ import React from 'react';
 import { forwardRef, useRef, useImperativeHandle } from 'react';
 import { useQuery, gql, NetworkStatus } from "@apollo/client";
 import { Flex,Spinner } from '@radix-ui/themes';
+import { ChevronDownIcon, ReloadIcon, UpdateIcon, DoubleArrowRightIcon } from '@radix-ui/react-icons';
 import {
   Tabs,
   Box,
   Text,
-  Button
+  Button,
+  Badge
 } from '@radix-ui/themes';
 import { FETCH_GITHUB_URL_QUERY,FETCH_WEB_URL_QUERY,FETCH_RELATED_ENDPOINTS_QUERY } from '../GraphQL/query';
-import { Plural, Trans } from '@lingui/macro'
+import { Plural, Trans } from '@lingui/macro';
+import {AccordionContent,AccordionTrigger} from './Accordian/Accordian.jsx';
+import * as Accordion from '@radix-ui/react-accordion';
+import classNames from 'classnames';
 
 const Endpoint = forwardRef(
   function Endpoint({url,kind,openEndpoint,endpointsMap,allEndpoints},ref) {
@@ -38,6 +43,7 @@ const Endpoint = forwardRef(
     };
   }, []);
 
+  // console.log(endpoint.networkStatus,related_endpoints.networkStatus);
   if (endpoint.networkStatus === NetworkStatus.refetch) return <Spinner/>;
   if (endpoint.loading) return <Spinner/>;
   if (endpoint.error) return <pre>{error.message}</pre>
@@ -54,34 +60,76 @@ const Endpoint = forwardRef(
   }
 
   function renderRelatedEndpoints(){
+    console.log("related endpoints")
+    // const na = <Badge color="orange" size="3">N/A</Badge>;
+    if(related_endpoints.data.endpoints.length > 1){
     return <ul key="ul" style={{listStyleType:'none',paddingLeft: '0px'}}>
-      {related_endpoints.data.endpoints.map((el,i)=>(
-            <section className='endpoint' onClick={()=>attachKindandOpenEndpoint(el)}  >
-                <section > 
-                  <Flex width="100%" justify="between" >
-                      <Flex justify="center" direction="column">
-                        <li key={i} className='endpointText'>{el.url}</li>
-                      </Flex>
-                      <Flex justify="end">
-                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.14645 11.1464C1.95118 11.3417 1.95118 11.6583 2.14645 11.8536C2.34171 12.0488 2.65829 12.0488 2.85355 11.8536L6.85355 7.85355C7.04882 7.65829 7.04882 7.34171 6.85355 7.14645L2.85355 3.14645C2.65829 2.95118 2.34171 2.95118 2.14645 3.14645C1.95118 3.34171 1.95118 3.65829 2.14645 3.85355L5.79289 7.5L2.14645 11.1464ZM8.14645 11.1464C7.95118 11.3417 7.95118 11.6583 8.14645 11.8536C8.34171 12.0488 8.65829 12.0488 8.85355 11.8536L12.8536 7.85355C13.0488 7.65829 13.0488 7.34171 12.8536 7.14645L8.85355 3.14645C8.65829 2.95118 8.34171 2.95118 8.14645 3.14645C7.95118 3.34171 7.95118 3.65829 8.14645 3.85355L11.7929 7.5L8.14645 11.1464Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
-                      </Flex>
-                  </Flex>
-                </section>
-              <hr style={{margin:'10px 0px'}}></hr>
-            </section>
-        ))}
-      </ul>
+        {related_endpoints.data.endpoints.map((el,i)=>(
+              <section className='endpoint' onClick={()=>attachKindandOpenEndpoint(el)}  >
+                  <section > 
+                    <Flex width="100%" justify="between" >
+                        <Flex justify="center" direction="column">
+                          <li key={i} className='endpointText'>{el.url}</li>
+                        </Flex>
+                        <Flex justify="end">
+                          <DoubleArrowRightIcon />
+                        </Flex>
+                    </Flex>
+                  </section>
+                <hr style={{margin:'10px 0px'}}></hr>
+              </section>
+          ))}
+        </ul>}
+      // return na;
   }
 
   return (
     <>
         <section>
             <Text size="7" as="p">{Object.values(endpoint.data)[0].url}</Text>
-            {JSON.stringify(endpoint.data)}
-            <br></br>
-            <br></br>
-            <h3><Trans>Related Endpoints</Trans> :</h3>
+            {/* <Flex style={{marginTop:"20px"}}>
+              <h3 style={{marginBottom:"0px",marginTop:"0px",marginRight:"5px"}}><Trans>Related Endpoints</Trans> :</h3>
+              {(related_endpoints.data.endpoints.length == 1) &&
+                <Badge color="orange" size="3" variant="soft">N/A</Badge>
+              }
+              {(related_endpoints.data.endpoints.length > 1) &&
+                <Badge color="green" size="3" variant="surface">{related_endpoints.data.endpoints.length}</Badge>
+              }
+            </Flex>
             {renderRelatedEndpoints()}
+            <h3 style={{marginBottom:"0px"}}><Trans>Metadata</Trans> :</h3>
+            {JSON.stringify(endpoint.data)} */}
+            <Accordion.Root className="AccordionRoot" type="multiple"  >
+              <Accordion.Item className="AccordionItem" value="item-1">
+                <AccordionTrigger>
+                    <Flex style={{alignItems:"center"}}>
+                      <h3 style={{marginBottom:"0px",marginTop:"0px",marginRight:"8px"}}>
+                        <Trans>Related Endpoints</Trans> :
+                      </h3>
+                      {(related_endpoints.data.endpoints.length == 1) &&
+                        <Badge color="orange" size="3" variant="soft">N/A</Badge>
+                      }
+                      {(related_endpoints.data.endpoints.length > 1) &&
+                        <Badge color="green" size="3" variant="surface">{related_endpoints.data.endpoints.length}</Badge>
+                      }
+                    </Flex>
+                </AccordionTrigger>
+                <AccordionContent>{renderRelatedEndpoints()}</AccordionContent>
+              </Accordion.Item>
+
+              <Accordion.Item className="AccordionItem" value="item-2">
+                <AccordionTrigger>
+                  <Flex style={{alignItems:"center"}}>
+                    <h3 style={{margin:"0px"}}>
+                      <Trans>Metadata</Trans> :
+                    </h3>
+                  </Flex>
+                </AccordionTrigger>
+                <AccordionContent>
+                  {JSON.stringify(endpoint.data)}
+                </AccordionContent>
+              </Accordion.Item>
+            </Accordion.Root>
         </section>
     </>
   )

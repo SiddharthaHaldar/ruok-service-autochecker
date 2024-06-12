@@ -1,6 +1,5 @@
 {
-  "name": "gc-react",
-  "private": true,
+  "name": "ruok-ui",
   "version": "1.0.0",
   "scripts": {
     "dev": "rspack serve",

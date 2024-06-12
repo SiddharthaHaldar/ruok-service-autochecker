@@ -49,15 +49,19 @@ msgstr "Tableau de bord"
 #~ msgid "Message Inbox"
 #~ msgstr "Boîte de réception de messages."
 
-#: src/components/EndpointsList.jsx:104
+#: src/components/Endpoint.jsx:95
+msgid "Metadata"
+msgstr ""
+
+#: src/components/Controls.jsx:97
 msgid "Refresh"
 msgstr "Rafraîchir"
 
-#: src/components/Endpoint.jsx:83
+#: src/components/Endpoint.jsx:86
 msgid "Related Endpoints"
 msgstr "Points de terminaison associés"
 
-#: src/components/EndpointsList.jsx:99
+#: src/components/Controls.jsx:72
 msgid "Scanned Endpoints"
 msgstr "Points de terminaison analysés"
 

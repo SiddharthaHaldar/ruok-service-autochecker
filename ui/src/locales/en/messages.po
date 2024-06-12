@@ -53,15 +53,19 @@ msgstr "Dashboard"
 #~ msgid "Message Inbox"
 #~ msgstr "Message Inbox"
 
-#: src/components/EndpointsList.jsx:104
+#: src/components/Endpoint.jsx:95
+msgid "Metadata"
+msgstr "Metadata"
+
+#: src/components/Controls.jsx:97
 msgid "Refresh"
 msgstr "Refresh"
 
-#: src/components/Endpoint.jsx:83
+#: src/components/Endpoint.jsx:86
 msgid "Related Endpoints"
 msgstr "Related Endpoints"
 
-#: src/components/EndpointsList.jsx:99
+#: src/components/Controls.jsx:72
 msgid "Scanned Endpoints"
 msgstr "Scanned Endpoints"
 
