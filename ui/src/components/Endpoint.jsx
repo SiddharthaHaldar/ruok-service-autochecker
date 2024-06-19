@@ -85,21 +85,9 @@ const Endpoint = forwardRef(
 
   return (
     <>
-        <section>
             <Text size="7" as="p">{Object.values(endpoint.data)[0].url}</Text>
-            {/* <Flex style={{marginTop:"20px"}}>
-              <h3 style={{marginBottom:"0px",marginTop:"0px",marginRight:"5px"}}><Trans>Related Endpoints</Trans> :</h3>
-              {(related_endpoints.data.endpoints.length == 1) &&
-                <Badge color="orange" size="3" variant="soft">N/A</Badge>
-              }
-              {(related_endpoints.data.endpoints.length > 1) &&
-                <Badge color="green" size="3" variant="surface">{related_endpoints.data.endpoints.length}</Badge>
-              }
-            </Flex>
-            {renderRelatedEndpoints()}
-            <h3 style={{marginBottom:"0px"}}><Trans>Metadata</Trans> :</h3>
-            {JSON.stringify(endpoint.data)} */}
-            <Accordion.Root className="AccordionRoot" type="multiple"  >
+        <section>
+            <Accordion.Root className="AccordionRoot" type="multiple"  defaultValue={["item-1","item-2"]}>
               <Accordion.Item className="AccordionItem" value="item-1">
                 <AccordionTrigger>
                     <Flex style={{alignItems:"center"}}>

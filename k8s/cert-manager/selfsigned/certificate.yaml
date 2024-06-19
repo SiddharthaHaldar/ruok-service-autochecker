@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ingress-cert-selfsigned
+  namespace: istio-system
+spec:
+  # dnsNames: []
+  dnsNames:
+    - observatory.phac.alpha.canada.ca
+  issuerRef:
+    kind: Issuer
+    # name: letsencrypt-staging
+    # name: letsencrypt
+    name: self-signed
+  # privateKey:
+  #   algorithm: RSA
+  #   encoding: PKCS8
+  #   size: 4096
+  secretName: tlskeys

@@ -68,7 +68,7 @@ forwardRef(function Controls({ data,
     return (
         <Flex justify="between" align="center" style={{borderBottom:"solid",borderWidth:"1px",borderColor:"#ece2e2",paddingBottom:"10px"}}>
             <Flex justify="start" gap="4">
-            <Button size="3" variant="soft" onClick={()=>{showAllEndpoints()}} color="blue" ref={showAllEndpointsButtonRef}>
+            <Button size="3" variant="soft" onClick={()=>{showAllEndpoints()}} color="blue" ref={showAllEndpointsButtonRef} style={{}}>
                 <Trans>Scanned Endpoints</Trans>
             </Button>
             {(stack.current.length >= 2) && 

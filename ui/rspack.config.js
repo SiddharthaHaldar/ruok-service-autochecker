@@ -57,6 +57,7 @@ module.exports = () => {
     plugins: [
       new rspack.HtmlRspackPlugin({
         template: './index.html',
+        favicon: "./src/assets/favicon_canadaFlag.ico",
       }),
       new Dotenv({
         path: finalPath,// Path to .env file (this is the default)

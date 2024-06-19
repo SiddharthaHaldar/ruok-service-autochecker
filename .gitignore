@@ -5,6 +5,8 @@
 deploy
 **/nats.creds
 **/.DS_Store
+**/dist
+**/*.key.json
 temp-cloned-repo/
 # Ignore developer-specific IDE configuration
 .vscode/launch.json
