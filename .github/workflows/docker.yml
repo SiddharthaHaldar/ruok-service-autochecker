@@ -36,7 +36,7 @@ jobs:
 
                 GRAPHQL_HOST_SERVER=${{ secrets.UI_ENV_GRAPHQL_HOST_SERVER }}
                 GRAPHQL_PORT_SERVER=${{ secrets.UI_ENV_GRAPHQL_PORT_SERVER }}" > .env
-          echo .env
+          cat .env
 
       - name: Build and push Docker image
         id: push
