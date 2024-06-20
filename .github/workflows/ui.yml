@@ -1,0 +1,26 @@
+name: UI
+on:
+  push:
+    branches:
+    - ui-revived-2
+jobs:
+  build-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node Version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+
+      - name: Install NPM dependencictes
+        working-directory: ./ui
+        run: |
+          npm install
+          npm install --only=dev
+
+      - name: Build Dist
+        run: |
+          npm run build
+
