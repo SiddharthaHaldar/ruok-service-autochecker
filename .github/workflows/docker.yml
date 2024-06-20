@@ -32,10 +32,8 @@ jobs:
         id: env
         working-directory: ui
         run: |
-          echo "GRAPHQL_UI_URI="test"
-
-                GRAPHQL_HOST_SERVER=http://localhost
-                GRAPHQL_PORT_SERVER=4000" > .env
+          echo "GRAPHQL_UI_URI="${{ secrets.UI_ENV_GRAPHQL_UI_URI }}"\nGRAPHQL_HOST_SERVER=${{ secrets.UI_ENV_GRAPHQL_HOST_SERVER }}\nGRAPHQL_PORT_SERVER=${{ secrets.UI_ENV_GRAPHQL_PORT_SERVER }}" > .env
+          cat .env
 
       - name: Build and push Docker image
         id: push
