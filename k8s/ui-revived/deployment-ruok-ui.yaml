@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - 
-        image: vader404/ruok-ui:0.0.17 # {"$imagepolicy" : "flux-system:ruok-ui-image-policy"}
+        image: vader404/ruok-ui:0.0.18 # {"$imagepolicy" : "flux-system:ruok-ui-image-policy"}
         name: ruok-ui
         ports:
         - containerPort: 8080
