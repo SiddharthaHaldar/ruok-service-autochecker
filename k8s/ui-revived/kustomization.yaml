@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
 - deployment-ruok-ui.yaml
 - svc-ruok-ui.yaml
-- v-svc-ruok-ui.yaml
