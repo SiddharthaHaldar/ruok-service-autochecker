@@ -33,7 +33,7 @@ spec:
           value: http://graphql-api
         - name: GRAPHQL_PORT_SERVER
           value: "4000"
-        image: vader404/ruok-ui:0.0.10
+        image: vader404/ruok-ui:0.0.2
         name: ruok-ui
         ports:
         - containerPort: 8080
