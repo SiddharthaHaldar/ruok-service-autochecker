@@ -30,11 +30,11 @@ spec:
     spec:
       containers:
       - 
-        # env:
-        # - name: GRAPHQL_HOST_SERVER
-        #   value: http://graphql-api
-        # - name: GRAPHQL_PORT_SERVER
-        #   value: "4000"
+        env:
+        - name: GRAPHQL_HOST_SERVER
+          value: http://graphql-api
+        - name: GRAPHQL_PORT_SERVER
+          value: "4000"
         image: vader404/ruok-ui:0.0.11 # {"$imagepolicy" : "flux-system:ruok-ui-image-policy"}
         name: ruok-ui
         ports:
