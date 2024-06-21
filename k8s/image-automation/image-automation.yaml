@@ -43,4 +43,4 @@ spec:
         email: fluxcd@users.noreply.github.com
       messageTemplate: "[ci skip] {{range .Updated.Images}}{{println .}}{{end}}"
     push:
-      branch: main
+      branch: ui-revived
