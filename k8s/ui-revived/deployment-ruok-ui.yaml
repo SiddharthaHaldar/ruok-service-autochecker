@@ -4,6 +4,7 @@ metadata:
   labels:
     app: ruok-ui
   name: ruok-ui
+  namespace: default
 spec:
   replicas: 1
   selector:
