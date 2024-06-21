@@ -32,7 +32,7 @@ spec:
   interval: 5m
   update:
     strategy: Setters
-    path: .
+    path: ./k8s/ui-revived
   git:
     checkout:
       ref:
