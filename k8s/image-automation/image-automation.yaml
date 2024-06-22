@@ -1,5 +1,5 @@
 ---
-apiVersion: image.toolkit.fluxcd.io/v1beta2
+apiVersion: image.toolkit.fluxcd.io/v2
 kind: ImageRepository
 metadata:
   name: ruok-ui-image-repo
@@ -19,28 +19,28 @@ spec:
   policy:
     semver:
       range: '>=0.0.1'
-# ---
-# apiVersion: image.toolkit.fluxcd.io/v1beta1
-# kind: ImageUpdateAutomation
-# metadata:
-#   name: ruok-ui-image-deployment-updater
-#   namespace: flux-system
-# spec:
-#   sourceRef:
-#     kind: GitRepository
-#     name: flux-system
-#   interval: 5m
-#   update:
-#     strategy: Setters
-#     path: ./k8s/ui-revived
-#   git:
-#     checkout:
-#       ref:
-#         branch: ui-revived
-#     commit:
-#       author:
-#         name: fluxbot
-#         email: fluxcd@users.noreply.github.com
-#       messageTemplate: "[ci skip] {{range .Updated.Images}}{{println .}}{{end}}"
-#     push:
-#       branch: ui-revived
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: ruok-ui-image-deployment-updater
+  namespace: flux-system
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  interval: 5m
+  update:
+    strategy: Setters
+    path: ./k8s/ui-revived
+  git:
+    checkout:
+      ref:
+        branch: ui-revived
+    commit:
+      author:
+        name: fluxbot
+        email: fluxcd@users.noreply.github.com
+      messageTemplate: "[ci skip] {{range .Updated.Images}}{{println .}}{{end}}"
+    push:
+      branch: ui-revived
