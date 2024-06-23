@@ -34,7 +34,7 @@ export default function App() {
       <Container>
         <br></br>
         <Heading size="8" mb="2" trim="start">
-          RUOK <Trans>Dashboard :</Trans>
+          RUOK <Trans>Dashboard</Trans>
         </Heading>
         <EndpointsList/>
       </Container>
