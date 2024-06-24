@@ -4,6 +4,7 @@ metadata:
   labels:
     app: ruok-ui
   name: ruok-ui
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -28,12 +29,7 @@ spec:
         service.istio.io/canonical-revision: latest
     spec:
       containers:
-      - env:
-        - name: GRAPHQL_HOST_SERVER
-          value: http://graphql-api
-        - name: GRAPHQL_PORT_SERVER
-          value: "4000"
-        image: vader404/ruok-ui:0.0.10
+      - image: vader404/ruok-ui:0.0.2 # {"$imagepolicy" : "flux-system:ruok-ui-image-policy"}
         name: ruok-ui
         ports:
         - containerPort: 8080
@@ -237,4 +233,3 @@ spec:
           name: istio-ca-root-cert
         name: istiod-ca-cert
 status: {}
----
