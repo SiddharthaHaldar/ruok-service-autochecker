@@ -6,6 +6,7 @@
 APP_NAME := ruok
 APP_VERSION := 0.0.1
 
+CONATINER_REGISTRY_NAME := localhost
 # Figure out if podman or docker is being used as the container runtime
 CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
 
@@ -16,29 +17,33 @@ CONTAINER_RUNTIME := $(shell command -v podman 2> /dev/null || echo docker)
 #  |_.__/ \__,_|_|_|\__,_|
 
 # Build all images in the repo
-build: build-graphql-api-image build-webhook-server-image build-graph-updater build-octokit-scanner build-cloned-repo-scanner build-web-endpoint-scanner
+build: build-graphql-api-image build-webhook-server-image build-graph-updater build-octokit-scanner build-cloned-repo-scanner build-web-endpoint-scanner build-ruok-ui
 
 # GraphQL API
 build-graphql-api-image:
-	$(CONTAINER_RUNTIME) build ./api/ -t localhost/$(APP_NAME)-graphql-api:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./api/ -t $(CONATINER_REGISTRY_NAME)/$(APP_NAME)-graphql-api:$(APP_VERSION)
 
 # Scanners
 build-octokit-scanner:
-	$(CONTAINER_RUNTIME) build ./scanners/github-octokit/ -t localhost/$(APP_NAME)-octokit-scanner:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./scanners/github-octokit/ -t $(CONATINER_REGISTRY_NAME)/$(APP_NAME)-octokit-scanner:$(APP_VERSION)
 
 build-cloned-repo-scanner:
-	$(CONTAINER_RUNTIME) build ./scanners/github-cloned-repo/ -t localhost/$(APP_NAME)-cloned-repo-scanner:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./scanners/github-cloned-repo/ -t $(CONATINER_REGISTRY_NAME)/$(APP_NAME)-cloned-repo-scanner:$(APP_VERSION)
 
 build-web-endpoint-scanner:
-	$(CONTAINER_RUNTIME) build ./scanners/web-endpoint/ -t localhost/$(APP_NAME)-web-endpoint-scanner:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./scanners/web-endpoint/ -t $(CONATINER_REGISTRY_NAME)/$(APP_NAME)-web-endpoint-scanner:$(APP_VERSION)
 
 # Webhook Server
 build-webhook-server-image:
-	$(CONTAINER_RUNTIME) build ./event-collectors/github-webhook-server/ -t localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./event-collectors/github-webhook-server/ -t $(CONATINER_REGISTRY_NAME)/$(APP_NAME)-webhook-server:$(APP_VERSION)
 
 # Graph Updater
 build-graph-updater:
-	$(CONTAINER_RUNTIME) build ./graph-updater/ -t localhost/$(APP_NAME)-graph-updater:$(APP_VERSION)
+	$(CONTAINER_RUNTIME) build ./graph-updater/ -t $(CONATINER_REGISTRY_NAME)/$(APP_NAME)-graph-updater:$(APP_VERSION)
+
+# UI
+build-ruok-ui:
+	$(CONTAINER_RUNTIME) build ./ui/ -t $(CONATINER_REGISTRY_NAME)/$(APP_NAME)-ui:$(APP_VERSION)
 
 kind-push-all: 
 	kind load docker-image localhost/$(APP_NAME)-graphql-api:$(APP_VERSION)
@@ -48,6 +53,14 @@ kind-push-all:
 	kind load docker-image localhost/$(APP_NAME)-webhook-server:$(APP_VERSION)
 	kind load docker-image localhost/$(APP_NAME)-graph-updater:$(APP_VERSION)
 	
+docker-push-all: 
+	docker push ${CONATINER_REGISTRY_NAME}/$(APP_NAME)-graphql-api:$(APP_VERSION)
+	docker push ${CONATINER_REGISTRY_NAME}/$(APP_NAME)-web-endpoint-scanner:$(APP_VERSION)
+	docker push ${CONATINER_REGISTRY_NAME}/$(APP_NAME)-cloned-repo-scanner:$(APP_VERSION)
+	docker push ${CONATINER_REGISTRY_NAME}/$(APP_NAME)-octokit-scanner:$(APP_VERSION)
+	docker push ${CONATINER_REGISTRY_NAME}/$(APP_NAME)-webhook-server:$(APP_VERSION)
+	docker push ${CONATINER_REGISTRY_NAME}/$(APP_NAME)-graph-updater:$(APP_VERSION)
+	docker push ${CONATINER_REGISTRY_NAME}/$(APP_NAME)-ui:$(APP_VERSION)
 
 #       _            _             
 #    __| | ___ _ __ | | ___  _   _ 
