@@ -12,15 +12,19 @@ resources:
 - ./svc-nats.yaml
 - ./svc-ruok-api.yaml
 - ./svc-webhook-server.yaml
-- ./ui/deployment-ui-server.yaml
-- ./ui/svc-ui-server.yaml
-- ./ui/ns-ui.yaml
+- ./ui-revived/deployment-ruok-ui.yaml
+- ./ui-revived/svc-ruok-ui.yaml
+- ./istio/gateway.yaml
+- ./istio/v-svc-ruok-ui.yaml
 patches:
 - target:
     version: v1
     kind: Deployment
     name: graphql-api
   patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: CONATINER_REGISTRY_NAME/ruok-graphql-api:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -31,6 +35,9 @@ patches:
     kind: Deployment
     name: webhook-server
   patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: CONATINER_REGISTRY_NAME/ruok-webhook-server:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -43,6 +50,9 @@ patches:
     kind: Deployment
     name: graph-updater
   patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: CONATINER_REGISTRY_NAME/ruok-graph-updater:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -55,6 +65,9 @@ patches:
     kind: Deployment
     name: cloned-repo-scanner
   patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: CONATINER_REGISTRY_NAME/ruok-cloned-repo-scanner:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -67,6 +80,9 @@ patches:
     kind: Deployment
     name: octokit-scanner
   patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: CONATINER_REGISTRY_NAME/ruok-octokit-scanner:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -79,6 +95,9 @@ patches:
     kind: Deployment
     name: web-endpoint-scanner
   patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: CONATINER_REGISTRY_NAME/ruok-web-endpoint-scanner:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -86,3 +105,20 @@ patches:
           value: nats:4222
         - name: GRAPHQL_URL
           value: http://graphql-api:4000/graphql
+- target:
+    version: v1
+    kind: Deployment
+    name: ruok-ui
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: CONATINER_REGISTRY_NAME/ruok-ui:0.0.1
+- target:
+    group: networking.istio.io
+    version: v1beta1
+    kind: Gateway
+    name: public-gateway
+  patch: |-
+    - op: add
+      path: /spec/servers/0/tls/httpsRedirect
+      value: false
