@@ -32,11 +32,14 @@ class GraphDB:
     def _key_safe_url(self, url: str) -> str:
         return url.replace("://", "-").replace("/", "-")
 
-    def insert_endpoint(self, url):
+    def insert_endpoint(self, endpoint):
+        endpoint_dict = strawberry.asdict(endpoint)
+        url = endpoint_dict["url"]
+        kind = endpoint_dict["kind"]
         if url == "":
             return url
         if not self.nodes.get(self._key_safe_url(url)):
-            self.nodes.insert({"url": url, "_key": self._key_safe_url(url)})
+            self.nodes.insert({"url": url, "kind": kind, "_key": self._key_safe_url(url)})
         return url
 
     def upsert_scanner_endpoint(
@@ -59,6 +62,10 @@ class GraphDB:
         return scanner_endpoint
 
     def insert_edge(self, endpoint1, endpoint2):
+        endpoint1_dict = strawberry.asdict(endpoint1)
+        endpoint2_dict = strawberry.asdict(endpoint2)
+        endpoint1 = endpoint1_dict["url"]
+        endpoint2 = endpoint2_dict["url"]
         edge_key = f"{self._key_safe_url(endpoint1)}-to-{self._key_safe_url(endpoint2)}"
         if not self.edges.get(edge_key):
             self.edges.insert(

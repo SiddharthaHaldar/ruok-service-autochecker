@@ -10,7 +10,7 @@ import {
   Button,
   Badge
 } from '@radix-ui/themes';
-import { FETCH_GITHUB_URL_QUERY,FETCH_WEB_URL_QUERY,FETCH_RELATED_ENDPOINTS_QUERY } from '../GraphQL/query';
+import { FETCH_GITHUB_URL_QUERY,FETCH_WEB_URL_QUERY,FETCH_RELATED_ENDPOINTS_QUERY } from '../GraphQL/queries';
 import { Plural, Trans } from '@lingui/macro';
 import {AccordionContent,AccordionTrigger} from './Accordian/Accordian.jsx';
 import * as Accordion from '@radix-ui/react-accordion';
@@ -84,8 +84,8 @@ const Endpoint = forwardRef(
   }
 
   return (
-    <>
-            <Text size="7" as="p">{Object.values(endpoint.data)[0].url}</Text>
+      <>
+        <Text size="7" as="p">{Object.values(endpoint.data)[0].url}</Text>
         <section>
             <Accordion.Root className="AccordionRoot" type="multiple"  defaultValue={["item-1","item-2"]}>
               <Accordion.Item className="AccordionItem" value="item-1">
