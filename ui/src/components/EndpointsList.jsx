@@ -11,7 +11,7 @@ import '../index.css';
 import Endpoint from './Endpoint';
 import Controls from './Controls.jsx';
 import { useQuery, gql, NetworkStatus } from "@apollo/client";
-import { ALL_ENDPOINTS_QUERY } from '../GraphQL/query';
+import { ALL_ENDPOINTS_QUERY } from '../GraphQL/queries';
 import {
   Tabs,
   Box,

@@ -24,7 +24,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: CONATINER_REGISTRY_NAME/ruok-graphql-api:0.0.1
+      value: vader404/ruok-graphql-api:0.0.3
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -37,7 +37,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: CONATINER_REGISTRY_NAME/ruok-webhook-server:0.0.1
+      value: vader404/ruok-webhook-server:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -52,7 +52,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: CONATINER_REGISTRY_NAME/ruok-graph-updater:0.0.1
+      value: vader404/ruok-graph-updater:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -67,7 +67,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: CONATINER_REGISTRY_NAME/ruok-cloned-repo-scanner:0.0.1
+      value: vader404/ruok-cloned-repo-scanner:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -82,7 +82,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: CONATINER_REGISTRY_NAME/ruok-octokit-scanner:0.0.1
+      value: vader404/ruok-octokit-scanner:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -97,7 +97,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: CONATINER_REGISTRY_NAME/ruok-web-endpoint-scanner:0.0.1
+      value: vader404/ruok-web-endpoint-scanner:0.0.1
     - op: add
       path: /spec/template/spec/containers/0/env
       value:
@@ -112,7 +112,7 @@ patches:
   patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/image
-      value: CONATINER_REGISTRY_NAME/ruok-ui:0.0.1
+      value: vader404/ruok-ui:0.0.1
 - target:
     group: networking.istio.io
     version: v1beta1

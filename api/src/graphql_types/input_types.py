@@ -19,6 +19,11 @@ class AccessibilityCheckPassesInput:
     metadata: Optional[JSON] = None
 
 @strawberry.input
+class EndpointInput:
+    url: str
+    kind: Optional[str] = None
+
+@strawberry.input
 class GithubEndpointInput:
     url: str
     kind: str

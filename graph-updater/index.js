@@ -48,10 +48,18 @@ process.on('SIGINT', () => process.exit(0))
       const endpointHandler = getEndpoint(endpointKind);
       const newEndpoints = await endpointHandler.getGraphMetaData(endpointEventPayload)
 
+      const newEndpointsAndKind = newEndpoints.map((endpoint) => {
+          let kind = getEndpointKind(endpoint)[0];
+          kind = kind.split("E")[0];
+          kind = kind[0].toUpperCase() + kind.substring(1);
+          return `{url : "${endpoint}", kind : "${kind}"}`;
+      });
+
       console.log('newEndpoints', newEndpoints)
 
       // Create string serialized array of endpoints associated with this endpoint
       const newEndpointsString = `["${Array.from(newEndpoints).join('", "')}"]`;
+      const newEndpointsStringAndKind = `[${Array.from(newEndpointsAndKind).join(',')}]`;
 
       // Mutation to add a graph for the new endpoints
       const mutation = gql`
