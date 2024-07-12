@@ -10,3 +10,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY ./src/ /code
 
 CMD ["python", "main.py"]
+
+EXPOSE 4000

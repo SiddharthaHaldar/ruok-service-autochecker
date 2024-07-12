@@ -6,7 +6,14 @@ import strawberry
 @strawberry.type
 class Endpoint:
     url: str
+    kind: Optional[str] = None
 
+@strawberry.type
+class Edge:
+    _key: str = None
+    _id: str = None
+    from_url : Endpoint
+    to_url : Endpoint
 
 JSON = strawberry.scalar(
     NewType("JSON", object),
@@ -29,21 +36,23 @@ class AccessibilityCheckPasses:
 @strawberry.type
 class GithubEndpoint(Endpoint):
     url: str
-    kind: str
+    kind: Optional[str] = None
     _key: str
-    owner: str
-    repo: str
-    license: str
-    visibility: str
-    programming_language: List[str]
-    automated_security_fixes: CheckPasses
-    vulnerability_alerts: CheckPasses
-    branch_protection: CheckPasses
-    has_security_md: CheckPasses
-    has_dependabot_yaml: CheckPasses
-    gitleaks: CheckPasses
-    hadolint: CheckPasses
-    trivy_repo_vulnerability: CheckPasses
+    owner: Optional[str] = None
+    repo: Optional[str] = None
+    license: Optional[str] = None
+    api: Optional[bool] = None
+    visibility: Optional[str] = None
+    description: Optional[str] = None
+    programming_language: Optional[List[str]] = None
+    automated_security_fixes: Optional[CheckPasses] = None
+    vulnerability_alerts: Optional[CheckPasses] = None
+    branch_protection: Optional[CheckPasses] = None
+    has_security_md: Optional[CheckPasses] = None
+    has_dependabot_yaml: Optional[CheckPasses] = None
+    gitleaks: Optional[CheckPasses] = None
+    hadolint: Optional[CheckPasses] = None
+    trivy_repo_vulnerability: Optional[CheckPasses] = None
 
 @strawberry.type
 class Accessibility:

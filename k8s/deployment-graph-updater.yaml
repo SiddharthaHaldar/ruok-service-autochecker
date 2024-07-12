@@ -15,4 +15,5 @@ spec:
     spec:
       containers:
         - name: graph-updater
-          image: localhost/ruok-graph-updater:0.0.1
+          image: vader404/ruok-graph-updater:0.0.1
+          # image: localhost/ruok-graph-updater:0.0.1

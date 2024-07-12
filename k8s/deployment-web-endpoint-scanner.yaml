@@ -15,4 +15,5 @@ spec:
     spec:
       containers:
         - name: web-endpoint-scanner
-          image: localhost/ruok-web-endpoint-scanner:0.0.1
+          image: vader404/ruok-web-endpoint-scanner:0.0.1
+          # image: localhost/ruok-web-endpoint-scanner:0.0.1

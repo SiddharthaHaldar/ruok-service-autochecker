@@ -1,0 +1,36 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ingress-cert-letsencrypt
+  namespace: istio-system
+spec:
+  secretName: tlskeys-letsencrypt
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 4096
+  usages:
+    - server auth
+    - client auth
+  dnsNames:
+    - "observatory.alpha.phac.gc.ca"
+  issuerRef:
+    name: letsencrypt-https
+# apiVersion: cert-manager.io/v1
+# kind: Certificate
+# metadata:
+#   name: ingress-cert
+#   namespace: istio-system
+# spec:
+#   dnsNames: 
+#   - observatory.alpha.phac.gc.ca
+#   issuerRef:
+#     name: letsencrypt
+#   privateKey:
+#     algorithm: RSA
+#     encoding: PKCS8
+#     size: 4096
+#   secretName: tlskeys-letsencrypt

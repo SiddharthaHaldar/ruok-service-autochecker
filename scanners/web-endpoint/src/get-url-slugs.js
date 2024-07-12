@@ -19,7 +19,7 @@ async function getSlugs(url, page, browser) {
   }
 }
 
-export async function getPages(url, page, browser) {
+export async function getPage(url, page, browser) {
   // concatenates slugs for a url, to the url to form an array of page url(s) for a particular endpoint
   let pages = [url]
   const slugs = await getSlugs(url, page, browser)

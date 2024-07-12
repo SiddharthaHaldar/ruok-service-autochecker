@@ -15,4 +15,5 @@ spec:
     spec:
       containers:
         - name: cloned-repo-scanner
-          image: localhost/ruok-cloned-repo-scanner:0.0.1
+          image: vader404/ruok-cloned-repo-scanner:0.0.1
+          # image: localhost/ruok-cloned-repo-scanner:0.0.1

@@ -2,7 +2,8 @@ import strawberry
 
 from typing import List
 
-from graphql_types.input_types import GithubEndpointInput, WebEndpointInput
+from graphql_types.input_types import EndpointInput, GithubEndpointInput, WebEndpointInput
+from graphql_types.typedef import GithubEndpoint
 from model import GraphDB
 
 
@@ -65,6 +66,7 @@ class Mutation:
         client = GraphDB()
         client.upsert_scanner_endpoint(endpoint)
         client.close()
+        print(endpoint)
         return endpoint.url
     
     @strawberry.mutation
@@ -133,7 +135,7 @@ class Mutation:
         return endpoint.url
 
     @strawberry.mutation
-    def endpoints(self, urls: List[str]) -> List[str]:
+    def endpoints(self, urls: List[EndpointInput]) -> List[str]:
         """
         Writes a list of URLs to the graph. Each URL will be associated with
         every other URL in the list.
@@ -141,7 +143,7 @@ class Mutation:
         client = GraphDB()
         client.insert_endpoints(urls)
         client.close()
-        return urls
+        return list(map(lambda url:strawberry.asdict(url)["url"],urls))
 
     @strawberry.mutation
     def product(self, name: str, urls: List[str]) -> str:

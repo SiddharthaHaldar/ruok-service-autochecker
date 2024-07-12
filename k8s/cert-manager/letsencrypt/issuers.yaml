@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-https
+  namespace: istio-system
+spec:
+  acme:
+    email: siddhartha.haldar@phac-aspc.gc.ca
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-https
+    solvers:
+    - http01:
+        ingress:
+          class: istio

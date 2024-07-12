@@ -4,7 +4,7 @@ from model import GraphDB
 
 from typing import List
 
-from graphql_types.typedef import Endpoint, GithubEndpoint, WebEndpoint, Accessibility, AccessibilityCheckPasses
+from graphql_types.typedef import Edge, Endpoint, GithubEndpoint, CheckPasses, WebEndpoint, Accessibility, AccessibilityCheckPasses
 
 
 @strawberry.type
@@ -39,7 +39,19 @@ class Query:
         # Remove unecessary db fields from the endpoint dict
         endpoint.pop("_id", None)
         endpoint.pop("_rev", None)
-        return GithubEndpoint(**endpoint)
+        return GithubEndpoint(
+                **{
+                    k: CheckPasses(**v)
+                    for k, v in endpoint.items()
+                    if type(v) is dict
+                },
+                **{
+                    k: v
+                    for k, v in endpoint.items()
+                    if type(v) is not dict
+                }
+        )
+        # return GithubEndpoint(**endpoint)
 
     @strawberry.field
     def github_endpoints(self, limit: int) -> List[GithubEndpoint]:
@@ -69,7 +81,20 @@ class Query:
         for endpoint in endpoints:
             endpoint.pop("_id", None)
             endpoint.pop("_rev", None)
-        return [GithubEndpoint(**endpoint) for endpoint in endpoints]
+        return [GithubEndpoint(
+                        **{
+                            k: CheckPasses(**v)
+                            for k, v in endpoint.items()
+                            if type(v) is dict
+                        },
+                        **{
+                            k: v
+                            for k, v in endpoint.items()
+                            if type(v) is not dict
+                        }
+                    )    
+                for endpoint in endpoints]
+        # return [GithubEndpoint(**endpoint) for endpoint in endpoints]
     
     @strawberry.field
     def web_endpoint(self, url: str) -> WebEndpoint:
@@ -197,6 +222,57 @@ class Query:
         endpoints = client.get_endpoints(urls)
         client.close()
         return [Endpoint(url=vertex) for vertex in endpoints]
+
+    @strawberry.field
+    def all_edges(self) -> List[Edge]:
+        """
+        # Get All Edges
+
+        Returns all existing edges within the Arango Graph
+
+        # Example
+
+        ```graphql
+        query {
+            allEdges {
+                url
+            }
+        }
+        ```
+
+        """
+        client = GraphDB()
+        edges = client.get_all_edges()
+        client.close()
+        return [Edge(_key=edge['_key'],
+                     _id=edge['_id'],
+                     from_url=Endpoint(url=edge['_from'],kind=None),
+                     to_url=Endpoint(url=edge['_to'],kind=None)) for edge in edges]
+
+    @strawberry.field
+    def all_endpoints(self) -> List[Endpoint]:
+        """
+        # Get All Endpoint
+
+        Returns all existing endpoints within the Arango Graph
+
+        # Example
+
+        ```graphql
+        query {
+            allEndpoints {
+                url
+            }
+        }
+        ```
+
+        """
+        client = GraphDB()
+        endpoints = client.get_all_endpoints()
+        # print(endpoints)
+        client.close()
+        return [Endpoint(url=endpoint['url'],
+                         kind=endpoint['kind']) for endpoint in endpoints]
 
     @strawberry.field
     def product(self, name: str) -> str:

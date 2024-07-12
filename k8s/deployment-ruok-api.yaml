@@ -3,8 +3,9 @@ kind: Deployment
 metadata:
   labels:
     app: graphql-api
+    istio-injection: enabled
   name: graphql-api
-  namespace: default
+  # namespace: ingress
 spec:
   replicas: 1
   selector:
@@ -18,8 +19,9 @@ spec:
     spec:
       containers:
       - name: graphql-api
-        imagePullPolicy: Never
-        image: localhost/ruok-graphql-api:0.0.1
+        # imagePullPolicy: Never
+        image: vader404/ruok-graphql-api:0.0.3
+        # image: localhost/ruok-graphql-api:0.0.1
         securityContext:
           allowPrivilegeEscalation: false
         ports:
