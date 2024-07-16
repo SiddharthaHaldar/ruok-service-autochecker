@@ -4,7 +4,15 @@ from model import GraphDB
 
 from typing import List
 
-from graphql_types.typedef import Edge, Endpoint, GithubEndpoint, CheckPasses, WebEndpoint, Accessibility, AccessibilityCheckPasses
+from graphql_types.typedef import Edge, \
+                                  Endpoint, \
+                                  GithubEndpoint, \
+                                  CheckPasses, \
+                                  WebEndpoint, \
+                                  Accessibility, \
+                                  AccessibilityCheckPasses
+
+from graphql_types.input_types import FilterCriteriaInput                                  
 
 
 @strawberry.type
@@ -252,9 +260,9 @@ class Query:
     @strawberry.field
     def all_endpoints(self) -> List[Endpoint]:
         """
-        # Get All Endpoint
+        # Get All Endpoints
 
-        Returns all existing endpoints within the Arango Graph
+        Returns all existing endpoints within the Arango Graph 
 
         # Example
 
@@ -270,6 +278,30 @@ class Query:
         client = GraphDB()
         endpoints = client.get_all_endpoints()
         # print(endpoints)
+        client.close()
+        return [Endpoint(url=endpoint['url'],
+                         kind=endpoint['kind']) for endpoint in endpoints]
+
+    @strawberry.field
+    def filter(self, criteria : FilterCriteriaInput) -> List[Endpoint]:
+        """
+        # Filter Endpoints
+
+        Returns all existing endpoints within the Arango Graph that match the filter cirteria
+
+        # Example
+
+        ```graphql
+        query {
+            allEndpoints {
+                url
+            }
+        }
+        ```
+
+        """
+        client = GraphDB()
+        endpoints = client.filter_endpoints(criteria=criteria)
         client.close()
         return [Endpoint(url=endpoint['url'],
                          kind=endpoint['kind']) for endpoint in endpoints]
