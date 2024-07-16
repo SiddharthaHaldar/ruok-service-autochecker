@@ -24,6 +24,11 @@ class EndpointInput:
     kind: Optional[str] = None
 
 @strawberry.input
+class FilterCriteriaInput:
+    url: Optional[str] = None
+    kind: Optional[str] = None
+
+@strawberry.input
 class GithubEndpointInput:
     url: str
     kind: str

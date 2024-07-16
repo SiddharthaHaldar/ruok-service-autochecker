@@ -6,7 +6,7 @@ import strawberry
 
 from constants import Settings
 
-from graphql_types.input_types import GithubEndpointInput, WebEndpointInput
+from graphql_types.input_types import GithubEndpointInput, WebEndpointInput, FilterCriteriaInput
 
 
 class GraphDB:
@@ -18,6 +18,7 @@ class GraphDB:
             username=Settings().USERNAME,
             password=Settings().PASSWORD,
         )
+        self.aql = self.db.aql
         self.graph = self.db.graph(Settings().GRAPH_NAME)
         self.nodes = self.graph.vertex_collection(Settings().VERTEX_COLLECTION)
         self.edges = self.graph.edge_collection(Settings().EDGE_COLLECTION)
@@ -104,6 +105,13 @@ class GraphDB:
 
     def get_scanner_endpoint(self, url):
         return self.nodes.get(self._key_safe_url(url))
+
+    def filter_endpoints(self, criteria : FilterCriteriaInput):
+        criteriaDict = strawberry.asdict(criteria)
+        criteriaDict = {k: v for k, v in criteriaDict.items() if v is not None}
+        print(criteriaDict)
+        nodes = self.nodes.find(criteriaDict, skip=0)
+        return nodes
     
     def get_scanner_endpoints(self, kind, limit):
         cursor = self.nodes.find({"kind": kind}, skip=0, limit=limit)
