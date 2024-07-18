@@ -93,6 +93,8 @@ class GraphDB:
             self.insert_endpoint(url)
             self.insert_edge(root_url, url)
             self.insert_edge(url, root_url)
+        # Remove stale edges
+        # self.remove_stale_edges(root_url)
         return urls
 
     def insert_product(self, product, urls):
