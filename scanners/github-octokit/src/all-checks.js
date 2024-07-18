@@ -24,8 +24,12 @@ export class AllChecksStrategy extends OctokitCheckStrategy {
     async formatResponse() {
         const checkResults = await Promise.all(
           this.checkers.map(async (checker) => {
-            const result = await checker.formatResponse();
-            return { [checker.constructor.name]: result };
+            try{
+              const result = await checker.formatResponse();
+              return { [checker.constructor.name]: result };
+            } catch(error){
+              return { [checker.constructor.name]: error };
+            }
           })
         );
     

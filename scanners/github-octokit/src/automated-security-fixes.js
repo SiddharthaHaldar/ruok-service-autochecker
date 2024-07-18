@@ -33,8 +33,20 @@ export class AutomatedSecurityFixesStrategy extends OctokitCheckStrategy {
         } 
       }
     } catch (error) {
-      throw {
-        'dependabot': `error: ${error.message}` 
+      if(error.code == 404){
+        return {
+          checkPasses: false,
+          metadata: {
+            enabled: false,
+            paused: null,
+
+          } 
+        }
+      }
+      else{
+        throw {
+          'dependabot': `error: ${error.message}` 
+        }
       }
     }
   }

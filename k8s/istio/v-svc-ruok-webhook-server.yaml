@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: v-svc-ruok-webhook-server
+  namespace: default
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - public-gateway
+  http:
+  - name: ruok-webhook-server
+    match:
+    - uri:
+        prefix: /webhook
+    rewrite:
+        uri: /
+    route:
+    - destination:
+        host: webhook-server
+        port:
+          number: 3000
+

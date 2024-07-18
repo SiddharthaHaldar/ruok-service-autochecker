@@ -4,6 +4,8 @@ import { load } from "js-yaml";
 
 import 'dotenv-safe/config.js'
 
+import { getEndpointKind } from "./endpoint.js"
+
 const { GITHUB_TOKEN } = process.env
 
 const GRAPH_METADATA_NAME = ".product.yaml";
@@ -43,9 +45,13 @@ export class GithubEndpoint {
       // Create list of endpoints associated with this endpoint
       var extraEndpoints = this.extractEndpoints(productDotYaml);
     }
+    const payloadEndpointKind = getEndpointKind(payload.endpoint)[0];
+    var kind = payloadEndpointKind.split("E")[0];
+    console.log(kind)
+    kind = kind[0].toUpperCase() + kind.substring(1);
     var newEndpoints = new Set([
-      ...extraEndpoints,
-      payload.endpoint
+      `{url : "${payload.endpoint}", kind : "${kind}"}`,
+      ...extraEndpoints
     ]);
     console.log("New endpoints: ", newEndpoints);
     return newEndpoints;
@@ -59,9 +65,9 @@ export class GithubEndpoint {
    */
   extractEndpoints(yamlObj) {
     return new Set([
-      ...(yamlObj.webEndpoints || []),
-      ...(yamlObj.githubEndpoints || []),
-      ...(yamlObj.containerEndpoints || []),
+      ...((yamlObj.webEndpoints || []).map(endpoint => `{url : "${endpoint}", kind : "Web"}`)),
+      ...((yamlObj.githubEndpoints || [])).map(endpoint => `{url : "${endpoint}", kind : "Github"}`),
+      ...((yamlObj.containerEndpoints || [])).map(endpoint => `{url : "${endpoint}", kind : "Container"}`),
     ])
   }
 }

@@ -26,7 +26,7 @@ export class VunerabilityAlertsEnabledStrategy extends OctokitCheckStrategy {
                 }   
             }
         } catch (error) {
-            if (error.message == 'Vulnerability alerts are disabled.'){
+            if (error.status == 404){
                 return {
                     checkPasses: false,
                     metadata: null
