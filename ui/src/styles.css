@@ -839,6 +839,19 @@
   --yellow-indicator: var(--yellow-10);
   --yellow-track: var(--yellow-10);
 }
+
+html,
+body {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+#react-root {
+  height: 100%;
+}
+
 @supports (color: color(display-p3 1 1 1)) {
   @media (color-gamut: p3) {
     :root,
@@ -4518,6 +4531,7 @@
   --gray-track: var(--slate-track);
 }
 .radix-themes {
+  height: 100%;
   --cursor-button: default;
   --cursor-checkbox: default;
   --cursor-disabled: not-allowed;
