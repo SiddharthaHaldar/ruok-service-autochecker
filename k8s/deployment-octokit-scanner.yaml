@@ -15,5 +15,4 @@ spec:
     spec:
       containers:
         - name: octokit-scanner
-          image: vader404/ruok-octokit-scanner:0.0.1
-          # image: localhost/ruok-octokit-scanner:0.0.1
+          image: vader404/ruok-octokit-scanner:0.0.2

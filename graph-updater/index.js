@@ -46,27 +46,27 @@ process.on('SIGINT', () => process.exit(0))
       console.log('endpointKind', endpointKind)
 
       const endpointHandler = getEndpoint(endpointKind);
-      const newEndpoints = await endpointHandler.getGraphMetaData(endpointEventPayload)
-
-      const newEndpointsAndKind = newEndpoints.map((endpoint) => {
-          let kind = getEndpointKind(endpoint)[0];
-          kind = kind.split("E")[0];
-          kind = kind[0].toUpperCase() + kind.substring(1);
-          return `{url : "${endpoint}", kind : "${kind}"}`;
-      });
-
-      console.log('newEndpoints', newEndpoints)
+      const newEndpointsWithKind = await endpointHandler.getGraphMetaData(endpointEventPayload)
+      const newEndpoints = Array.from(newEndpointsWithKind).map(endpoint=> {
+                                  let jsonString = endpoint.replace('url', '"url"').replace('kind', '"kind"');
+                                  const obj = JSON.parse(jsonString);
+                                  return obj.url;
+                              });
 
       // Create string serialized array of endpoints associated with this endpoint
       const newEndpointsString = `["${Array.from(newEndpoints).join('", "')}"]`;
-      const newEndpointsStringAndKind = `[${Array.from(newEndpointsAndKind).join(',')}]`;
+      const newEndpointsWithKindString= `[${Array.from(newEndpointsWithKind).join(',')}]`
+
+      console.log(newEndpointsString);
+      console.log(newEndpointsWithKindString);
 
       // Mutation to add a graph for the new endpoints
       const mutation = gql`
       mutation {
-        endpoints(urls: ${newEndpointsString}) 
+        endpoints(urls: ${newEndpointsWithKindString}) 
       }
       `;
+
       // New GraphQL client - TODO: remove hard-coded URL
       const graphqlClient = new GraphQLClient(GRAPHQL_URL);
       // Write mutation to GraphQL API
