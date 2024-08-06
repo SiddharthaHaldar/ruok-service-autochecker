@@ -95,7 +95,7 @@ class GraphDB:
             self.insert_edge(root_url, url, "child")
             self.insert_edge(url, root_url, "parent")
         # Remove stale edges
-        # self.remove_stale_edges(root_url)
+        self.remove_stale_edges(root_url,other_urls)
         return urls
 
     def insert_product(self, product, urls):
@@ -109,6 +109,28 @@ class GraphDB:
             print("inserting edge")
             self.insert_edge(product, url, "child")
             self.insert_edge(url, product, "parent")
+    
+    def remove_stale_edges(self,root_url,urls):
+        root_url = strawberry.asdict(root_url)['url']
+        # Fetch URLs related to the root_url currently in the DB
+        existing_urls = self.get_endpoints([root_url])
+
+        new_urls = set(list(map(lambda el:strawberry.asdict(el)['url'], urls)))
+        new_urls.add(root_url)
+
+        # Run a loop over exsting URLs and check if they are a part
+        # of the new_urls. If not erase the edge between that URL and 
+        # the root_url
+        for url in existing_urls:
+            if url not in new_urls:
+                # Delete that edge
+                print(url)
+                self.remove_edge(root_url,url)
+                self.remove_edge(url,root_url)
+    
+    def remove_edge(self, url1, url2):
+        edge_key = f"{self._key_safe_url(url1)}-to-{self._key_safe_url(url2)}"
+        self.edges.delete_match({'_key': edge_key})
 
     def get_scanner_endpoint(self, url):
         return self.nodes.get(self._key_safe_url(url))
