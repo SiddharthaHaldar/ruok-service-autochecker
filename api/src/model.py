@@ -62,7 +62,7 @@ class GraphDB:
             self.nodes.update(update_dict)
         return scanner_endpoint
 
-    def insert_edge(self, endpoint1, endpoint2):
+    def insert_edge(self, endpoint1, endpoint2, relation):
         endpoint1_dict = strawberry.asdict(endpoint1)
         endpoint2_dict = strawberry.asdict(endpoint2)
         endpoint1 = endpoint1_dict["url"]
@@ -74,6 +74,7 @@ class GraphDB:
                     "_key": edge_key,
                     "_from": f"{Settings().VERTEX_COLLECTION}/{self._key_safe_url(endpoint1)}",
                     "_to": f"{Settings().VERTEX_COLLECTION}/{self._key_safe_url(endpoint2)}",
+                    "relation" : relation
                 }
             )
 
@@ -91,19 +92,23 @@ class GraphDB:
         # For all other urls, make a bidirectional edge between the root url and themselves.
         for url in other_urls:
             self.insert_endpoint(url)
-            self.insert_edge(root_url, url)
-            self.insert_edge(url, root_url)
+            self.insert_edge(root_url, url, "child")
+            self.insert_edge(url, root_url, "parent")
         # Remove stale edges
         # self.remove_stale_edges(root_url)
         return urls
 
     def insert_product(self, product, urls):
-        if not self.nodes.get(product):
-            self.nodes.insert({"_key": product})
+        if not self.nodes.get(product.url):
+            self.insert_endpoint(product)
+            # self.nodes.insert({"_key": product})
+        print("Inserted Product")
         for url in urls:
             self.insert_endpoint(url)
-            self.insert_edge(product, url)
-            self.insert_edge(url, product)
+            print("inserted endpoint")
+            print("inserting edge")
+            self.insert_edge(product, url, "child")
+            self.insert_edge(url, product, "parent")
 
     def get_scanner_endpoint(self, url):
         return self.nodes.get(self._key_safe_url(url))
@@ -134,16 +139,19 @@ class GraphDB:
         )
 
     def get_endpoints(self, urls):
-        unique_urls = set()
+        unique_urls = {}
         for url in urls:
             if url == "":
                 continue
             url_vertices = self.get_endpoint(url)["vertices"]
             if url_vertices:
-                unique_urls = unique_urls.union(
-                    [v["url"] if "url" in v.keys() else v["_key"] for v in url_vertices]
-                )
-        return list(unique_urls)
+                for v in url_vertices:
+                    key =  str({'url' : v["url"],'kind' : v["kind"]}) if "url" in v.keys() \
+                            else \
+                            str({'url' : v["url"],'kind' : v["kind"]})
+                    unique_urls[key] = v
+        print(unique_urls.values())
+        return list(unique_urls.values())
 
     def get_all_edges(self):
         return [edge for edge in self.edges.all()]
@@ -151,3 +159,17 @@ class GraphDB:
     def get_all_endpoints(self):
         # return [node['_key'] for node in self.nodes.all()]
         return [node for node in self.nodes.all()]
+
+    def get_service(self, name):
+        if not self.nodes.get(self._key_safe_url(name)):
+            return {
+                "vertices": [],
+                "paths": [],
+            }
+        query = f"""FOR v, e, p IN 0..1 OUTBOUND "endpointNodes/{name}" GRAPH "endpoints" OPTIONS {{ uniqueVertices: "path" }}  RETURN v"""
+        cursor = self.aql.execute(query)
+        result = [doc for doc in cursor]
+        d = {}
+        for r in result:
+            d[r['kind']] = r
+        return d
