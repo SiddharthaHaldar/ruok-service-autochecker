@@ -111,11 +111,15 @@ class GraphDB:
             self.insert_edge(url, product, "parent")
     
     def remove_stale_edges(self,root_url,urls):
-        root_url = strawberry.asdict(root_url)['url']
+        root_url = self._key_safe_url(strawberry.asdict(root_url)['url'])
         # Fetch URLs related to the root_url currently in the DB
-        existing_urls = self.get_endpoints([root_url])
+        print(root_url)
+        query = f"""FOR v, e, p IN 0..1 OUTBOUND "endpointNodes/{root_url}" GRAPH "endpoints" OPTIONS {{ uniqueVertices: "path" }} FILTER e.relation == "child" RETURN v"""
+        cursor = self.aql.execute(query)
+        existing_urls = [doc['url'] for doc in cursor]
+        # existing_urls = self.get_endpoints([root_url])
 
-        existing_urls = list(map(lambda el:el['url'], existing_urls))
+        # existing_urls = list(map(lambda el:el['url'], existing_urls))
         new_urls = set(list(map(lambda el:strawberry.asdict(el)['url'], urls)))
         new_urls.add(root_url)
 
