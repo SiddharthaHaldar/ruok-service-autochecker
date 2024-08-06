@@ -115,9 +115,11 @@ class GraphDB:
         # Fetch URLs related to the root_url currently in the DB
         existing_urls = self.get_endpoints([root_url])
 
+        existing_urls = list(map(lambda el:el['url'], existing_urls))
         new_urls = set(list(map(lambda el:strawberry.asdict(el)['url'], urls)))
         new_urls.add(root_url)
 
+        print(new_urls,existing_urls)
         # Run a loop over exsting URLs and check if they are a part
         # of the new_urls. If not erase the edge between that URL and 
         # the root_url
@@ -172,7 +174,6 @@ class GraphDB:
                             else \
                             str({'url' : v["url"],'kind' : v["kind"]})
                     unique_urls[key] = v
-        print(unique_urls.values())
         return list(unique_urls.values())
 
     def get_all_edges(self):
