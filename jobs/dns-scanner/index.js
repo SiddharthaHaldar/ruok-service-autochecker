@@ -36,23 +36,30 @@ process.on('SIGINT', () => process.exit(0))
     console.log("Reading complete \n");
 
 
-    const githubEndpoints = [];
+    const services = [];
     for(var file of dirContents){
         const type = dirHandler.findFileType(file);
         if(type === ".yaml"){
             const content = await dirHandler.parseFileContents(file);
-            githubEndpoints.push(content.metadata.annotations.sourceCodeRepository);
+            let serviceObj = {
+                payloadType : "service",
+                serviceName : content.metadata.name,
+                repoEndpoint : content.metadata.annotations.sourceCodeRepository,
+                webEndpoint : content.spec.name
+            }
+            services.push(serviceObj);
         }
     }
 
-    console.log(githubEndpoints);
+    console.log(services);
 
     //remove cloned repo
     console.log("Removing cloned repo directory...");
     await removeClonedRepository(repoPath);
 
     // Queue up new endpoints to be analyzed by the appropriate scanners
-    await publishToNats(nc, jc, NATS_PUB_STREAM, githubEndpoints);
+    // await publishToNats(nc, jc, NATS_PUB_STREAM, githubEndpoints);
+    await publishToNats(nc, jc, NATS_PUB_STREAM, services);
 
     console.log("published container endpoint events");
 
