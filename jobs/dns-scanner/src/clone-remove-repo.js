@@ -7,7 +7,8 @@ import path from 'path'
 export async function cloneRepository(clone_url, repoName) {
   // Clones Repository into tmp directory - returns path
   try {
-    const tempDir = os.tmpdir();
+    // const tempDir = os.tmpdir();
+    const tempDir = './repo-scans';
     const repoPath = path.join(tempDir, `${repoName}-${Date.now()}`);
 
     // Check if the repository directory already exists
@@ -21,6 +22,7 @@ export async function cloneRepository(clone_url, repoName) {
     }
 
     // Clone the repository
+    console.log(repoPath)
     await simpleGit().clone(clone_url, repoPath);
     console.log('Repository cloned successfully.');
     
