@@ -4,14 +4,14 @@ ENV NODE_ENV production
 
 WORKDIR /app
 
-RUN apk --no-cache add curl=8.5.0-r0
+# RUN apk --no-cache add curl=8.5.0-r0
+RUN apk add --no-cache git
 
 COPY package*.json ./
 
 RUN npm ci
 
-# COPY . . 
-COPY ./.env.example ./
+COPY ./.env ./.env.example ./
 COPY ./src ./src
 COPY ./index.js .
 

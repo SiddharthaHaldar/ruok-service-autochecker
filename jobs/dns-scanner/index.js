@@ -8,7 +8,6 @@ import { DirHandler } from './src/file-reader.js'
 
 const {
     NATS_URL,
-    GRAPHQL_URL,
     NATS_PUB_STREAM,
     DNS_REPOSITORY
 } = process.env;
@@ -19,13 +18,13 @@ const jc = JSONCodec();
 
 console.log('🚀 Connected to NATS server ');
 
-process.on('SIGTERM', () => process.exit(0))
-process.on('SIGINT', () => process.exit(0))
-;(async () => {
+// process.on('SIGTERM', () => process.exit(0))
+// process.on('SIGINT', () => process.exit(0))
+(async () => {
     console.log('\n**************************************************************')
     console.log(`\nScanning DNS repo from : ${DNS_REPOSITORY}`)
 
-    // Clone the DNS repository repository
+    // Clone the DNS repository 
     const repoPath = await cloneRepository(DNS_REPOSITORY, "phac-dns")
     console.log ('Cloned repository at path', repoPath, '\n')
 
@@ -58,11 +57,11 @@ process.on('SIGINT', () => process.exit(0))
     await removeClonedRepository(repoPath);
 
     // Queue up new endpoints to be analyzed by the appropriate scanners
-    // await publishToNats(nc, jc, NATS_PUB_STREAM, githubEndpoints);
-    await publishToNats(nc, jc, NATS_PUB_STREAM, services);
+     await publishToNats(nc, jc, NATS_PUB_STREAM, services);
 
     console.log("published container endpoint events");
 
+    process.exit(0)
 })();
 
-// await nc.closed();
+await nc.closed();
