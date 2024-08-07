@@ -234,6 +234,32 @@ class Query:
                          kind=vertex['kind']) for vertex in endpoints]
 
     @strawberry.field
+    def referenced_endpoints(self, url: str) -> List[Endpoint]:
+        """
+        # Get Multiple Endpoints
+
+        Given a subset of URLs, retrieves all URLs assocaited with any
+        URLs in the subset. Note that the purpose of this query is to get information
+        on which URLs are related to eachother, not to get detailed information about
+        any specific kind of endpoint.
+
+        # Example
+
+        ```graphql
+        query {
+            endpoints(urls:["https://some-webapp.canada.ca"]) {
+                url
+            }
+        }
+        ```
+
+        """
+        client = GraphDB()
+        endpoints = client.get_referenced_endpoints(url)
+        client.close()
+        return [Endpoint(url=vertex['url'],
+                         kind=vertex['kind']) for vertex in endpoints]
+    @strawberry.field
     def all_edges(self) -> List[Edge]:
         """
         # Get All Edges

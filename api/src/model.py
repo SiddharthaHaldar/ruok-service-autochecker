@@ -117,9 +117,7 @@ class GraphDB:
         query = f"""FOR v, e, p IN 0..1 OUTBOUND "endpointNodes/{root_url}" GRAPH "endpoints" OPTIONS {{ uniqueVertices: "path" }} FILTER e.relation == "child" RETURN v"""
         cursor = self.aql.execute(query)
         existing_urls = [doc['url'] for doc in cursor]
-        # existing_urls = self.get_endpoints([root_url])
 
-        # existing_urls = list(map(lambda el:el['url'], existing_urls))
         new_urls = set(list(map(lambda el:strawberry.asdict(el)['url'], urls)))
         new_urls.add(root_url)
 
@@ -179,6 +177,20 @@ class GraphDB:
                             str({'url' : v["url"],'kind' : v["kind"]})
                     unique_urls[key] = v
         return list(unique_urls.values())
+
+    def get_referenced_endpoints(self, url):
+        unique_urls = []
+        if url == "":
+            pass
+        if not self.nodes.get(self._key_safe_url(url)):
+            url = url + "/"
+        query = f"""FOR v, e, p IN 0..1 OUTBOUND "endpointNodes/{self._key_safe_url(url)}" GRAPH "endpoints" OPTIONS {{ uniqueVertices: "path" }} FILTER e.relation == "child" RETURN v"""
+        cursor = self.aql.execute(query)
+        url_vertices = [doc for doc in cursor]
+        if url_vertices:
+            for v in url_vertices:
+                unique_urls.append(v)
+        return unique_urls
 
     def get_all_edges(self):
         return [edge for edge in self.edges.all()]
